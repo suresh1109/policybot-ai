@@ -6,7 +6,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="/static/css/main.css">
-<link rel="stylesheet" href="/static/css/admin.css">
+<link rel="stylesheet" href="/static/css/admin.css?v=4">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body class="theme-neon admin-body">
@@ -68,7 +68,7 @@
       <button class="refresh-btn" onclick="loadKB()"><i class="fas fa-sync"></i> Refresh</button>
       <label class="export-btn" for="kb-file-input" style="cursor:pointer">
         <i class="fas fa-cloud-upload-alt"></i> Upload Policy Document
-        <input type="file" id="kb-file-input" accept=".pdf,.txt,.docx,.doc,.jpg,.jpeg,.png" onchange="kbUpload(this)" hidden>
+        <input type="file" id="kb-file-input" accept=".pdf,.txt,.docx,.doc,.csv,.xlsx,.xls,.jpg,.jpeg,.png,.webp" onchange="kbUpload(this)" hidden>
       </label>
     </div>
   </div>
@@ -174,7 +174,7 @@
         <input type="hidden" id="update-doc-id">
         <label class="export-btn" for="update-file-input" style="justify-content:center;cursor:pointer">
           <i class="fas fa-file-arrow-up"></i> Choose Updated File
-          <input type="file" id="update-file-input" accept=".pdf,.txt,.docx,.doc,.jpg,.jpeg,.png" hidden onchange="showUpdateFile(this)">
+          <input type="file" id="update-file-input" accept=".pdf,.txt,.docx,.doc,.csv,.xlsx,.xls,.jpg,.jpeg,.png,.webp" hidden onchange="showUpdateFile(this)">
         </label>
         <div id="update-file-name" style="font-size:12px;color:var(--a1);text-align:center;font-weight:600"></div>
         <input class="search-input" id="update-note" placeholder="Change note (optional — e.g. 'Updated premiums for 2025')" style="width:100%;box-sizing:border-box">
@@ -270,6 +270,92 @@
 </section>
 
 </main>
-<script src="/static/js/admin.js"></script>
+<script src="/static/js/admin.js?v=4"></script>
+
+<script>
+/* ── 3D Floating Shield Animation ───────────────────────────────────────── */
+(function(){
+  const canvas = document.createElement('canvas');
+  canvas.id = 'shield-3d';
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.08';
+  document.body.insertBefore(canvas, document.body.firstChild);
+
+  const ctx = canvas.getContext('2d');
+  let W, H, t = 0;
+  const shields = Array.from({length:8}, (_,i) => ({
+    x: Math.random(), y: Math.random(),
+    vx: (Math.random()-.5)*.0003, vy: (Math.random()-.5)*.0003,
+    size: 18 + Math.random()*32, rot: Math.random()*Math.PI*2,
+    rv: (Math.random()-.5)*.008,
+    opacity: 0.3 + Math.random()*.5,
+    hue: [220,260,280,200][i%4]
+  }));
+  const particles = Array.from({length:40}, () => ({
+    x:Math.random(), y:Math.random(),
+    vx:(Math.random()-.5)*.0002, vy:(Math.random()-.5)*.0002,
+    size: 1+Math.random()*2, life:Math.random()
+  }));
+
+  function drawShield(x,y,size,rot,opacity,hue) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    const g = ctx.createLinearGradient(0,-size,0,size);
+    g.addColorStop(0, `hsla(${hue},80%,70%,${opacity})`);
+    g.addColorStop(1, `hsla(${hue+40},90%,50%,${opacity*.5})`);
+    ctx.fillStyle = g;
+    ctx.strokeStyle = `hsla(${hue},90%,75%,${opacity*.8})`;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(0, -size);
+    ctx.bezierCurveTo( size*.85,-size*.85,  size*.85,0,      0, size);
+    ctx.bezierCurveTo(-size*.85,0,         -size*.85,-size*.85, 0,-size);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    // inner glow line
+    ctx.strokeStyle = `hsla(${hue},100%,90%,${opacity*.4})`;
+    ctx.lineWidth = .8;
+    ctx.beginPath();
+    ctx.moveTo(0, -size*.7);
+    ctx.bezierCurveTo(size*.55,-size*.55, size*.55,0, 0, size*.7);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function frame() {
+    ctx.clearRect(0,0,W,H);
+    t += .012;
+    shields.forEach(s => {
+      s.x += s.vx; s.y += s.vy; s.rot += s.rv;
+      if(s.x<-.05||s.x>1.05){s.vx*=-1;}
+      if(s.y<-.05||s.y>1.05){s.vy*=-1;}
+      const pulse = 1 + Math.sin(t+s.rot)*0.08;
+      drawShield(s.x*W, s.y*H, s.size*pulse, s.rot, s.opacity, s.hue);
+    });
+    // floating particles / dots
+    particles.forEach(p => {
+      p.x+=p.vx; p.y+=p.vy; p.life+=.003;
+      if(p.x<0||p.x>1) p.vx*=-1;
+      if(p.y<0||p.y>1) p.vy*=-1;
+      const a = (Math.sin(p.life*3)*.3+.5)*.6;
+      ctx.beginPath();
+      ctx.arc(p.x*W, p.y*H, p.size, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(90,114,255,${a})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+
 </body>
 </html>

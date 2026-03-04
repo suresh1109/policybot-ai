@@ -247,6 +247,10 @@ async function kbViewDoc(docId) {
     const plans = d.plans || [];
     const vers  = d.versions || [];
 
+    // Type breakdown chips
+    const typeCount = {};
+    plans.forEach(p => { const t = p.insurance_type||'Other'; typeCount[t]=(typeCount[t]||0)+1; });
+
     let html = `
       <div class="kb-modal-doc-info">
         <div class="kb-modal-info-row"><span>File</span><strong>${esc(doc.filename||'—')}</strong></div>
@@ -254,21 +258,39 @@ async function kbViewDoc(docId) {
         <div class="kb-modal-info-row"><span>Version</span><strong>v${doc.version||1}</strong></div>
         <div class="kb-modal-info-row"><span>Uploaded</span><strong>${(doc.uploaded_at||'').slice(0,16).replace('T',' ')}</strong></div>
         <div class="kb-modal-info-row"><span>By</span><strong>${doc.uploaded_by||'admin'}</strong></div>
-        <div class="kb-modal-info-row"><span>Plans extracted</span><strong>${plans.length}</strong></div>
+        <div class="kb-modal-info-row"><span>Plans extracted</span><strong style="color:#4ade80">${plans.length}</strong></div>
       </div>`;
 
-    if (plans.length) {
-      html += `<div class="kb-modal-section-title">Extracted Plans (${plans.length})</div>`;
-      plans.forEach(p => {
-        html += planCard(p);
+    if (Object.keys(typeCount).length > 1) {
+      html += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin:-4px 0 4px">';
+      Object.entries(typeCount).sort((a,b)=>b[1]-a[1]).forEach(([t,c]) => {
+        html += `<span style="padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;background:rgba(90,114,255,.12);border:1px solid rgba(90,114,255,.25);color:#818cf8">${typeIcon(t)} ${t} (${c})</span>`;
       });
+      html += '</div>';
+    }
+
+    if (plans.length) {
+      html += `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <div class="kb-modal-section-title" style="margin:0">Extracted Plans (${plans.length})</div>
+          <input type="text" id="doc-plan-search" placeholder="🔍 Search plans…"
+            style="padding:6px 12px;background:rgba(255,255,255,.05);border:1px solid rgba(80,120,255,.3);border-radius:8px;color:#dde5ff;font-size:12px;outline:none;width:190px;transition:border .2s"
+            oninput="filterDocPlans(this.value)"
+            onfocus="this.style.borderColor='rgba(90,114,255,.7)'"
+            onblur="this.style.borderColor='rgba(80,120,255,.3)'">
+        </div>
+        <div id="doc-plans-list" style="display:flex;flex-direction:column;gap:10px">`;
+      plans.forEach(p => {
+        const srch = ((p.plan_name||'')+(p.company_name||'')+(p.insurance_type||'')).toLowerCase();
+        html += `<div class="doc-plan-item" data-search="${esc(srch)}">${planCard(p)}</div>`;
+      });
+      html += '</div>';
     } else {
       html += `<div class="kb-empty-state"><i class="fas fa-circle-info"></i> No plans extracted from this document yet.</div>`;
     }
 
     if (vers.length) {
-      html += `<div class="kb-modal-section-title">Version History</div>
-        <div class="kb-version-list">`;
+      html += `<div class="kb-modal-section-title">Version History</div><div class="kb-version-list">`;
       vers.forEach(v => {
         html += `<div class="kb-version-row">
           <span class="kb-ver-num">v${v.version}</span>
@@ -277,7 +299,7 @@ async function kbViewDoc(docId) {
           <span class="kb-ver-note">${esc(v.change_note||'')}</span>
         </div>`;
       });
-      html += `</div>`;
+      html += '</div>';
     }
 
     document.getElementById('kb-modal-title').textContent = `📄 ${doc.filename}`;
@@ -285,8 +307,6 @@ async function kbViewDoc(docId) {
     document.getElementById('kb-modal').classList.remove('hidden');
   } catch(e) { console.error('View doc', e); }
 }
-
-/* ── View single plan modal ───────────────────────────────────────────── */
 async function kbViewPlan(planId) {
   const plan = _kbAllPlans.find(p => p.id === planId);
   if (!plan) { alert('Plan not found in cache — please refresh.'); return; }
@@ -297,38 +317,79 @@ async function kbViewPlan(planId) {
 }
 
 function planCard(p, full = false) {
+  const TC = {
+    'Health Insurance':    ['#4ade80','rgba(34,197,94,.18)','rgba(34,197,94,.35)'],
+    'Term Life Insurance': ['#818cf8','rgba(99,102,241,.18)','rgba(99,102,241,.35)'],
+    'Life Insurance':      ['#818cf8','rgba(99,102,241,.18)','rgba(99,102,241,.35)'],
+    'Vehicle Insurance':   ['#fbbf24','rgba(245,158,11,.18)','rgba(245,158,11,.35)'],
+    'Travel Insurance':    ['#22d3ee','rgba(6,182,212,.18)', 'rgba(6,182,212,.35)'],
+    'Property Insurance':  ['#f87171','rgba(239,68,68,.18)', 'rgba(239,68,68,.35)'],
+    'Accident Insurance':  ['#fb923c','rgba(249,115,22,.18)','rgba(249,115,22,.35)'],
+  };
+  const [tc,tbg,tbd] = TC[p.insurance_type] || ['#94a3b8','rgba(148,163,184,.12)','rgba(148,163,184,.28)'];
+
   const fields = [
-    ['Insurance Type',      p.insurance_type],
-    ['Coverage Amount',     p.coverage_amount],
-    ['Premium Range',       p.premium_range],
-    ['Waiting Period',      p.waiting_period],
-    ['Eligibility Age',     p.eligibility_age],
-    ['Network Hospitals',   p.network_hospitals],
-    ['Conditions Covered',  p.conditions_covered],
-    ['Exclusions',          p.exclusions],
-    ['Claim Process',       p.claim_process],
-    ['Special Benefits',    p.special_benefits],
+    ['💰 Coverage',         p.coverage_amount],
+    ['📅 Premium / yr',     p.premium_range],
+    ['⏳ Waiting Period',   p.waiting_period],
+    ['👤 Eligibility Age',  p.eligibility_age],
+    ['🏥 Network',          p.network_hospitals],
+    ['✅ Conditions',       p.conditions_covered],
+    ['❌ Exclusions',       p.exclusions],
+    ['📋 Claim Process',    p.claim_process],
+    ['⭐ Special Benefits', p.special_benefits],
   ];
-  const rows = fields.filter(([, v]) => v && v !== 'Not specified')
-    .map(([k, v]) => `<div class="kb-plan-field"><span class="kb-field-label">${k}</span><span class="kb-field-val">${esc(v)}</span></div>`)
-    .join('');
-  const summary = p.raw_summary ? `<div class="kb-plan-summary">${esc(p.raw_summary)}</div>` : '';
-  return `
-    <div class="kb-plan-card ${p.is_master ? 'kb-plan-master' : ''}">
-      <div class="kb-plan-card-header">
-        <div>
-          <div class="kb-plan-card-name">${esc(p.plan_name||'—')}</div>
-          <div class="kb-plan-card-company">${esc(p.company_name||'—')}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-          <span class="kb-type-chip">${typeIcon(p.insurance_type)} ${esc(p.insurance_type||'—')}</span>
-          ${p.is_master ? '<span class="kb-master-badge">MASTER</span>' : ''}
-          <span class="kb-rec-badge">🏆 ${p.recommend_count||0} recs</span>
-        </div>
-      </div>
-      ${summary}
-      <div class="kb-plan-fields">${rows}</div>
-    </div>`;
+
+  const validFields = fields.filter(([,v]) => v && v !== 'Not specified' && v !== 'Not applicable');
+  const half = Math.ceil(validFields.length / 2);
+
+  const makeField = ([k,v]) =>
+    '<div style="padding:9px 14px;display:flex;flex-direction:column;gap:3px;border-bottom:1px solid rgba(255,255,255,.045)">' +
+      '<span style="font-size:9.5px;font-weight:700;color:#4a5568;text-transform:uppercase;letter-spacing:.07em">' + k + '</span>' +
+      '<span style="font-size:12px;color:#c4cfe4;line-height:1.45">' + esc(v) + '</span>' +
+    '</div>';
+
+  const col1 = validFields.slice(0, half).map(makeField).join('');
+  const col2 = validFields.slice(half).map(makeField).join('');
+
+  const summary = p.raw_summary
+    ? '<div style="padding:10px 16px 11px;font-size:12px;color:#7c8db5;font-style:italic;background:rgba(0,0,0,.25);border-bottom:1px solid rgba(255,255,255,.05);line-height:1.5">' + esc(p.raw_summary) + '</div>'
+    : '';
+
+  const mastBadge = p.is_master
+    ? '<span style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:9.5px;font-weight:800;background:rgba(245,158,11,.18);color:#fbbf24;border:1px solid rgba(245,158,11,.35);letter-spacing:.05em">MASTER</span>'
+    : '';
+
+  const recBadge = (p.recommend_count||0) > 0
+    ? '<span style="font-size:10px;color:#3a4a65">&#127942; ' + p.recommend_count + ' recs</span>'
+    : '';
+
+  return (
+    '<div style="background:#0d1a28;border:1px solid ' + tbd + ';border-radius:14px;overflow:hidden;transition:box-shadow .2s" onmouseover="this.style.boxShadow=\'0 0 0 1px ' + tbd + ',0 8px 24px rgba(0,0,0,.5)\'" onmouseout="this.style.boxShadow=\'none\'">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:13px 16px;background:linear-gradient(135deg,' + tbg + ',rgba(0,0,0,.1))">' +
+        '<div style="min-width:0;flex:1">' +
+          '<div style="font-size:14px;font-weight:700;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px">' + esc(p.plan_name||'—') + '</div>' +
+          '<div style="font-size:11px;color:#4a5568;font-weight:500">' + esc(p.company_name||'—') + '</div>' +
+        '</div>' +
+        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0">' +
+          '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;background:' + tbg + ';border:1px solid ' + tbd + ';color:' + tc + ';white-space:nowrap">' + typeIcon(p.insurance_type) + ' ' + esc(p.insurance_type||'—') + '</span>' +
+          mastBadge + recBadge +
+        '</div>' +
+      '</div>' +
+      summary +
+      '<div style="display:grid;grid-template-columns:1fr 1fr">' +
+        '<div style="border-right:1px solid rgba(255,255,255,.05)">' + col1 + '</div>' +
+        '<div>' + col2 + '</div>' +
+      '</div>' +
+    '</div>'
+  );
+}
+function filterDocPlans(q) {
+  const term = q.toLowerCase().trim();
+  document.querySelectorAll('#doc-plans-list .doc-plan-item').forEach(el => {
+    const match = !term || el.dataset.search.includes(term);
+    el.style.display = match ? '' : 'none';
+  });
 }
 
 /* ── Upload pipeline ──────────────────────────────────────────────────── */

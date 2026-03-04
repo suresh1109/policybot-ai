@@ -680,34 +680,328 @@ class OCRVerifier:
             handoff_to_gemini=True)
 
     def analyze_health_report(self, file_bytes: bytes, file_ext: str,
-                               user_id: str) -> dict:
-        """Analyze health/medical report for conditions."""
-        log.info(f"[OCR-HEALTH] Analyzing health report | user={user_id}")
+                               user_id: str,
+                               stated_name: str = "",
+                               stated_age=None,
+                               stated_gender: str = "",
+                               insurance_type: str = "") -> dict:
+        """
+        Analyze health/medical report — v2 UPGRADE.
+
+        STEP 1 — Identity check:
+          Extract patient name / age / gender from report.
+          Compare with stated profile fields.
+          If fields missing in report → mark as UNKNOWN (not mismatch).
+
+        STEP 2 — Condition detection (abnormal results only):
+          Do NOT flag a condition just because a test name appears.
+          Only flag when:
+            • status = High / Low / Abnormal / Positive
+            • doctor's remark confirms the condition
+            • diagnosed with / impression / conclusion line names a condition
+
+        STEP 3 — Insurance-type filtering:
+          Health → Diabetes, BP, Heart, Asthma, Kidney, Thyroid, Cancer
+          Life/Term → Heart, Diabetes, Cancer, Major illness
+          Accident → skip medical (return healthy)
+        """
+        log.info(f"[OCR-HEALTH] Analyzing health report | user={user_id} "
+                 f"| name='{stated_name}' age={stated_age} gender='{stated_gender}'")
 
         raw_text = TextExtractor.extract(file_bytes, file_ext)
         if not raw_text or len(raw_text.strip()) < 10:
-            return {"success": False, "message": "Could not read the health report. Please upload a clearer document.", "conditions": []}
+            return {
+                "success":  False,
+                "message":  "Could not read the health report. Please upload a clearer document.",
+                "conditions": [],
+                "identity_check": {"name": "UNKNOWN", "age": "UNKNOWN", "gender": "UNKNOWN"},
+            }
 
-        parsed = DocumentParser.parse_health_report(raw_text)
-        conditions = parsed.get("conditions_found", [])
-        doctor     = parsed.get("doctor", "")
-        diagnosis  = parsed.get("diagnosis", "")
+        text_lower = raw_text.lower()
 
-        msg = "✅ Health report analyzed! "
+        # ══════════════════════════════════════════════════════════════════════
+        # STEP 1 — Identity check from report header
+        # ══════════════════════════════════════════════════════════════════════
+        identity = self._extract_report_identity(raw_text)
+        id_check = {
+            "name":   "UNKNOWN",
+            "age":    "UNKNOWN",
+            "gender": "UNKNOWN",
+        }
+        id_warnings = []
+
+        # Name check
+        if stated_name and identity.get("name"):
+            matched = self._compare_names(stated_name, identity["name"])
+            id_check["name"] = "YES" if matched else "NO"
+            if not matched:
+                id_warnings.append(
+                    f"⚠️ Patient name on report ('{identity['name']}') "
+                    f"doesn't match your name ('{stated_name}')."
+                )
+        elif identity.get("name"):
+            id_check["name"] = "UNKNOWN"   # no stated name to compare
+
+        # Age check
+        if stated_age and identity.get("age") is not None:
+            try:
+                doc_age = int(identity["age"])
+                diff    = abs(doc_age - int(stated_age))
+                id_check["age"] = "YES" if diff <= 3 else "NO"
+                if diff > 3:
+                    id_warnings.append(
+                        f"⚠️ Patient age on report ({doc_age}) "
+                        f"doesn't match your age ({stated_age})."
+                    )
+            except (ValueError, TypeError):
+                id_check["age"] = "UNKNOWN"
+
+        # Gender check
+        if stated_gender and identity.get("gender"):
+            doc_gender = identity["gender"].lower()
+            st_gender  = stated_gender.lower()
+            # Normalize to M/F
+            is_male   = st_gender in ("male", "m")
+            is_female = st_gender in ("female", "f")
+            doc_male   = any(w in doc_gender for w in ("male", " m ", "m/"))
+            doc_female = any(w in doc_gender for w in ("female", " f ", "f/"))
+            if (is_male and doc_male) or (is_female and doc_female):
+                id_check["gender"] = "YES"
+            elif doc_male or doc_female:
+                id_check["gender"] = "NO"
+                id_warnings.append(
+                    f"⚠️ Gender on report ('{identity['gender']}') "
+                    f"doesn't match your profile ('{stated_gender}')."
+                )
+
+        log.info(f"[OCR-HEALTH] Identity check: {id_check} | warnings={id_warnings}")
+
+        # ══════════════════════════════════════════════════════════════════════
+        # STEP 2 — Condition detection: abnormal results ONLY
+        # ══════════════════════════════════════════════════════════════════════
+        ins_lower = (insurance_type or "").lower()
+
+        # Accident insurance → no medical check needed
+        if "accident" in ins_lower:
+            parsed     = DocumentParser.parse_health_report(raw_text)
+            doctor     = parsed.get("doctor", "")
+            conditions = []
+            risk_level = "LOW"
+        else:
+            conditions = self._detect_abnormal_conditions(raw_text, text_lower)
+            parsed     = DocumentParser.parse_health_report(raw_text)
+            doctor     = parsed.get("doctor", "")
+            diagnosis  = parsed.get("diagnosis", "")
+
+            # Insurance-type filter: only keep relevant conditions
+            if "life" in ins_lower or "term" in ins_lower:
+                relevant = {"Heart Disease", "Diabetes", "Cancer", "Kidney Disease",
+                            "Hypertension", "Thyroid"}
+                conditions = [c for c in conditions if c in relevant]
+            # Health → all conditions relevant (no filter needed)
+            # Travel → similar to health
+
+            risk_level = ("HIGH"   if len(conditions) >= 2 else
+                          "MEDIUM" if len(conditions) == 1 else
+                          "LOW")
+
+        # ══════════════════════════════════════════════════════════════════════
+        # STEP 3 — Build result message
+        # ══════════════════════════════════════════════════════════════════════
+        lines_out = ["📋 **Document Verification Result**", ""]
+        lines_out.append(f"**Document Type:** Medical / Health Report")
+        lines_out.append("")
+        lines_out.append("**Identity Check**")
+        lines_out.append(f"• Name Match: {id_check['name']}")
+        lines_out.append(f"• Age Match:  {id_check['age']}")
+        lines_out.append(f"• Gender Match: {id_check['gender']}")
+
+        if id_warnings:
+            lines_out.append("")
+            lines_out.extend(id_warnings)
+
+        lines_out.append("")
+        lines_out.append("**Health Analysis**")
+
         if conditions:
-            msg += f"Found: {', '.join(conditions)}. "
+            lines_out.append(f"• Detected Conditions: {', '.join(conditions)}")
+        else:
+            lines_out.append("• Conclusion: All parameters are normal. No medical conditions detected.")
+
         if doctor:
-            msg += f"Doctor: {doctor}. "
-        msg += "This will help us recommend better plans for you 👍"
+            lines_out.append(f"• Issuing Doctor / Lab: {doctor}")
+
+        lines_out.append(f"\n**Insurance Risk Level: {risk_level}**")
+        lines_out.append("")
+        lines_out.append("I'll factor this into your plan recommendation 👍")
+
+        reply_msg = "\n".join(lines_out)
+        log.info(f"[OCR-HEALTH] Conditions={conditions} | Risk={risk_level}")
 
         return {
-            "success":    True,
-            "message":    msg,
-            "conditions": conditions,
-            "doctor":     doctor,
-            "diagnosis":  diagnosis,
+            "success":       True,
+            "message":       reply_msg,
+            "conditions":    conditions,
+            "doctor":        doctor,
+            "identity_check": id_check,
+            "id_warnings":   id_warnings,
+            "risk_level":    risk_level,
             "handoff_to_gemini": True,
         }
+
+    # ── Identity extraction from medical report header ─────────────────────
+    def _extract_report_identity(self, text: str) -> dict:
+        """Extract patient name, age, gender from medical report header."""
+        result = {}
+
+        # Patient Name — common labels in lab reports
+        name_patterns = [
+            r'(?:Patient\s*Name|Name)[\\s:]+([A-Za-z][A-Za-z\\s\\.]{2,40})',
+            r'(?:Mr\\.?|Mrs\\.?|Ms\\.?|Dr\\.?)\\s+([A-Z][A-Za-z\\s]{2,35})',
+            r'(?:Ref\\.?\\s*by|Referred\\s*by)[\\s:]+.{0,20}\\n([A-Z][A-Za-z\\s]{3,35})',
+        ]
+        for pat in name_patterns:
+            m = re.search(pat, text, re.IGNORECASE)
+            if m:
+                candidate = m.group(1).strip()
+                candidate = re.sub(r'\s+', ' ', candidate)
+                if 3 < len(candidate) < 50:
+                    result["name"] = candidate
+                    break
+
+        # Age — common formats: Age: 34Y, Age/Sex: 34Y/M, Age: 34 Years
+        age_patterns = [
+            r'Age[\s:/]*(\d{1,3})\s*(?:Y(?:rs?|ears?)?|year)',
+            r'Age\s*/\s*Sex[\s:]*(\d{1,3})',
+            r'(\d{1,3})\s*(?:Years?|Yrs?|Y)\s*/\s*(?:M|F|Male|Female)',
+        ]
+        for pat in age_patterns:
+            m = re.search(pat, text, re.IGNORECASE)
+            if m:
+                age_val = int(m.group(1))
+                if 1 <= age_val <= 120:
+                    result["age"] = age_val
+                    break
+
+        # Gender
+        gender_pat = r'(?:Sex|Gender)[\s:/]*([MF](?:ale)?|Male|Female)'
+        m = re.search(gender_pat, text, re.IGNORECASE)
+        if m:
+            result["gender"] = m.group(1).strip()
+
+        return result
+
+    # ── Abnormal-only condition detector ──────────────────────────────────
+    def _detect_abnormal_conditions(self, raw_text: str, text_lower: str) -> list:
+        """
+        SMART DETECTION: only flag a condition when results are abnormal.
+
+        Logic:
+          • Look for the condition keyword AND an abnormal marker nearby
+            (HIGH / LOW / ABNORMAL / POSITIVE / ELEVATED / ABOVE NORMAL)
+          • OR look for explicit diagnosis/impression lines naming the disease
+          • Do NOT flag just because a test name appears with a normal result
+        """
+        ABNORMAL_MARKERS = [
+            "high", "low", "abnormal", "positive", "elevated",
+            "above normal", "below normal", "increased", "decreased",
+            "borderline", "critical", "flagged", "out of range",
+            "uncontrolled", "detected",
+        ]
+
+        # Tests that are NOT diseases by themselves
+        TEST_ONLY_TERMS = {
+            "blood sugar", "fbs", "rbs", "ppbs", "hba1c",    # glucose tests (not disease)
+            "cholesterol", "ldl", "hdl", "triglycerides",
+            "tsh", "t3", "t4",                                # thyroid tests
+            "creatinine", "egfr", "urea",                     # kidney tests
+            "bilirubin", "sgot", "sgpt", "alt", "ast",        # liver tests
+            "haemoglobin", "hb", "rbc", "wbc", "platelets",
+        }
+
+        DIAGNOSIS_MARKERS = [
+            "diagnosis", "diagnosed with", "impression", "conclusion",
+            "findings", "assessment", "final report", "clinical diagnosis",
+        ]
+
+        def window_has_abnormal(text: str, pos: int, window: int = 120) -> bool:
+            """Check if any abnormal marker appears within ±window chars of pos."""
+            start = max(0, pos - window)
+            end   = min(len(text), pos + window)
+            snippet = text[start:end].lower()
+            return any(m in snippet for m in ABNORMAL_MARKERS)
+
+        # ── Condition map: keyword → condition label ───────────────────────
+        CONDITION_MAP = {
+            "Diabetes": [
+                "diabetes", "diabetic", "insulin", "blood sugar high",
+                "hba1c high", "fasting sugar high", "hyperglycemia",
+            ],
+            "Hypertension": [
+                "hypertension", "blood pressure high", "bp elevated",
+                "systolic high", "diastolic high",
+            ],
+            "Heart Disease": [
+                "coronary", "cardiac", "heart failure", "myocardial",
+                "angina", "arrhythmia", "ecg abnormal", "angioplasty",
+                "left ventricular", "right ventricular",
+            ],
+            "Asthma": [
+                "asthma", "bronchial asthma", "inhaler", "wheezing abnormal",
+                "spirometry abnormal", "obstructive airway",
+            ],
+            "Cancer": [
+                "malignancy", "carcinoma", "tumor", "oncology",
+                "chemotherapy", "biopsy positive", "metastasis",
+            ],
+            "Kidney Disease": [
+                "chronic kidney", "renal failure", "creatinine high",
+                "dialysis", "nephropathy", "kidney disease",
+                "gfr low", "proteinuria",
+            ],
+            "Thyroid": [
+                "hypothyroid", "hyperthyroid", "tsh high", "tsh low",
+                "tsh elevated", "thyroid disorder", "thyroiditis",
+            ],
+            "Liver Disease": [
+                "hepatitis", "cirrhosis", "liver failure", "sgot high",
+                "sgpt high", "alt elevated", "fatty liver grade",
+            ],
+        }
+
+        found_conditions = []
+
+        # ── Pass 1: keyword + abnormal marker proximity ────────────────────
+        for condition, keywords in CONDITION_MAP.items():
+            if condition in found_conditions:
+                continue
+            for kw in keywords:
+                pos = text_lower.find(kw)
+                if pos == -1:
+                    continue
+                # Skip if this is a test-only term and no abnormal nearby
+                if kw in TEST_ONLY_TERMS:
+                    if window_has_abnormal(text_lower, pos):
+                        found_conditions.append(condition)
+                        break
+                else:
+                    # Non-test keyword found → immediate flag (e.g. "coronary", "cirrhosis")
+                    found_conditions.append(condition)
+                    break
+
+        # ── Pass 2: scan diagnosis / impression lines ──────────────────────
+        for line in raw_text.split('\n'):
+            line_l = line.lower().strip()
+            if not any(dm in line_l for dm in DIAGNOSIS_MARKERS):
+                continue
+            # This is a diagnosis line — check all conditions
+            for condition, keywords in CONDITION_MAP.items():
+                if condition in found_conditions:
+                    continue
+                if any(kw in line_l for kw in keywords):
+                    found_conditions.append(condition)
+
+        return list(dict.fromkeys(found_conditions))   # preserve order, deduplicate
 
     def analyze_vehicle_doc(self, file_bytes: bytes, file_ext: str,
                              user_id: str) -> dict:
@@ -765,6 +1059,26 @@ class OCRVerifier:
         return TextExtractor.extract(file_bytes, file_ext)
 
     # ── Helpers ────────────────────────────────────────────────────────────
+    def _compare_names(self, stated: str, from_id: str) -> bool:
+        """Fuzzy name match — at least one meaningful word must match."""
+        import re as _re
+        stop = {"mr","mrs","ms","dr","shri","smt","kumari","late","s/o","d/o","w/o"}
+        def clean(s):
+            s = _re.sub(r"[^a-z ]", "", s.strip().lower())
+            return {w for w in s.split() if len(w) > 1 and w not in stop}
+        s_words = clean(stated)
+        d_words = clean(from_id)
+        if not s_words or not d_words:
+            return True   # can't compare, give benefit of doubt
+        common = s_words & d_words
+        # Need at least one word match OR high overlap ratio
+        if common:
+            return True
+        # Soundex-style: check first 3 chars of each word
+        s_prefixes = {w[:3] for w in s_words}
+        d_prefixes = {w[:3] for w in d_words}
+        return bool(s_prefixes & d_prefixes)
+
     def _compare_age(self, dob: datetime.date | None, stated_age) -> tuple:
         if dob is None or stated_age is None:
             return None, ""

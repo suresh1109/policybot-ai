@@ -251,13 +251,14 @@ def upload():
             log.info(f"[PIPELINE] Step 2: Gemini Vision fallback | user={user_id}")
             try:
                 v_result = verifier.verify(
-                    file_path  = save_path,
-                    file_bytes = file_bytes,
-                    file_ext   = ext,
-                    doc_type   = doc_type,
-                    stated_age = stated_age,
-                    user_id    = user_id,
-                    session_id = session_id,
+                    file_path   = save_path,
+                    file_bytes  = file_bytes,
+                    file_ext    = ext,
+                    doc_type    = doc_type,
+                    stated_age  = stated_age,
+                    stated_name = stated_name,
+                    user_id     = user_id,
+                    session_id  = session_id,
                 )
                 log.info(f"[PIPELINE] Gemini fallback: {v_result['status']}")
             except Exception as ge:
@@ -307,9 +308,21 @@ def upload():
         # ── Determine which OCR analyzer to call ─────────────────────────
         if doc_type in ("health_report", "condition_report"):
             log.info(f"[PIPELINE] Condition/Health report OCR | user={user_id}")
-            result = ocr.analyze_health_report(file_bytes, ext, user_id)
+            result = ocr.analyze_health_report(
+                file_bytes     = file_bytes,
+                file_ext       = ext,
+                user_id        = user_id,
+                stated_name    = profile.get("name", "") or "",
+                stated_age     = profile.get("age"),
+                stated_gender  = profile.get("gender", "") or "",
+                insurance_type = profile.get("insurance_type", "") or "",
+            )
 
             conditions_found = result.get("conditions", [])
+            identity_check   = result.get("identity_check", {})
+            id_warnings      = result.get("id_warnings", [])
+            risk_level       = result.get("risk_level", "LOW")
+
             if conditions_found:
                 existing = profile.get("medical_conditions", "")
                 new_conds = ", ".join(conditions_found)
@@ -327,15 +340,11 @@ def upload():
                     "condition_report_result":   "No conditions detected",
                 })
 
-            # ── Always advance to collect_budget after condition report ────
+            # Always advance to collect_budget after condition report
             db.upsert_user_profile(user_id, {"onboarding_stage": "collect_budget"})
 
+            # Use the rich formatted reply (includes identity check + conditions)
             reply_msg = result.get("message", "✅ Health report analyzed 👍")
-            if conditions_found:
-                reply_msg = (f"✅ Got it! I found {', '.join(conditions_found)} in your report. "
-                             f"I'll factor this into your plan recommendation 🏥")
-            else:
-                reply_msg = "✅ Health report received and analyzed! No conditions found. Continuing..."
 
             return jsonify({
                 "status":           "success",
@@ -343,6 +352,9 @@ def upload():
                 "reply":            reply_msg,
                 "conditions_found": conditions_found,
                 "doctor":           result.get("doctor", ""),
+                "identity_check":   identity_check,
+                "id_warnings":      id_warnings,
+                "risk_level":       risk_level,
                 "next_stage":       "collect_budget",
                 "options":          ["Under ₹500","₹500–₹1,000","₹1,000–₹2,000","₹2,000–₹5,000","Above ₹5,000"],
                 "option_type":      "radio",
