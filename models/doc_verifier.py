@@ -34,11 +34,19 @@ EXTRACT THESE FIELDS ACCURATELY:
 4. Date of Birth (DOB) — usually labeled "DOB:", "Date of Birth:", "D.O.B:"
    Format usually DD/MM/YYYY
 
-5. Exact ID document type
+5. GENDER — look for any of these on the document:
+   - Aadhaar: "Male" / "Female" / "Transgender" printed on the card
+   - Driving License: "Sex: M" or "Sex: F" or "Gender: Male/Female"
+   - Passport: Sex field in the Machine Readable Zone (M or F)
+   - Voter ID: Often printed as "Male" / "Female"
+   - PAN Card: Gender is NOT shown — return null
+   Return exactly: "Male", "Female", "Other", or null if not present/readable.
+
+6. Exact ID document type
 
 PRIVACY RULE:
 - DO NOT output Aadhaar number, PAN number, DL number, or any numeric ID number
-- DO output full name and DOB — needed for identity verification
+- DO output full name, DOB, and gender — needed for identity verification
 
 IMAGE QUALITY VALUES:
   good=sharp well-lit fully visible | blurry=out of focus | dark=too dim
@@ -54,6 +62,7 @@ OUTPUT ONLY VALID JSON — NO markdown fences, NO explanation:
   "dob_visible": true or false,
   "dob": "DD/MM/YYYY" or null,
   "dob_confidence": "high" | "medium" | "low" | "none",
+  "gender": "Male" | "Female" | "Other" | null,
   "notes": "brief note — no ID numbers"
 }"""
 
@@ -96,6 +105,11 @@ OUTPUT ONLY VALID JSON — NO markdown fences, NO explanation:
         dob_vis    = analysis.get("dob_visible", False)
         dob_raw    = analysis.get("dob")
         dob_conf   = analysis.get("dob_confidence", "none")
+        # Gender — extracted directly from the ID (never asked manually)
+        gender_raw = analysis.get("gender")
+        id_gender  = gender_raw.strip().capitalize() if gender_raw else None
+        if id_gender and id_gender not in ("Male", "Female", "Other"):
+            id_gender = None   # ignore unexpected values
         notes      = analysis.get("notes", "")
 
         log.info(f"[VERIFY] valid={is_valid} id={id_type} quality={quality} "
@@ -175,7 +189,8 @@ OUTPUT ONLY VALID JSON — NO markdown fences, NO explanation:
                 f"{age_badge}"
                 "\n\nYour identity is confirmed — let's continue! 👍",
                 quality=quality, id_type=id_type,
-                dob_year=dob_year, doc_name=name_on_id, notes=notes)
+                dob_year=dob_year, doc_name=name_on_id, notes=notes,
+                id_gender=id_gender)
         else:
             return self._result("age_mismatch", False,
                 f"⚠️ **Age mismatch on your {id_type}!**\n\n"
@@ -320,7 +335,7 @@ OUTPUT ONLY VALID JSON — NO markdown fences, NO explanation:
 
     def _result(self, status, verified, message,
                 quality="", id_type="", dob_year="",
-                doc_name="", notes="", options=None):
+                doc_name="", notes="", options=None, id_gender=""):
         return {
             "status":         status,
             "verified":       verified,
@@ -333,6 +348,7 @@ OUTPUT ONLY VALID JSON — NO markdown fences, NO explanation:
             "notes":          notes,
             "options":        options or [],
             "option_type":    "radio" if options else "none",
+            "id_gender":      id_gender,     # extracted from ID, never asked manually
         }
 
     @staticmethod

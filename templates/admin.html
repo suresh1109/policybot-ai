@@ -34,6 +34,34 @@
   </div>
 </nav>
 
+<!-- ── FRAUD ALERT BELL (fixed top-right) ─────────────────────────────── -->
+<div class="fraud-bell-wrap" id="fraud-bell-wrap" onclick="openFraudAlerts()" title="Fraud Alerts">
+  <i class="fas fa-bell"></i>
+  <span class="fraud-bell-badge hidden" id="fraud-bell-badge">0</span>
+</div>
+
+<!-- ── FRAUD ALERT PANEL (slide-in) ──────────────────────────────────── -->
+<div class="fraud-panel hidden" id="fraud-alert-panel">
+  <div class="fraud-panel-header">
+    <div class="fraud-panel-title">
+      <i class="fas fa-triangle-exclamation" style="color:#ef4444"></i>
+      High Risk Alerts
+    </div>
+    <button class="fraud-panel-close" onclick="closeFraudPanel()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="fraud-panel-body" id="fraud-panel-body">
+    <div class="fraud-panel-empty">Checking for alerts…</div>
+  </div>
+  <div class="fraud-panel-footer">
+    <a onclick="showSection('fraud'); closeFraudPanel();" class="fraud-panel-link">
+      View All Fraud Data →
+    </a>
+  </div>
+</div>
+<div class="fraud-panel-backdrop hidden" id="fraud-backdrop" onclick="closeFraudPanel()"></div>
+
 <main class="admin-content">
 
 <!-- DASHBOARD -->
@@ -270,7 +298,7 @@
 </section>
 
 </main>
-<script src="/static/js/admin.js?v=4"></script>
+<script src="/static/js/admin.js?v=5"></script>
 
 <script>
 /* ── 3D Floating Shield Animation ───────────────────────────────────────── */

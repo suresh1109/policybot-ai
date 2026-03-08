@@ -1,44 +1,117 @@
-# ============================================================
-# PolicyBot v4 — Python Requirements
-# ============================================================
-# Install command:
+# ==============================================================
+# PolicyBot v22 — Python Dependencies
+# ==============================================================
+#
+# INSTALL COMMAND:
 #   pip install -r requirements.txt
 #
-# Also required (system package, NOT pip):
-#   Windows : https://github.com/UB-Mannheim/tesseract/wiki
-#             Install path: C:\Program Files\Tesseract-OCR\tesseract.exe
-#   Ubuntu  : sudo apt install tesseract-ocr poppler-utils
-#   macOS   : brew install tesseract poppler
-# ============================================================
+# ──────────────────────────────────────────────────────────────
+# SYSTEM PACKAGES  (install these FIRST, before pip)
+# ──────────────────────────────────────────────────────────────
+#
+#   Ubuntu / Debian / WSL2:
+#     sudo apt update
+#     sudo apt install -y \
+#       tesseract-ocr tesseract-ocr-eng \
+#       poppler-utils \
+#       libgl1-mesa-glx libglib2.0-0 \
+#       libsm6 libxext6 libxrender1
+#
+#   macOS (Homebrew):
+#     brew install tesseract poppler
+#
+#   Windows:
+#     Tesseract  → https://github.com/UB-Mannheim/tesseract/wiki
+#                  Install to: C:\Program Files\Tesseract-OCR\
+#     Poppler    → https://github.com/oschwartz10612/poppler-windows/releases
+#                  Extract and add the bin\ folder to your PATH
+#
+# ──────────────────────────────────────────────────────────────
+# GEMINI API KEY  (required — bot cannot reply without it)
+# ──────────────────────────────────────────────────────────────
+#   Free key at: https://aistudio.google.com/app/apikey
+#   Add to .env as GEMINI_API_KEY_1=your_key_here
+# ==============================================================
 
-# ── Web Framework ────────────────────────────────────────────
+
+# ── Flask Web Framework ───────────────────────────────────────
 Flask==3.1.2
-flask-cors==4.0.1
 Werkzeug==3.1.5
 Jinja2==3.1.6
 itsdangerous==2.2.0
 click==8.3.1
+flask-cors==4.0.1
 
-# ── Environment & Config ─────────────────────────────────────
+
+# ── Environment / Config ──────────────────────────────────────
 python-dotenv==1.2.1
 
-# ── Gemini AI (conversation + optional Vision fallback) ──────
-google-generativeai==0.7.2
 
-# ── Offline OCR — Image Processing ──────────────────────────
+# ── Gemini AI  (chat engine + optional Vision OCR fallback) ───
+# Required for all bot responses. Without a valid key the bot
+# will start but cannot answer any user messages.
+google-generativeai==0.8.3
+
+
+# ── OCR / Image processing  (Gov ID + health report scanning) ─
 pytesseract==0.3.13
-opencv-python==4.13.0.92
-Pillow==12.1.1
-numpy==2.4.2
+opencv-python-headless==4.10.0.84
+Pillow==10.4.0
+numpy==1.26.4
 
-# ── Document Reading ─────────────────────────────────────────
-pypdf==5.9.0
+
+# ── Document reading  (PDF / DOCX uploads) ───────────────────
+pypdf==4.3.1
 pdf2image==1.17.0
-python-docx==1.2.0
-pi
-# ── Production Server ────────────────────────────────────────
+python-docx==1.1.2
+
+
+# ── PDF report generation ─────────────────────────────────────
+reportlab==4.2.5
+
+
+# ── HTTP client  (WhatsApp API + outbound requests) ───────────
+requests==2.32.3
+
+
+# ── Production WSGI server ────────────────────────────────────
 gunicorn==22.0.0
 
-# ── Optional: Vector DB for RAG ──────────────────────────────
-faiss-cpu==1.8.0
-chromadb==0.5.0
+
+# ==============================================================
+# OPTIONAL — Vector / semantic search  (uncomment to enable)
+# ==============================================================
+# faiss-cpu==1.8.0
+# chromadb==0.5.0
+
+
+# ==============================================================
+# PIN NOTES — why each version is pinned where it is
+# ==============================================================
+#
+# google-generativeai 0.8.3
+#   Last stable pre-1.x SDK.  Works with gemini-1.5-flash and
+#   gemini-1.5-pro.  The 1.x series changed the entire API surface.
+#
+# opencv-python-headless 4.10.0.84
+#   Headless variant has no GUI dependencies — safe on servers,
+#   Railway, Render, Docker, Heroku.  On a local desktop you can
+#   swap to opencv-python at the same version number.
+#
+# Pillow 10.4.0
+#   Pillow 11+ renamed LANCZOS → Resampling.LANCZOS and removed
+#   several constants used by pdf2image and older cv2 glue code.
+#   Pinned to 10.x for safety.
+#
+# numpy 1.26.4
+#   OpenCV 4.10 requires numpy < 2.  numpy 2.x changed the C ABI
+#   and breaks cv2 at import time.
+#
+# pypdf 4.3.1
+#   pypdf 5.x changed PdfReader, PageObject, and stream internals.
+#   Pinned to 4.x until policy_kb.py is updated for 5.x.
+#
+# reportlab 4.2.5
+#   The PDF report uses platypus/flowables API stable since 3.x.
+#   4.2.5 is the latest tested release.
+# ==============================================================

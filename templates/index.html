@@ -1,70 +1,200 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="body-root" class="theme-neon">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PolicyBot AI v3 — Insurance Advisor</title>
+<title>PolicyBot AI — Insurance Advisor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="/static/css/main.css">
+<link rel="stylesheet" href="/static/css/main.css?v=22">
 </head>
-<body class="theme-neon" id="body-root">
+<body>
 
-<canvas id="particle-canvas"></canvas>
-<div class="bg-grid"></div>
-<div class="bg-orb orb-1"></div>
-<div class="bg-orb orb-2"></div>
+<!-- ═══════════════════════════════════════════════
+     LANDING SCREEN — Full PC style
+═══════════════════════════════════════════════ -->
+<div class="landing-screen" id="landing-screen">
 
-<!-- HEADER -->
-<header class="app-header">
-  <div class="hdr-left">
-    <div class="logo-wrap">
-      <div class="logo-icon"><i class="fas fa-shield-halved"></i></div>
-      <div>
-        <div class="logo-name">PolicyBot <span class="ver-badge">v3</span></div>
-        <div class="logo-sub">AI Insurance Advisor · Gemini Vision</div>
+  <!-- WebGL 3D animated background -->
+  <canvas id="landing-3d" class="landing-3d-canvas"></canvas>
+  <div class="landing-overlay"></div>
+
+  <!-- TOP NAV -->
+  <nav class="lp-nav">
+    <div class="lp-nav-logo">
+      <div class="lp-nav-icon"><i class="fas fa-shield-halved"></i></div>
+      <span class="lp-nav-brand">PolicyBot <em>AI</em></span>
+    </div>
+    <div class="lp-nav-links">
+      <span onclick="launchChatWith('Health Insurance')">Health</span>
+      <span onclick="launchChatWith('Vehicle Insurance')">Vehicle</span>
+      <span onclick="launchChatWith('Term / Life Insurance')">Life</span>
+      <span onclick="launchChatWith('Travel Insurance')">Travel</span>
+      <span onclick="launchChatWith('Property Insurance')">Property</span>
+    </div>
+    <button class="lp-nav-cta" onclick="launchChat()">
+      <i class="fas fa-bolt"></i> Get Started Free
+    </button>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <div class="lp-hero">
+
+    <!-- LEFT: headline + CTA -->
+    <div class="lp-hero-left">
+
+      <div class="lp-trust-row">
+        <span class="lp-trust-badge"><span class="lp-live-dot"></span>AI Powered</span>
+        <span class="lp-trust-badge"><i class="fas fa-lock"></i> Bank-grade Security</span>
+        <span class="lp-trust-badge"><i class="fas fa-bolt"></i> 2-min Quotes</span>
+      </div>
+
+      <h1 class="lp-headline">
+        Find the <span class="lp-hl-grad">Perfect Insurance</span><br>
+        Plan with AI
+      </h1>
+      <p class="lp-subline">
+        PolicyBot analyzes your profile, verifies your documents with OCR,
+        and recommends the best plans — personalized for you and your family.
+      </p>
+
+      <div class="lp-btn-row">
+        <button class="lp-btn-primary" onclick="launchChat()">
+          <i class="fas fa-comments"></i> Start Chat
+        </button>
+        <button class="lp-btn-voice" id="lp-voice-btn" onclick="launchChatVoice()">
+          <div class="lp-orb" id="lp-orb">
+            <div class="lp-orb-ring r1"></div>
+            <div class="lp-orb-ring r2"></div>
+            <i class="fas fa-microphone"></i>
+          </div>
+          <span>Talk to AI</span>
+        </button>
+      </div>
+
+      <div class="lp-stats">
+        <div class="lp-stat"><div class="lp-stat-n">50K+</div><div class="lp-stat-l">Users Served</div></div>
+        <div class="lp-stat-sep"></div>
+        <div class="lp-stat"><div class="lp-stat-n">200+</div><div class="lp-stat-l">Plans Compared</div></div>
+        <div class="lp-stat-sep"></div>
+        <div class="lp-stat"><div class="lp-stat-n">4.9 ★</div><div class="lp-stat-l">User Rating</div></div>
+        <div class="lp-stat-sep"></div>
+        <div class="lp-stat"><div class="lp-stat-n">₹0</div><div class="lp-stat-l">Always Free</div></div>
       </div>
     </div>
-  </div>
-  <div class="hdr-right">
-    <div class="theme-strip" id="theme-strip">
-      <button class="th-btn active" data-theme="neon"    title="Neon Dark"><i class="fas fa-moon"></i></button>
-      <button class="th-btn"        data-theme="clean"   title="Light"><i class="fas fa-sun"></i></button>
-      <button class="th-btn"        data-theme="glass"   title="Glass"><i class="fas fa-gem"></i></button>
-      <button class="th-btn"        data-theme="minimal" title="Minimal"><i class="fas fa-circle-half-stroke"></i></button>
-    </div>
-    <select class="lang-sel" id="lang-sel" onchange="setLang(this.value)">
-      <option value="English">IN English</option>
-      <option value="Tamil">IN Tamil</option>
-      <option value="Hindi">IN Hindi</option>
-    </select>
-    <button class="icon-btn" onclick="toggleFontSize()" title="Font size"><i class="fas fa-text-height"></i></button>
-    <a href="/admin/login" class="hdr-admin-btn"><i class="fas fa-chart-pie"></i> Admin</a>
-  </div>
-</header>
 
-<!-- MAIN LAYOUT -->
-<div class="app-body">
+    <!-- RIGHT: animated orb + floating cards -->
+    <div class="lp-hero-right">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-
-    <!-- Profile card -->
-    <div class="side-card profile-card">
-      <div class="profile-avatar-wrap">
-        <div class="profile-avatar-ring"><i class="fas fa-user-circle"></i></div>
-        <div class="id-verified-dot hidden" id="id-verified-dot" title="ID Verified">
-          <i class="fas fa-check"></i>
+      <!-- Big animated orb -->
+      <div class="lp-big-orb-wrap">
+        <div class="lp-big-orb">
+          <div class="lp-bo-ring br1"></div>
+          <div class="lp-bo-ring br2"></div>
+          <div class="lp-bo-ring br3"></div>
+          <div class="lp-bo-core"><i class="fas fa-shield-halved"></i></div>
         </div>
       </div>
-      <div class="profile-name" id="p-name">Your Profile</div>
-      <div class="profile-fields" id="p-fields">
-        <div class="pf-row hidden" id="pf-ins"><i class="fas fa-heart-pulse"></i><span id="pv-ins">—</span></div>
-        <div class="pf-row hidden" id="pf-age"><i class="fas fa-calendar"></i><span id="pv-age">—</span></div>
-        <div class="pf-row hidden" id="pf-city"><i class="fas fa-location-dot"></i><span id="pv-city">—</span></div>
-        <div class="pf-row hidden" id="pf-budget"><i class="fas fa-indian-rupee-sign"></i><span id="pv-budget">—</span></div>
-        <div class="pf-row hidden" id="pf-medical"><i class="fas fa-syringe"></i><span id="pv-medical">—</span></div>
+
+      <!-- Floating insurance type cards -->
+      <div class="lp-float-card lp-fc-tl" onclick="launchChatWith('Health Insurance')">
+        <i class="fas fa-heart-pulse"></i>
+        <div><div class="lp-fc-t">Health</div><div class="lp-fc-s">Insurance</div></div>
+      </div>
+      <div class="lp-float-card lp-fc-tr" onclick="launchChatWith('Vehicle Insurance')">
+        <i class="fas fa-car"></i>
+        <div><div class="lp-fc-t">Vehicle</div><div class="lp-fc-s">Insurance</div></div>
+      </div>
+      <div class="lp-float-card lp-fc-bl" onclick="launchChatWith('Term / Life Insurance')">
+        <i class="fas fa-umbrella"></i>
+        <div><div class="lp-fc-t">Life</div><div class="lp-fc-s">Insurance</div></div>
+      </div>
+      <div class="lp-float-card lp-fc-br" onclick="launchChatWith('Travel Insurance')">
+        <i class="fas fa-plane"></i>
+        <div><div class="lp-fc-t">Travel</div><div class="lp-fc-s">Insurance</div></div>
+      </div>
+
+      <!-- Live notification toast -->
+      <div class="lp-notif">
+        <div class="lp-notif-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="lp-notif-text">
+          <div class="lp-notif-title">Suresh saved ₹4,200/yr</div>
+          <div class="lp-notif-sub">Switched to Star Health · just now</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM QUICK-START BAR -->
+  <div class="lp-quickbar">
+    <span class="lp-qb-label">Choose Insurance Type →</span>
+    <div class="lp-qb-item" onclick="launchChatWith('Health Insurance')"><i class="fas fa-heart-pulse"></i> Health</div>
+    <div class="lp-qb-item" onclick="launchChatWith('Vehicle Insurance')"><i class="fas fa-car"></i> Vehicle</div>
+    <div class="lp-qb-item" onclick="launchChatWith('Term / Life Insurance')"><i class="fas fa-umbrella"></i> Life / Term</div>
+    <div class="lp-qb-item" onclick="launchChatWith('Travel Insurance')"><i class="fas fa-plane"></i> Travel</div>
+    <div class="lp-qb-item" onclick="launchChatWith('Property Insurance')"><i class="fas fa-home"></i> Property</div>
+    <div class="lp-qb-item" onclick="launchChatWith('Accident Insurance')"><i class="fas fa-user-shield"></i> Accident</div>
+  </div>
+
+</div><!-- end landing-screen -->
+
+
+<!-- ═══════════════════════════════════════════════
+     CHAT PAGE  (ChatGPT-style full-window layout)
+═══════════════════════════════════════════════ -->
+<div class="gpt-shell hidden" id="floating-shell">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="gpt-sidebar" id="sidebar">
+
+    <!-- ── XP Progress Bar ────────────────────────────────────────────────── -->
+    <div class="xp-bar-wrap hidden" id="xp-bar-wrap">
+      <div class="xp-bar-top">
+        <span class="xp-level-icon" id="xp-level-icon">🌱</span>
+        <span class="xp-level-name" id="xp-level-name">Beginner</span>
+        <span class="xp-total" id="xp-total">0 XP</span>
+      </div>
+      <div class="xp-bar-track">
+        <div class="xp-bar-fill" id="xp-bar-fill" style="width:0%"></div>
+      </div>
+      <div class="xp-badges-row" id="xp-badges-row"></div>
+    </div>
+
+    <!-- Sidebar header -->
+    <div class="gsb-header">
+      <div class="gsb-logo">
+        <div class="gsb-logo-icon"><i class="fas fa-shield-halved"></i></div>
+        <span class="gsb-logo-name">PolicyBot</span>
+      </div>
+      <button class="gsb-new-btn" onclick="startNewChat()" title="New chat">
+        <i class="fas fa-pen-to-square"></i>
+      </button>
+    </div>
+
+    <!-- Scrollable sidebar body -->
+    <div class="gsb-scroll">
+
+    <!-- Profile section -->
+    <div class="gsb-section">
+      <div class="gsb-section-label">Your Profile</div>
+      <div class="gsb-profile" id="gsb-profile">
+        <div class="gsb-avatar-wrap">
+          <div class="gsb-avatar"><i class="fas fa-user-circle"></i></div>
+          <div class="id-verified-dot hidden" id="id-verified-dot"><i class="fas fa-check"></i></div>
+        </div>
+        <div class="gsb-profile-info">
+          <div class="gsb-profile-name" id="p-name">Your Profile</div>
+          <div class="gsb-profile-fields" id="p-fields">
+            <div class="pf-row hidden" id="pf-ins"><i class="fas fa-heart-pulse"></i><span id="pv-ins">—</span></div>
+            <div class="pf-row hidden" id="pf-age"><i class="fas fa-calendar"></i><span id="pv-age">—</span></div>
+            <div class="pf-row hidden" id="pf-city"><i class="fas fa-location-dot"></i><span id="pv-city">—</span></div>
+            <div class="pf-row hidden" id="pf-budget"><i class="fas fa-indian-rupee-sign"></i><span id="pv-budget">—</span></div>
+            <div class="pf-row hidden" id="pf-medical"><i class="fas fa-syringe"></i><span id="pv-medical">—</span></div>
+            <div class="pf-row hidden" id="pf-risk"><i class="fas fa-chart-bar"></i><span id="pv-risk">—</span></div>
+            <div class="pf-row hidden" id="pf-premium"><i class="fas fa-rupee-sign"></i><span id="pv-premium">—</span></div>
+          </div>
+        </div>
       </div>
       <div class="verif-row hidden" id="verif-row">
         <div class="verif-item">
@@ -74,76 +204,82 @@
       </div>
     </div>
 
-    <!-- Upload card — HIDDEN by default, JS shows it at upload stages -->
-    <div class="side-card upload-card hidden" id="upload-card">
-      <div class="upload-header">
-        <i class="fas fa-lock"></i> Secure Upload
-        <span class="ocr-badge" id="ocr-badge" title="Offline OCR Active">OCR</span>
-      </div>
-      <div class="upload-privacy-note">
-        <i class="fas fa-lock" style="color:var(--success)"></i> Images never stored permanently<br>
-        <i class="fas fa-ban"  style="color:var(--danger)"></i>  ID numbers never recorded
-      </div>
-      <select class="upload-sel" id="up-doc-type">
-        <optgroup label="Government ID">
-          <option value="aadhaar">Aadhaar Card</option>
-          <option value="pan">PAN Card</option>
-          <option value="driving_license">Driving Licence</option>
-          <option value="passport">Passport</option>
-          <option value="voter_id">Voter ID</option>
-        </optgroup>
-        <optgroup label="Health / Condition Docs">
-          <option value="health_report">Health Report / Lab Report</option>
-          <option value="condition_report">Medical Prescription</option>
-        </optgroup>
-        <optgroup label="Vehicle Docs">
-          <option value="rc_book">RC Book</option>
-          <option value="vehicle_insurance">Previous Vehicle Insurance</option>
-        </optgroup>
-        <optgroup label="Life / Term Docs">
-          <option value="life_doc">Medical History / Income Proof</option>
-        </optgroup>
-        <optgroup label="Travel Docs">
-          <option value="travel_doc">Travel Declaration Doc</option>
-        </optgroup>
-        <optgroup label="Property Docs">
-          <option value="property_doc">Property Damage / Claim Proof</option>
-        </optgroup>
-        <optgroup label="Other">
-          <option value="prev_policy">Previous Insurance Policy</option>
-        </optgroup>
-      </select>
-      <label class="upload-drop-zone" id="upload-drop-zone" for="file-upload">
-        <div class="udz-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-        <div class="udz-text">Tap to upload or drag &amp; drop</div>
-        <div class="udz-sub">JPG · PNG · WEBP · GIF · BMP · TIFF · PDF · DOCX · TXT · Max 15MB</div>
-        <input type="file" id="file-upload"
-               accept=".jpg,.jpeg,.png,.webp,.gif,.bmp,.tiff,.tif,.pdf,.docx,.doc,.txt"
-               onchange="handleUpload(this)" hidden>
-      </label>
-      <button class="skip-upload-btn hidden" id="skip-upload-btn" onclick="skipConditionUpload()">
-        <i class="fas fa-forward"></i> Skip — Continue Without
-      </button>
-      <div class="verif-status-box hidden" id="verif-status-box">
-        <div class="vsb-spinner hidden" id="vsb-spinner">
-          <div class="spinner-ring"></div><span>Analyzing document…</span>
+    <!-- Upload section (hidden until needed) -->
+    <div class="gsb-section hidden" id="upload-section-wrap">
+      <div class="gsb-section-label"><i class="fas fa-lock"></i> Secure Upload <span class="ocr-badge" id="ocr-badge">OCR</span></div>
+      <div class="upload-card" id="upload-card">
+        <div class="upload-privacy-note">
+          <i class="fas fa-lock" style="color:var(--success)"></i> Images never stored<br>
+          <i class="fas fa-ban"  style="color:var(--danger)"></i> IDs never recorded
         </div>
-        <div class="vsb-result hidden" id="vsb-result"></div>
+        <select class="upload-sel" id="up-doc-type">
+          <optgroup label="Government ID">
+            <option value="aadhaar">Aadhaar Card</option>
+            <option value="pan">PAN Card</option>
+            <option value="driving_license">Driving Licence</option>
+            <option value="passport">Passport</option>
+            <option value="voter_id">Voter ID</option>
+          </optgroup>
+          <optgroup label="Health / Condition Docs">
+            <option value="medical_report">Medical / Health Report</option>
+            <option value="health_report">Health / Lab Report</option>
+            <option value="condition_report">Medical Prescription</option>
+          </optgroup>
+          <optgroup label="Vehicle Docs">
+            <option value="rc_book">RC Book</option>
+            <option value="vehicle_insurance">Previous Vehicle Insurance</option>
+          </optgroup>
+          <optgroup label="Life / Term Docs">
+            <option value="life_doc">Medical History / Income Proof</option>
+          </optgroup>
+          <optgroup label="Travel Docs">
+            <option value="travel_doc">Travel Declaration Doc</option>
+          </optgroup>
+          <optgroup label="Property Docs">
+            <option value="property_doc">Property Damage / Claim Proof</option>
+          </optgroup>
+          <optgroup label="Other">
+            <option value="prev_policy">Previous Insurance Policy</option>
+          </optgroup>
+        </select>
+        <label class="upload-drop-zone" id="upload-drop-zone" for="file-upload">
+          <div class="udz-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+          <div class="udz-text">Drop file or click to upload</div>
+          <div class="udz-sub">JPG · PNG · PDF · DOCX · Max 15MB</div>
+          <input type="file" id="file-upload"
+                 accept=".jpg,.jpeg,.png,.webp,.gif,.bmp,.tiff,.tif,.pdf,.docx,.doc,.txt"
+                 onchange="handleUpload(this)" hidden>
+        </label>
+        <button class="skip-upload-btn hidden" id="skip-upload-btn" onclick="skipConditionUpload()">
+          <i class="fas fa-forward"></i> Skip
+        </button>
+        <div class="verif-status-box hidden" id="verif-status-box">
+          <div class="vsb-spinner hidden" id="vsb-spinner">
+            <div class="spinner-ring"></div><span>Analyzing…</span>
+          </div>
+          <div class="vsb-result hidden" id="vsb-result"></div>
+        </div>
       </div>
-
     </div>
 
     <!-- Confidence card -->
-    <div class="side-card confidence-card hidden" id="confidence-card">
-      <div class="conf-title"><i class="fas fa-shield-check"></i> Confidence Level</div>
+    <div class="gsb-section hidden" id="confidence-card">
+      <div class="conf-title"><i class="fas fa-shield-check"></i> Confidence</div>
       <div class="conf-value" id="conf-value">—</div>
     </div>
 
-    <!-- Progress card -->
-    <div class="side-card progress-card">
+    <!-- 3D Visualizer -->
+    <div class="gsb-section hidden" id="viz3d-card">
+      <div class="viz3d-header"><i class="fas fa-cube"></i> 3D Plan View<span class="viz3d-badge">LIVE</span></div>
+      <div class="viz3d-canvas-wrap" id="viz3d-canvas"></div>
+      <div class="viz3d-plan-name" id="viz3d-plan-name">Select a plan</div>
+    </div>
+
+    <!-- Progress -->
+    <div class="gsb-section gsb-progress-section">
       <div class="prog-label-row">
         <span class="prog-title" id="prog-stage-label">Getting Started</span>
-        <span class="prog-pct"   id="prog-pct">7%</span>
+        <span class="prog-pct" id="prog-pct">7%</span>
       </div>
       <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:7%"></div></div>
       <div class="prog-dots" id="prog-dots">
@@ -154,19 +290,109 @@
       </div>
     </div>
 
+
+    <!-- ── Claim Probability Gauge (hidden until risk scored) ─────────────── -->
+    <div class="gsb-section hidden" id="claim-prob-card">
+      <div class="gsb-section-label"><i class="fas fa-chart-pie"></i> Claim Probability</div>
+      <div class="claim-gauge-wrap">
+        <svg class="claim-gauge-svg" viewBox="0 0 120 70" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background arc -->
+          <path d="M 10 65 A 50 50 0 0 1 110 65" fill="none" stroke="var(--border)" stroke-width="10" stroke-linecap="round"/>
+          <!-- Colored arc — animated via JS (stroke-dasharray) -->
+          <path id="claim-gauge-arc" d="M 10 65 A 50 50 0 0 1 110 65" fill="none"
+                stroke="#7c6bff" stroke-width="10" stroke-linecap="round"
+                stroke-dasharray="0 157" style="transition:stroke-dasharray 1.2s ease,stroke .4s"/>
+        </svg>
+        <div class="claim-gauge-center">
+          <div class="claim-pct-value" id="claim-pct-value">—</div>
+          <div class="claim-pct-label">chance of claim</div>
+        </div>
+        <div class="claim-gauge-labels">
+          <span>Low</span><span style="margin-left:auto">High</span>
+        </div>
+      </div>
+      <div class="claim-prob-desc" id="claim-prob-desc">Calculated after profile analysis</div>
+    </div>
+
+    <!-- ── Hospital Network (hidden until health plan recommended) ─────────── -->
+    <div class="gsb-section hidden" id="hospital-card">
+      <div class="gsb-section-label"><i class="fas fa-hospital"></i> Cashless Hospitals</div>
+      <div class="hospital-list" id="hospital-list">
+        <div class="hosp-loading"><i class="fas fa-spinner fa-spin"></i> Loading…</div>
+      </div>
+      <div class="hospital-count" id="hospital-count"></div>
+    </div>
+
+    </div><!-- end gsb-scroll -->
+
+    <!-- Sidebar footer -->
+    <div class="gsb-footer">
+      <div class="gsb-footer-row">
+        <div class="theme-strip" id="theme-strip">
+          <button class="th-btn active" data-theme="neon"    title="Neon"><i class="fas fa-moon"></i></button>
+          <button class="th-btn"        data-theme="clean"   title="Light"><i class="fas fa-sun"></i></button>
+          <button class="th-btn"        data-theme="glass"   title="Glass"><i class="fas fa-gem"></i></button>
+          <button class="th-btn"        data-theme="minimal" title="Minimal"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+        <select class="lang-sel" id="lang-sel" onchange="setLang(this.value)">
+          <option value="English">EN</option>
+          <option value="Tamil">தமிழ்</option>
+          <option value="Hindi">हिंदी</option>
+        </select>
+        <a href="/admin/login" class="gsb-admin-btn" title="Admin"><i class="fas fa-chart-pie"></i></a>
+      </div>
+    </div>
+
   </aside>
 
-  <!-- CHAT SECTION -->
-  <section class="chat-area">
+  <!-- MAIN CHAT AREA (ChatGPT style) -->
+  <main class="gpt-main">
+
+    <!-- Top bar -->
+    <div class="gpt-topbar">
+      <div class="gpt-topbar-left">
+        <div class="cph-avatar"><i class="fas fa-shield-halved"></i><div class="cph-online-ring"></div></div>
+        <div class="cph-info">
+          <div class="cph-name">PolicyBot <span class="ver-badge">AI</span></div>
+          <div class="cph-sub"><span class="cph-dot"></span>AI Insurance Advisor</div>
+        </div>
+      </div>
+      <div class="gpt-topbar-right">
+        <div class="theme-strip topbar-theme">
+          <button class="th-btn active" data-theme="neon"    title="Neon Dark"><i class="fas fa-moon"></i></button>
+          <button class="th-btn"        data-theme="clean"   title="Light"><i class="fas fa-sun"></i></button>
+          <button class="th-btn"        data-theme="glass"   title="Glass"><i class="fas fa-gem"></i></button>
+          <button class="th-btn"        data-theme="minimal" title="Minimal"><i class="fas fa-circle-half-stroke"></i></button>
+        </div>
+        <select class="lang-sel topbar-lang" id="topbar-lang" onchange="setLang(this.value)">
+          <option value="English">IN English</option>
+          <option value="Tamil">IN Tamil</option>
+          <option value="Hindi">IN Hindi</option>
+        </select>
+        <button class="icon-btn" onclick="toggleFontSize()" title="Font size"><i class="fas fa-text-height"></i></button>
+        <button class="icon-btn calc-open-btn" onclick="openCalc()" title="Premium Calculator">
+          <i class="fas fa-calculator"></i>
+        </button>
+        <button class="icon-btn pr-open-btn" onclick="openPolicyReader()" title="AI Policy Reader">
+          <i class="fas fa-file-magnifying-glass"></i>
+        </button>
+        <a href="/admin/login" class="topbar-admin-btn"><i class="fas fa-chart-pie"></i> Admin</a>
+      </div>
+    </div>
+
+    <!-- Messages -->
     <div class="chat-messages" id="chat-messages"></div>
 
+    <!-- Typing -->
     <div class="typing-row hidden" id="typing-row">
+      <div class="gpt-typing-avatar"><i class="fas fa-shield-halved"></i></div>
       <div class="typing-bubble">
         <div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div>
       </div>
       <span class="typing-label">PolicyBot is thinking…</span>
     </div>
 
+    <!-- Options zone -->
     <div class="options-zone" id="options-zone"></div>
 
     <!-- Rating panel -->
@@ -179,9 +405,7 @@
         <button class="star-btn" onclick="setStar(4)">★</button>
         <button class="star-btn" onclick="setStar(5)">★</button>
       </div>
-      <div class="rating-labels">
-        <span>Poor</span><span>Below Average</span><span>Average</span><span>Good</span><span>Excellent</span>
-      </div>
+      <div class="rating-labels"><span>Poor</span><span>Below Avg</span><span>Average</span><span>Good</span><span>Excellent</span></div>
       <button class="rating-submit hidden" id="rating-submit" onclick="submitRating()">
         <i class="fas fa-paper-plane"></i> Submit Rating
       </button>
@@ -193,29 +417,28 @@
       <div class="esc-fields">
         <input class="esc-input" id="esc-phone" type="tel"  placeholder="Your phone number (+91...)">
         <input class="esc-input" id="esc-time"  type="text" placeholder="Best time to call (e.g. 10am-12pm)">
-        <button class="esc-btn" onclick="submitEscalation()">
-          <i class="fas fa-phone"></i> Request Callback
+        <button class="esc-btn" onclick="submitEscalation()"><i class="fas fa-phone"></i> Request Callback</button>
+      </div>
+    </div>
+
+    <!-- Input area (ChatGPT style) -->
+    <div class="gpt-input-wrap">
+      <div class="gpt-input-box" id="gpt-input-box">
+        <button class="gpt-mic-btn" id="mic-btn" onclick="toggleVoice()" title="Voice input">
+          <i class="fas fa-microphone" id="mic-icon"></i>
+          <div class="mic-ring" id="mic-ring"></div>
+        </button>
+        <textarea id="chat-input"
+          placeholder="Message PolicyBot…"
+          rows="1" onkeydown="onKey(event)" oninput="autoH(this)"></textarea>
+        <button class="gpt-send-btn" onclick="sendMsg()">
+          <i class="fas fa-arrow-up"></i>
         </button>
       </div>
+      <div class="gpt-input-hint">PolicyBot AI — Insurance Advisor · India</div>
     </div>
 
-    <!-- Input bar -->
-    <div class="input-bar">
-      <button class="mic-btn" id="mic-btn" onclick="toggleVoice()" title="Voice input">
-        <i class="fas fa-microphone" id="mic-icon"></i>
-        <div class="mic-ring" id="mic-ring"></div>
-      </button>
-      <div class="input-box">
-        <textarea id="chat-input"
-          placeholder="Type your message or choose an option above..."
-          rows="1" onkeydown="onKey(event)" oninput="autoH(this)"></textarea>
-      </div>
-      <button class="send-btn" onclick="sendMsg()">
-        <i class="fas fa-paper-plane"></i>
-      </button>
-    </div>
-
-    <!-- Voice waveform -->
+    <!-- Waveform -->
     <div class="waveform-bar hidden" id="waveform-bar">
       <div class="wf-wrap">
         <div class="wf-icon"><i class="fas fa-microphone"></i></div>
@@ -231,8 +454,10 @@
       </div>
       <button class="wf-stop" onclick="stopVoice()"><i class="fas fa-stop"></i> Stop</button>
     </div>
-  </section>
-</div>
+
+  </main>
+
+</div><!-- end gpt-shell -->
 
 <!-- Toast -->
 <div id="toast-wrap"></div>
@@ -259,14 +484,212 @@
     <div class="verif-overlay-steps">
       <div class="vos active" id="vos-1"><i class="fas fa-upload"></i> Document Received</div>
       <div class="vos"        id="vos-2"><i class="fas fa-search"></i> Checking Image Quality</div>
-      <div class="vos"        id="vos-3"><i class="fas fa-font"></i> Extracting Text (OCR)</div>
-      <div class="vos"        id="vos-4"><i class="fas fa-calendar-alt"></i> Finding Date of Birth</div>
-      <div class="vos"        id="vos-5"><i class="fas fa-user-check"></i> Verifying Age Match</div>
+      <div class="vos"        id="vos-3"><i class="fas fa-id-badge"></i> Extracting Name &amp; DOB</div>
+      <div class="vos"        id="vos-4"><i class="fas fa-user-check"></i> Verifying Name Match</div>
+      <div class="vos"        id="vos-5"><i class="fas fa-calendar-check"></i> Verifying Age Match</div>
     </div>
     <div class="verif-overlay-sub" id="verif-overlay-sub">Please wait...</div>
   </div>
 </div>
 
-<script src="/static/js/app.js"></script>
+<div class="health-report-card" id="health-report-card" style="display:none"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" onerror="console.warn('Three.js unavailable')"></script>
+<script src="/static/js/insurance3d.js" onerror="console.warn('insurance3d.js not found')"></script>
+<script src="/static/js/app.js?v=22"></script>
+
+<!-- ══════════════════════════════════════════════════════════
+     PREMIUM CALCULATOR MODAL
+════════════════════════════════════════════════════════════ -->
+<div class="calc-overlay hidden" id="calc-overlay" onclick="if(event.target===this)closeCalc()">
+  <div class="calc-modal">
+    <div class="calc-header">
+      <div class="calc-header-left">
+        <div class="calc-icon"><i class="fas fa-calculator"></i></div>
+        <div>
+          <div class="calc-title">Premium Calculator</div>
+          <div class="calc-sub">Instant quote — no sign-up needed</div>
+        </div>
+      </div>
+      <button class="calc-close" onclick="closeCalc()"><i class="fas fa-times"></i></button>
+    </div>
+
+    <div class="calc-body">
+      <!-- LEFT: inputs -->
+      <div class="calc-inputs">
+
+        <div class="calc-field">
+          <label class="calc-label">Insurance Type</label>
+          <select class="calc-sel" id="ci-ins">
+            <option value="health">🏥 Health Insurance</option>
+            <option value="vehicle">🚗 Vehicle Insurance</option>
+            <option value="term life">💼 Term / Life Insurance</option>
+            <option value="travel">✈️ Travel Insurance</option>
+            <option value="property">🏠 Property Insurance</option>
+            <option value="accident">⚡ Personal Accident</option>
+          </select>
+        </div>
+
+        <div class="calc-field">
+          <label class="calc-label">Your Age <span id="ci-age-val" class="calc-val-lbl">30</span></label>
+          <div class="calc-slider-wrap">
+            <span>18</span>
+            <input type="range" class="calc-slider" id="ci-age" min="18" max="75" value="30"
+              oninput="document.getElementById('ci-age-val').textContent=this.value; calcPreview()">
+            <span>75</span>
+          </div>
+        </div>
+
+        <div class="calc-field">
+          <label class="calc-label">Coverage</label>
+          <select class="calc-sel" id="ci-cov" onchange="calcPreview()">
+            <option value="Myself only">👤 Myself only</option>
+            <option value="Me and my spouse">👫 Me &amp; Spouse</option>
+            <option value="Myself and children">👨‍👧 Me &amp; Children</option>
+            <option value="Whole family">👨‍👩‍👧‍👦 Whole Family</option>
+          </select>
+        </div>
+
+        <div class="calc-field" id="ci-fam-field" style="display:none">
+          <label class="calc-label">Family Members <span id="ci-fam-val" class="calc-val-lbl">3</span></label>
+          <div class="calc-slider-wrap">
+            <span>2</span>
+            <input type="range" class="calc-slider" id="ci-fam" min="2" max="8" value="3"
+              oninput="document.getElementById('ci-fam-val').textContent=this.value; calcPreview()">
+            <span>8</span>
+          </div>
+        </div>
+
+        <div class="calc-field">
+          <label class="calc-label">Medical Conditions</label>
+          <select class="calc-sel" id="ci-med" onchange="calcPreview()">
+            <option value="None">✅ None</option>
+            <option value="Diabetes">🩸 Diabetes</option>
+            <option value="Hypertension">💊 Hypertension / BP</option>
+            <option value="Asthma">🫁 Asthma / Respiratory</option>
+            <option value="Thyroid">🦋 Thyroid</option>
+            <option value="Heart condition">❤️ Heart Condition</option>
+            <option value="Kidney disease">🫘 Kidney Disease</option>
+            <option value="Cancer">🎗️ Cancer</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: result -->
+      <div class="calc-result" id="calc-result">
+        <div class="calc-result-idle">
+          <i class="fas fa-calculator" style="font-size:32px;opacity:.3;margin-bottom:12px"></i>
+          <div>Adjust sliders to see<br>your instant quote</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="calc-footer">
+      <div class="calc-disclaimer">
+        <i class="fas fa-info-circle"></i>
+        Estimates based on market averages. Actual premium may vary by insurer and policy terms.
+      </div>
+      <button class="calc-cta" onclick="closeCalc(); launchChat()">
+        <i class="fas fa-comments"></i> Get Exact Quote from PolicyBot
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     AI POLICY DOCUMENT READER MODAL
+══════════════════════════════════════════════════════════════ -->
+<div class="pr-overlay hidden" id="pr-overlay" onclick="if(event.target===this)closePolicyReader()">
+  <div class="pr-modal">
+
+    <div class="pr-header">
+      <div class="pr-header-left">
+        <div class="pr-icon"><i class="fas fa-file-magnifying-glass"></i></div>
+        <div>
+          <div class="pr-title">AI Policy Document Reader</div>
+          <div class="pr-sub">Upload your existing policy — AI finds gaps &amp; exclusions instantly</div>
+        </div>
+      </div>
+      <button class="pr-close" onclick="closePolicyReader()"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- Upload zone -->
+    <div class="pr-upload-zone" id="pr-upload-zone"
+         onclick="document.getElementById('pr-file-input').click()"
+         ondragover="event.preventDefault();this.classList.add('drag-over')"
+         ondragleave="this.classList.remove('drag-over')"
+         ondrop="event.preventDefault();this.classList.remove('drag-over');handlePRDrop(event)">
+      <input type="file" id="pr-file-input" accept=".pdf,.jpg,.jpeg,.png,.docx,.txt" style="display:none"
+             onchange="handlePRFile(this.files[0])">
+      <div class="pr-upload-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+      <div class="pr-upload-title">Drop your policy document here</div>
+      <div class="pr-upload-sub">PDF, JPG, PNG, DOCX, TXT · Max 15MB</div>
+      <div class="pr-upload-btn">Choose File</div>
+    </div>
+
+    <!-- Progress bar (hidden until upload) -->
+    <div class="pr-progress-wrap hidden" id="pr-progress-wrap">
+      <div class="pr-progress-bar" id="pr-progress-bar"></div>
+      <div class="pr-progress-label" id="pr-progress-label">Uploading…</div>
+    </div>
+
+    <!-- Results (hidden until analysis done) -->
+    <div class="pr-results hidden" id="pr-results">
+
+      <div class="pr-results-header">
+        <div class="pr-results-title"><i class="fas fa-shield-halved"></i> Policy Analysis Complete</div>
+        <div class="pr-results-badge" id="pr-results-badge">Health Insurance</div>
+      </div>
+
+      <div class="pr-summary" id="pr-summary"></div>
+
+      <div class="pr-grid">
+        <!-- Coverage Found -->
+        <div class="pr-card pr-card-good">
+          <div class="pr-card-title"><i class="fas fa-circle-check"></i> Coverage Found</div>
+          <ul class="pr-list pr-list-good" id="pr-coverage-list"></ul>
+        </div>
+        <!-- Gaps -->
+        <div class="pr-card pr-card-warn">
+          <div class="pr-card-title"><i class="fas fa-triangle-exclamation"></i> Gaps Detected</div>
+          <ul class="pr-list pr-list-warn" id="pr-gaps-list"></ul>
+        </div>
+        <!-- Exclusions -->
+        <div class="pr-card pr-card-bad">
+          <div class="pr-card-title"><i class="fas fa-ban"></i> Exclusions &amp; Waiting Periods</div>
+          <ul class="pr-list pr-list-bad" id="pr-exclusions-list"></ul>
+        </div>
+        <!-- Recommendations -->
+        <div class="pr-card pr-card-blue">
+          <div class="pr-card-title"><i class="fas fa-lightbulb"></i> AI Recommendations</div>
+          <ul class="pr-list pr-list-blue" id="pr-recs-list"></ul>
+        </div>
+      </div>
+
+      <div class="pr-actions">
+        <button class="pr-action-btn pr-action-chat" onclick="closePolicyReader();launchChat()">
+          <i class="fas fa-comments"></i> Get Better Coverage with PolicyBot
+        </button>
+        <button class="pr-action-btn pr-action-reset" onclick="resetPolicyReader()">
+          <i class="fas fa-arrow-rotate-left"></i> Analyze Another Policy
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     GAMIFICATION: XP Badge popup (top-center flash)
+══════════════════════════════════════════════════════════════ -->
+<div class="xp-popup hidden" id="xp-popup">
+  <div class="xp-popup-icon" id="xp-popup-icon">🚀</div>
+  <div class="xp-popup-body">
+    <div class="xp-popup-badge" id="xp-popup-badge">First Step</div>
+    <div class="xp-popup-pts" id="xp-popup-pts">+10 XP</div>
+  </div>
+</div>
+
 </body>
 </html>

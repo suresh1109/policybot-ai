@@ -1,17 +1,15 @@
 """
-ConversationEngine v6 — Insurance-type-aware condition checks + document upload
-NEW IN v6:
-  - After collect_medical: branches based on insurance type AND conditions selected
-  - Health Insurance + condition → condition_report_upload → condition_report_wait → collect_budget
-  - Health Insurance + None → optional_health_check (skippable) → collect_budget
-  - Vehicle Insurance → vehicle_history → (if doc needed) vehicle_doc_upload → collect_budget
-  - Life/Term Insurance → life_docs → collect_budget
-  - Travel Insurance → travel_declare → collect_budget
-  - Property Insurance → property_history → collect_budget
-  - All new upload stages are LOCKED (only /api/upload or skip exits)
-  - After condition doc branch → returns to main recommendation module
+ConversationEngine v7 — Coverage selection + Family member collection + Medical gate + Optional medical report
+NEW IN v7:
+  - collect_coverage:        after collect_city — 3 options, "Myself only" skips family
+  - collect_family_count:    ask how many members to cover
+  - collect_family_members:  collects relationship+age per member iteratively
+  - collect_medical_status:  yes/no gate BEFORE detailed medical conditions multi-select
+  - optional_medical_report: optional health report upload right after medical check
+  - All new stages slot into existing _next() flow, no existing branch broken
 """
 import json, re
+from models.conversation_memory import memory_manager, ALL_STEPS, FIELD_TO_STEP
 
 SYSTEM_PROMPT = """You are PolicyBot, a warm AI Insurance Advisor for India.
 
@@ -39,24 +37,37 @@ STRICT STEP ORDER — DO NOT BREAK UNDER ANY CIRCUMSTANCE:
 1. Insurance type (radio shown)
 2. NAME — ALWAYS ask "Nice choice 👍 May I know your name?" after insurance type
 3. Age — ask "Thanks [name]! How old are you?"
-4. Gov ID upload — tell user to use upload widget on the left sidebar
+4. Gov ID upload — upload widget appears automatically in sidebar
 5. Verification wait — ONLY say waiting message
-6. Gender (radio shown)
-7. City
-8. Family members (multi-select shown)
-9. Medical conditions (multi-select shown)
-   → If condition exists (Health): ask to upload health/condition report
-   → If None (Health): optional general health check (skippable)
-   → Vehicle: ask about previous policy / accident history
-   → Life/Term: ask about medical history / income proof
-   → Travel: ask about health or trip declarations
-   → Property: ask about previous damage / claim history
-10. Budget (radio shown)
-11. Recommend 2-3 plans with full details
-12. Explain selected plan
-13. Ask about human advisor
-14. Ask for 1-5 star rating
-15. Farewell
+   → Gender is AUTOMATICALLY extracted from ID. NEVER ask gender as a question.
+6. City — ask which city
+7. Coverage — ask who the policy should cover (radio: Myself only / Spouse and children / Whole family)
+8. Family (ONLY if coverage ≠ "Myself only"):
+   a. How many members to cover (number input)
+   b. Does anyone in the family have medical conditions? (YES/NO only — do NOT ask per-member docs)
+9. Main user medical — "Do you have any existing medical conditions?" (main user only)
+   → If YES: ask them to briefly describe the condition(s)
+   → If NO: ask to upload health report for verification (main user only, optional)
+10. Optional medical report — upload widget for MAIN USER ONLY
+    → Health report analysis applies only to main user, NOT family
+11. Insurance-type-specific branch (health report / vehicle / life / travel / property)
+12. Budget (radio shown)
+13. REVIEW DETAILS — Show full summary of collected info. Ask "Continue or Change Details?"
+    → Continue: proceed silently (backend runs fraud check + risk scoring + premium prediction)
+    → Change Details: let user update specific fields, then show review again
+14. Recommend 2-3 plans with full details + estimated premium range from risk analysis
+    → If family has conditions: recommend family plans covering pre-existing diseases
+    → If main user has condition: recommend plans for pre-existing disease cover
+    → If no conditions + normal health report: recommend standard plans
+15. Explain selected plan
+16. Ask about human advisor
+17. Ask for 1-5 star rating
+18. Farewell
+
+SMART EXTRACTION RULE:
+- If the user mentions their name, age, insurance type, or city in their FIRST message, do NOT ask for that info again.
+- Example: "I am Suresh, age 45, want health insurance" → skip to asking for ID upload.
+- Check the SESSION PROFILE before asking any question — if already filled, skip to next unfilled field.
 
 ABSOLUTE RULES:
 - After insurance_type → NEXT is ALWAYS name. NO EXCEPTIONS
@@ -80,6 +91,9 @@ _NOT_A_NAME = {
     "none","male","female","other","myself","only me","family","spouse","children",
     "parents","full family","aadhaar","pan","passport","driving license","voter id",
     "diabetes","blood pressure","heart disease","asthma","cancer","upload","verify",
+    # ── intro-prefix-only phrases (suggestion chip clicks with no actual name) ──
+    "call me","i am","i'm","im","my name is","this is","name is","my name",
+    "name","call","me",
 }
 
 _SKIP_WORDS = ["skip","later","without","bypass","no id","continue without",
@@ -96,43 +110,73 @@ class ConversationEngine:
         "verify_wait",             # 5  locked
         "collect_gender",          # 6
         "collect_city",            # 7
-        "collect_family",          # 8
-        "collect_medical",         # 9
+        "collect_coverage",        # 8  — who does the policy cover?
+        "collect_family_count",    # 9  — how many members (skipped if "Myself only")
+        "collect_family_medical",  # 10 — does anyone in family have a condition?
+        "collect_family_members",  # 10b legacy compat — kept for existing sessions
+        "collect_family",          # 11 legacy compat
+        "collect_medical_status",  # 12 NEW — yes/no medical gate
+        "collect_medical",         # 13 — detailed multi-select (if yes)
         # ── Condition-specific branches (inserted after collect_medical) ──
-        "condition_report_upload", # 9a health condition report
-        "condition_report_wait",   # 9b locked
-        "optional_health_check",   # 9c optional (skippable)
-        "vehicle_history",         # 9d vehicle prev policy / accident
-        "vehicle_doc_upload",      # 9e vehicle doc upload (skippable)
-        "life_docs",               # 9f life/term medical or income doc
-        "travel_declare",          # 9g travel health / trip declaration
-        "property_history",        # 9h property damage / claim
+        "optional_medical_report", # 13a NEW — optional health report upload
+        "condition_report_upload", # 13b health condition report
+        "condition_report_wait",   # 13c locked
+        "optional_health_check",   # 13d optional (skippable)
+        "vehicle_history",         # 13e vehicle prev policy / accident
+        "vehicle_doc_upload",      # 13f vehicle doc upload (skippable)
+        "life_docs",               # 13g life/term medical or income doc
+        "travel_declare",          # 13h travel health / trip declaration
+        "property_history",        # 13i property damage / claim
         # ─────────────────────────────────────────────────────────────────
-        "collect_budget",          # 10
-        "recommendation",          # 11
-        "explain_plan",            # 12
-        "ask_escalation",          # 13
-        "ask_rating",              # 14
-        "farewell",                # 15
+        "collect_budget",          # 14
+        "review_details",          # 15 — user reviews all collected info
+        "edit_details",            # 15b — user edits specific fields
+        "fraud_check",             # 15c — silent: fraud detection (auto-advance)
+        "risk_scoring",            # 15d — silent: risk + premium prediction (auto-advance)
+        "recommendation",          # 16
+        "explain_plan",            # 16
+        "ask_escalation",          # 17
+        "ask_rating",              # 18
+        "farewell",                # 19
     ]
 
     PROGRESS = {
-        "insurance_type":7,  "collect_name":12,    "collect_age":18,
-        "doc_upload":24,     "verify_wait":29,      "collect_gender":35,
-        "collect_city":41,   "collect_family":47,   "collect_medical":53,
-        "condition_report_upload":57, "condition_report_wait":60,
+        "insurance_type":7,   "collect_name":12,     "collect_age":18,
+        "doc_upload":24,      "verify_wait":29,       "collect_gender":33,
+        "collect_city":37,
+        "collect_coverage":41,
+        "collect_family_count":43,
+        "collect_family_medical":45,   # NEW — family condition question
+        "collect_family_members":45,   # legacy
+        "collect_family":47,           # legacy
+        "collect_medical_status":50,   # NEW
+        "collect_medical":53,
+        "optional_medical_report":55,  # NEW
+        "condition_report_upload":57,  "condition_report_wait":60,
         "optional_health_check":57,
-        "vehicle_history":57, "vehicle_doc_upload":60,
-        "life_docs":57,       "travel_declare":57,   "property_history":57,
-        "collect_budget":65,  "recommendation":76,   "explain_plan":84,
-        "ask_escalation":91,  "ask_rating":96,        "farewell":100,
+        "vehicle_history":57,  "vehicle_doc_upload":60,
+        "life_docs":57,        "travel_declare":57,   "property_history":57,
+        "collect_budget":65,
+        "review_details":70,       # review step
+        "edit_details":70,         # edit step
+        "fraud_check":73,          # silent — fraud detection
+        "risk_scoring":74,         # silent — risk scoring
+        "recommendation":76,   "explain_plan":84,
+        "ask_escalation":91,   "ask_rating":96,       "farewell":100,
     }
     LABELS = {
         "insurance_type":"Insurance Type",  "collect_name":"Your Name",
         "collect_age":"Your Age",           "doc_upload":"ID Upload",
         "verify_wait":"Verifying ID",       "collect_gender":"Gender",
-        "collect_city":"Your City",         "collect_family":"Family",
+        "collect_city":"Your City",
+        "collect_coverage":"Coverage",
+        "collect_family_count":"Family Count",
+        "collect_family_medical":"Family Health",  # NEW
+        "collect_family_members":"Family Members", # legacy
+        "collect_family":"Family",                 # legacy
+        "collect_medical_status":"Medical Check",   # NEW
         "collect_medical":"Medical",
+        "optional_medical_report":"Medical Report", # NEW
         "condition_report_upload":"Health Report",
         "condition_report_wait":"Analyzing Report",
         "optional_health_check":"Health Check",
@@ -141,7 +185,12 @@ class ConversationEngine:
         "life_docs":"Life Documents",
         "travel_declare":"Travel Declare",
         "property_history":"Property History",
-        "collect_budget":"Budget",          "recommendation":"Recommendations",
+        "collect_budget":"Budget",
+        "review_details":"Review Details",
+        "edit_details":"Edit Details",
+        "fraud_check":"Analyzing...",
+        "risk_scoring":"Analyzing...",
+        "recommendation":"Recommendations",
         "explain_plan":"Plan Details",      "ask_escalation":"Human Advisor",
         "ask_rating":"Rating",              "farewell":"Done ✅",
     }
@@ -150,8 +199,9 @@ class ConversationEngine:
     _UPLOAD_LOCKED = {"verify_wait", "condition_report_wait"}
 
     # Stages that are skippable upload stages
-    _SKIPPABLE_UPLOAD = {"optional_health_check", "vehicle_doc_upload",
-                         "life_docs", "travel_declare", "property_history"}
+    _SKIPPABLE_UPLOAD = {"optional_health_check", "optional_medical_report",
+                         "vehicle_doc_upload", "life_docs",
+                         "travel_declare", "property_history"}
 
     def __init__(self, gemini, rag, db):
         self.gemini = gemini
@@ -159,14 +209,146 @@ class ConversationEngine:
         self.db     = db
 
     # ══════════════════════════════════════════════════════
+    # SMART PRE-EXTRACTION
+    # Runs on EVERY message before stage logic.
+    # Detects name / age / insurance_type / city from free text.
+    # Only saves fields NOT already in the profile.
+    # ══════════════════════════════════════════════════════
+    def smart_extract(self, message: str, profile: dict) -> dict:
+        """
+        Scan any user message for key profile fields and return only
+        the fields that (a) were detected AND (b) are not yet in the profile.
+
+        Fields detected:
+          name           — "I am Suresh S", "my name is ...", "this is ..."
+          age            — "I am 45", "my age is 45", "aged 32"
+          insurance_type — "health insurance", "car insurance", "term plan" …
+          city           — "in Chennai", "from Mumbai", "living in Delhi" …
+        """
+        msg   = message.strip()
+        msg_l = msg.lower()
+        out   = {}
+
+        # ── Insurance type ────────────────────────────────────────────────
+        if not profile.get("insurance_type"):
+            ins_map = {
+                "health insurance":    "Health Insurance",
+                "health plan":         "Health Insurance",
+                "mediclaim":           "Health Insurance",
+                "medical insurance":   "Health Insurance",
+                "term insurance":      "Term / Life Insurance",
+                "term life":           "Term / Life Insurance",
+                "term plan":           "Term / Life Insurance",
+                "life insurance":      "Term / Life Insurance",
+                "life plan":           "Term / Life Insurance",
+                "vehicle insurance":   "Vehicle Insurance",
+                "car insurance":       "Vehicle Insurance",
+                "bike insurance":      "Vehicle Insurance",
+                "motor insurance":     "Vehicle Insurance",
+                "auto insurance":      "Vehicle Insurance",
+                "travel insurance":    "Travel Insurance",
+                "trip insurance":      "Travel Insurance",
+                "overseas insurance":  "Travel Insurance",
+                "property insurance":  "Property Insurance",
+                "home insurance":      "Property Insurance",
+                "house insurance":     "Property Insurance",
+                "accident insurance":  "Accident Insurance",
+                "personal accident":   "Accident Insurance",
+            }
+            # Check multi-word phrases first (longest match wins)
+            for phrase, value in sorted(ins_map.items(), key=lambda x: -len(x[0])):
+                if phrase in msg_l:
+                    out["insurance_type"] = value
+                    break
+
+        # ── Age ──────────────────────────────────────────────────────────
+        if not profile.get("age"):
+            # Patterns: "I am 45", "age is 45", "aged 32", "I'm 28 years old"
+            age_patterns = [
+                r'(?:i\s+am|i\'m|im)\s+(\d{1,3})\s*(?:years?(?:\s+old)?)?',
+                r'(?:my\s+)?age\s+(?:is\s+)?(\d{1,3})',
+                r'aged?\s+(\d{1,3})',
+                r'(\d{1,3})\s+years?\s+old',
+                r'(\d{1,3})\s*(?:yr|yrs)\.?\s+old',
+            ]
+            for pat in age_patterns:
+                m = re.search(pat, msg_l)
+                if m:
+                    v = int(m.group(1))
+                    if 1 <= v <= 120:
+                        out["age"] = v
+                        break
+
+        # ── Name ─────────────────────────────────────────────────────────
+        if not profile.get("name"):
+            name_patterns = [
+                r"(?:i\s+am|i'm|im|my\s+name\s+is|this\s+is|call\s+me|name\s+is)\s+([A-Za-z][a-zA-Z .'-]{1,40})",
+            ]
+            for pat in name_patterns:
+                m = re.search(pat, msg, re.IGNORECASE)
+                if m:
+                    candidate = m.group(1).strip()
+                    # Remove trailing noise words
+                    candidate = re.sub(
+                        r'\s+(?:and|my|age|aged|i|is|want|looking|years?|old|from|in|at)\b.*',
+                        '', candidate, flags=re.IGNORECASE
+                    ).strip()
+                    # Validate: 1-4 words, no digits, not a stop-word
+                    words = candidate.split()
+                    if (1 <= len(words) <= 4
+                            and candidate[0].isalpha()
+                            and not any(c.isdigit() for c in candidate)
+                            and candidate.lower() not in _NOT_A_NAME):
+                        out["name"] = candidate.title()
+                        break
+
+        # ── City ─────────────────────────────────────────────────────────
+        if not profile.get("city"):
+            city_patterns = [
+                r'(?:i\s+(?:am|live|stay|reside)\s+(?:in|at|from))\s+([A-Za-z][a-zA-Z ]{2,30})',
+                r'(?:from|in|at|living\s+in|based\s+in|residing\s+in)\s+([A-Za-z][a-zA-Z ]{2,25})(?:\s*[,.]|$)',
+            ]
+            _CITY_STOP = {
+                "india","health","vehicle","travel","term","life","accident",
+                "property","insurance","plan","policy","cover","the","a",
+                "good","please","looking","want","need","get","buy","help",
+            }
+            for pat in city_patterns:
+                m = re.search(pat, msg, re.IGNORECASE)
+                if m:
+                    candidate = m.group(1).strip().rstrip(".,;")
+                    # Must be a clean city-like word(s)
+                    words = candidate.lower().split()
+                    if (1 <= len(words) <= 3
+                            and candidate[0].isalpha()
+                            and not any(c.isdigit() for c in candidate)
+                            and not any(w in _CITY_STOP for w in words)):
+                        out["city"] = candidate.title()
+                        break
+
+        return out
+
+    # ══════════════════════════════════════════════════════
     # MAIN
     # ══════════════════════════════════════════════════════
     def process(self, user_id, session_id, message, history,
                 profile, language="English", fresh_session=False):
 
+        # ── Conversation Memory: reset or sync ──────────────────────────────
         if fresh_session:
             self.db.reset_session_profile(user_id)
             profile = {"onboarding_stage": "insurance_type", "user_id": user_id}
+            memory_manager.reset(user_id)
+        else:
+            memory_manager.sync_from_profile(user_id, profile)
+
+        # ── Smart multi-field extraction from free text ─────────────────────
+        # Runs BEFORE stage logic — extracts name/age/insurance_type/city from any message
+        _smart = self.smart_extract(message.strip() if message else "", profile)
+        if _smart:
+            profile.update(_smart)
+            self.db.upsert_user_profile(user_id, _smart)
+            memory_manager.update_from_extracted(user_id, _smart)
 
         stage = profile.get("onboarding_stage", "insurance_type")
         if stage not in self.STEPS:
@@ -179,11 +361,15 @@ class ConversationEngine:
         if extracted:
             profile.update(extracted)
             self.db.upsert_user_profile(user_id, extracted)
+            memory_manager.update_from_extracted(user_id, extracted)
 
         if next_stage != stage:
             self.db.upsert_user_profile(user_id, {"onboarding_stage": next_stage})
             profile["onboarding_stage"] = next_stage
+            memory_manager.advance_stage(user_id, next_stage)
 
+        # ══════════════════════════════════════════════════════════════════════
+        # SILENT PIPELINE: Fraud Detection + Risk Scoring (invisible to user)
         if stage == "ask_rating":
             rv = self._extract_rating(message)
             if rv:
@@ -205,7 +391,9 @@ class ConversationEngine:
         # Detect profile-change events that allow fresh recommendations
         _budget_changed  = (stage == "collect_budget" and extracted.get("budget_range"))
         _family_changed  = (stage == "collect_family" and extracted.get("family_members"))
-        _profile_changed = _budget_changed or _family_changed
+        _edit_changed    = (stage == "edit_details" and bool(extracted))
+        _fraud_completed = (stage in ("fraud_check", "risk_scoring"))  # pipeline just ran
+        _profile_changed = _budget_changed or _family_changed or _edit_changed or _fraud_completed
 
         if _profile_changed:
             # Profile changed → reset plans_shown so new recs can fire
@@ -277,7 +465,9 @@ class ConversationEngine:
             rag_ctx = self.rag.get_context(self._rag_query(profile), self.gemini)
 
         prompt   = self._build_prompt(message, history, profile, rag_ctx, next_stage, language)
-        ai_reply = self.gemini.generate(prompt, system_prompt=SYSTEM_PROMPT, max_tokens=500)
+        # Token budget: review_details needs more room for full summary
+        _tok = 900 if next_stage in ("review_details", "edit_details", "recommendation", "collect_budget") else 500
+        ai_reply = self.gemini.generate(prompt, system_prompt=SYSTEM_PROMPT, max_tokens=_tok)
 
         # ── Fallback reply if AI fails or returns empty ──────────────────────────
         # Treat Gemini error strings same as empty (prevents error text showing as bot reply)
@@ -295,6 +485,11 @@ class ConversationEngine:
             _cond = profile.get("medical_conditions", "")
             _ins_l = _ins.lower()
             _fallback_map = {
+                "collect_coverage":       f"Who would you like the insurance policy to cover{', ' + _name if _name else ''}? 😊 (Myself only / My spouse and children / Whole family)",
+                "collect_family_count":   f"How many family members should be covered? 👨‍👩‍👧‍👦 (Please enter a number)",
+                "collect_family_medical": f"Does anyone in your family have any existing medical conditions? 🏥 (No, everyone is healthy / Yes, there are medical conditions)",
+                "collect_family_members": f"Please tell me the next family member's relationship and age. Example: Spouse, 40 😊",
+                "collect_medical_status": f"Do you have any existing medical conditions{', ' + _name if _name else ''}? 🏥",
                 "collect_medical":   (
                     f"Do you or any family members have any pre-existing injuries, "
                     "disabilities or occupational hazards? ⚡ (Select all that apply)"
@@ -305,12 +500,14 @@ class ConversationEngine:
                     f"Any medical conditions that may affect your travel coverage? ✈️ "
                     "(Select all that apply, or choose None)"
                     if "travel" in (_ins or "").lower() else
-                    f"Do you or any family members have any medical conditions? 🏥 (Select all that apply)"
+                    f"Please briefly mention your medical condition(s) 🏥 (Select all that apply)"
                 ),
+                "optional_medical_report": f"Since you have no conditions, uploading a health report helps us recommend better plans{', ' + _name if _name else ''} 📋 You can also skip this step.",
                 "collect_budget":    f"Almost there{', ' + _name if _name else ''}! 🎯 What is your monthly budget for insurance premiums? 💰",
+                "review_details":    f"Please review your details{', ' + _name if _name else ''} 📋 Name: {profile.get('name','—')} | Age: {profile.get('age','—')} | City: {profile.get('city','—')} | Insurance: {profile.get('insurance_type','—')} | Budget: {profile.get('budget_range','—')} | Medical: {profile.get('medical_conditions','None')} — Would you like to continue with these details? 😊",
+                "edit_details":      f"Sure{', ' + _name if _name else ''}! Which details would you like to update? 😊 You can change: Location, Coverage, Medical conditions, or Budget.",
                 "collect_family":    f"Who would you like to include in your insurance coverage{', ' + _name if _name else ''}? 👨‍👩‍👧‍👦",
                 "collect_city":      f"Which city do you live in{', ' + _name if _name else ''}? 🏙️",
-                "collect_gender":    f"What is your gender{', ' + _name if _name else ''}? 😊",
                 "ask_escalation":    f"Would you like to speak with a human advisor, {_name or 'there'}? 😊",
                 "ask_rating":        f"Thanks for chatting with me{', ' + _name if _name else ''}! 😊 Could you rate our conversation from 1 to 5 stars? ✨",
                 "farewell":          f"🎉 Thank you {_name or ''}! Your insurance journey is complete. Wishing you a safe and secure future!",
@@ -339,6 +536,7 @@ class ConversationEngine:
         # Show upload card only for stages where user needs to upload a file
         show_upload = next_stage in (
             "doc_upload", "verify_wait",
+            "optional_medical_report",        # NEW — optional medical report upload
             "condition_report_upload", "condition_report_wait",
             "optional_health_check",
             "vehicle_doc_upload",   # vehicle_history itself is radio-only (no upload needed)
@@ -349,6 +547,24 @@ class ConversationEngine:
 
         _is_farewell    = next_stage == "farewell"
         _lock_chat      = _is_farewell  # frontend should lock all input
+
+        # Build structured plan data for comparison table (only at recommendation stage)
+        _plans_table = []
+        if next_stage == "recommendation" and kb_recs:
+            for _item in kb_recs:
+                _p = _item["plan"]
+                _plans_table.append({
+                    "name":        _p.get("plan_name", ""),
+                    "company":     _p.get("company_name", ""),
+                    "type":        _p.get("insurance_type", ""),
+                    "coverage":    _p.get("coverage_amount", "N/A"),
+                    "premium":     _p.get("premium_range", "N/A"),
+                    "waiting":     _p.get("waiting_period", "N/A"),
+                    "age":         _p.get("eligibility_age", "N/A"),
+                    "benefits":    (_p.get("special_benefits") or "")[:120],
+                    "reason":      _item.get("reason", ""),
+                    "score":       _item.get("score", 0),
+                })
 
         return {
             "reply":              reply,
@@ -365,6 +581,7 @@ class ConversationEngine:
             "stage_label":        self.LABELS.get(next_stage, ""),
             "module":             self._module(next_stage),
             "plans_mentioned":    [],
+            "plans_table":        _plans_table,
             "trigger_cleanup":    _is_farewell,
             "lock_chat":          _lock_chat,
         }
@@ -393,100 +610,156 @@ class ConversationEngine:
         _safe_wind_stages = {"collect_budget","recommendation","explain_plan",
                              "ask_escalation","vehicle_history","vehicle_doc_upload",
                              "life_docs","travel_declare","property_history",
-                             "optional_health_check","condition_report_upload"}
+                             "optional_health_check","condition_report_upload",
+                             "collect_coverage","collect_family_count","collect_family_medical",
+                             "collect_medical_status","optional_medical_report",
+                             "review_details","edit_details"}
         if stage in _safe_wind_stages:
             if any(w in msg for w in self._WIND_UP_WORDS):
                 return "ask_rating"
 
         # ── Linear stages 1-7 (unchanged) ─────────────────────────────────
         if stage == "insurance_type":
-            if extracted.get("insurance_type"):
+            ins = extracted.get("insurance_type") or profile.get("insurance_type")
+            if ins:
                 # Clear any stale plan cache from previous session
                 self.db.clear_plans_shown(user_id)
+                # If name AND age were ALSO in the same opening message, skip straight to doc_upload
+                has_name = extracted.get("name") or profile.get("name")
+                has_age  = extracted.get("age")  or profile.get("age")
+                if has_name and has_age:
+                    return "doc_upload"
+                if has_name:
+                    return "collect_age"
                 return "collect_name"
             return "insurance_type"
 
         if stage == "collect_name":
-            return "collect_age" if extracted.get("name") else "collect_name"
+            # Skip if name was pre-extracted from this or a previous message
+            if extracted.get("name") or profile.get("name"):
+                # If age is ALSO already known (smart-extracted in same message), jump straight to doc_upload
+                if profile.get("age") or extracted.get("age"):
+                    return "doc_upload"
+                return "collect_age"
+            return "collect_name"
 
         if stage == "collect_age":
-            return "doc_upload" if extracted.get("age") else "collect_age"
+            # Skip if age was pre-extracted
+            if profile.get("age") or extracted.get("age"):
+                return "doc_upload"
+            return "collect_age"
 
         if stage == "doc_upload":
             if is_skip:
+                # ID skipped — no gender from ID, but we still don't ask gender manually
                 self.db.upsert_user_profile(user_id, {"gov_id_verified": 0})
-                return "collect_gender"
+                return "collect_city"   # gender never asked as a question
             return "doc_upload"
 
         if stage == "verify_wait":
             return "verify_wait"  # only /api/upload exits
 
         if stage == "collect_gender":
-            # After ID verification: user may confirm details first before giving gender
-            if "yes" in msg and ("correct" in msg or "detail" in msg):
-                # Details confirmed — now ask gender
-                # Don't advance yet, let next message carry gender
-                return "collect_gender"
-            if "no" in msg and ("update" in msg or "wrong" in msg or "incorrect" in msg):
-                # User wants to update details — go back to name collection
-                self.db.upsert_user_profile(user_id, {"name": None, "age": None})
-                return "collect_name"
-            return "collect_city" if extracted.get("gender") else "collect_gender"
+            # Gender is auto-extracted from Gov ID — NEVER asked as a manual question.
+            # This stage is only reached if gender wasn't on the ID (e.g. PAN card).
+            # In all cases: just advance to city. Do NOT prompt for gender input.
+            if profile.get("gender") or extracted.get("gender"):
+                return "collect_city"
+            # Even without gender — skip to city (gender not required for flow)
+            return "collect_city"
 
         if stage == "collect_city":
-            return "collect_family" if extracted.get("city") else "collect_city"
+            # Skip if city was pre-extracted
+            if profile.get("city") and not extracted.get("city"):
+                return "collect_coverage"
+            return "collect_coverage" if extracted.get("city") else "collect_city"
 
+        # ── Step 8: Coverage selection ─────────────────────────────────────
+        if stage == "collect_coverage":
+            cov = extracted.get("coverage_type") or profile.get("coverage_type")
+            if not cov:
+                return "collect_coverage"
+            # "Myself only" → skip all family collection
+            if "myself" in cov.lower() or "only" in cov.lower():
+                return "collect_medical_status"
+            # Family coverage → collect member count first
+            return "collect_family_count"
+
+        # ── Step 9: How many family members ────────────────────────────────
+        if stage == "collect_family_count":
+            count = extracted.get("family_member_count")
+            if count is None:
+                count = profile.get("family_member_count")
+            if not count:
+                return "collect_family_count"
+            # After getting count — ask family medical condition (NOT per-member details)
+            return "collect_family_medical"
+
+        # ── Step 10: Does anyone in the family have a medical condition? ──
+        # Single question, replaces iterative per-member collection
+        if stage == "collect_family_medical":
+            fam_med = extracted.get("family_medical_conditions")
+            if not fam_med:
+                return "collect_family_medical"
+            # Family medical answered — now ask main user's medical status
+            return "collect_medical_status"
+
+        # ── Legacy collect_family_members (kept for existing sessions) ─────
+        if stage == "collect_family_members":
+            # Check how many members collected vs total needed
+            needed   = int(profile.get("family_member_count") or 1)
+            existing = profile.get("family_members_json") or "[]"
+            try:
+                members = json.loads(existing)
+            except Exception:
+                members = []
+            new_member = extracted.get("family_member_entry")
+            if new_member:
+                members.append(new_member)
+                self.db.upsert_user_profile(user_id, {
+                    "family_members_json": json.dumps(members),
+                    "family_members": ", ".join(
+                        f"{m['relationship']} ({m['age']})" for m in members
+                    ),
+                })
+                profile["family_members_json"] = json.dumps(members)
+                profile["family_members"]       = profile.get("family_members", "")
+            if len(members) < needed:
+                return "collect_family_members"
+            return "collect_medical_status"
+
+        # ── Legacy collect_family (keep for existing sessions) ────────────
         if stage == "collect_family":
             if not extracted.get("family_members"):
                 return "collect_family"
-            # ── Skip collect_medical for types that don't need it ──────────────
-            _ins_type = (profile.get("insurance_type") or "").lower()
-            if "vehicle" in _ins_type:
-                return "vehicle_history"      # → vehicle branch directly
-            if "property" in _ins_type:
-                return "property_history"     # → property branch directly
-            # All others (health, life/term, travel, accident) need collect_medical
+            return "collect_medical_status"
+
+        # ── Step 12: Medical status yes/no gate ───────────────────────────
+        if stage == "collect_medical_status":
+            status = extracted.get("medical_conditions_status")
+            if not status:
+                return "collect_medical_status"
+            if status == "None":
+                # No conditions — go straight to optional medical report
+                return "optional_medical_report"
+            # Has conditions → collect details
             return "collect_medical"
 
-        # ── Step 9: collect_medical → branch by insurance type + conditions ──
+        # ── Step 13: collect_medical → always go to optional_medical_report first
         if stage == "collect_medical":
             if not extracted.get("medical_conditions"):
                 return "collect_medical"
+            # Route through optional medical report before type-specific branch
+            return "optional_medical_report"
 
-            cond = extracted.get("medical_conditions", "").lower()
-            has_condition = "none" not in cond
-
-            # Health Insurance
-            if "health" in ins:
-                if has_condition:
-                    # Store that a condition exists and doc upload is needed
-                    self.db.upsert_user_profile(user_id, {"condition_report_uploaded": 0})
-                    return "condition_report_upload"
-                else:
-                    return "optional_health_check"
-
-            # Vehicle Insurance
-            if "vehicle" in ins:
-                return "vehicle_history"
-
-            # Life / Term Insurance
-            if "life" in ins or "term" in ins:
-                return "life_docs"
-
-            # Travel Insurance
-            if "travel" in ins:
-                return "travel_declare"
-
-            # Property Insurance → property_history
-            if "property" in ins:
-                return "property_history"
-
-            # Accident Insurance → conditions captured, go to budget
-            if "accident" in ins:
-                return "collect_budget"
-
-            # Default (unknown type) — go straight to budget
-            return "collect_budget"
+        # ── Step 13a: Optional medical report upload ──────────────────────
+        if stage == "optional_medical_report":
+            # Upload handled by /api/upload — it sets next_stage
+            if is_skip or "no" in msg or "skip" in msg:
+                # No report uploaded — go to insurance-type-specific branch
+                return self._medical_branch(profile, user_id)
+            # Wait for upload
+            return "optional_medical_report"
 
         # ── Condition report upload (locked — /api/upload exits to collect_budget) ──
         if stage == "condition_report_upload":
@@ -543,7 +816,54 @@ class ConversationEngine:
 
         # ── Steps 10-15 (unchanged) ─────────────────────────────────────────
         if stage == "collect_budget":
-            return "recommendation" if extracted.get("budget_range") else "collect_budget"
+            return "review_details" if extracted.get("budget_range") else "collect_budget"
+
+        # ── Review details — show summary, let user confirm or edit ────────
+        if stage == "review_details":
+            if is_skip or any(w in msg for w in ["continue","yes","confirm","correct",
+                                                  "proceed","ok","okay","sure","looks good",
+                                                  "1","go ahead","right","all good",
+                                                  "✅ continue"]):
+                # Mark confirmed, run risk pipeline silently, then go to recommendation
+                self.db.upsert_user_profile(user_id, {"review_confirmed": 1})
+                try:
+                    from models.risk_engine import run_risk_pipeline
+                    run_risk_pipeline(profile, self.db, user_id)
+                except Exception as _re:
+                    import logging as _log
+                    _log.getLogger("PolicyBot").warning(f"[RISK] pipeline error: {_re}")
+                return "recommendation"
+            if any(w in msg for w in ["change","edit","update","modify","wrong",
+                                       "incorrect","no","2","different",
+                                       "✏️ change details"]):
+                return "edit_details"
+            return "review_details"
+
+        # ── Edit details — let user update specific fields ──────────────────
+        if stage == "edit_details":
+            # Any extracted profile update is saved in process(); then re-show review
+            # If user says continue/done → back to review to re-confirm
+            if any(w in msg for w in ["done","continue","save","ok","okay","confirmed",
+                                       "that's all","thats all","finish","proceed"]):
+                return "review_details"
+            # If user provides updated data (city, budget, medical, coverage) → stay
+            updated_any = bool(
+                extracted.get("city") or extracted.get("budget_range") or
+                extracted.get("medical_conditions") or extracted.get("coverage_type") or
+                extracted.get("family_medical_conditions")
+            )
+            # After extracting updates → go back to review to re-confirm
+            if updated_any:
+                return "review_details"
+            return "edit_details"
+
+        # ── Fraud Check: SILENT — auto-advance, no user message needed ───────
+        if stage == "fraud_check":
+            return "risk_scoring"
+
+        # ── Risk Scoring: SILENT — auto-advance, no user message needed ──────
+        if stage == "risk_scoring":
+            return "recommendation"
 
         if stage == "recommendation":
             select_words = ["select","choose","this one","go with","i want","apply",
@@ -590,6 +910,56 @@ class ConversationEngine:
         return stage
 
     # ══════════════════════════════════════════════════════
+    # MEDICAL BRANCH HELPER
+    # Called after optional_medical_report skip/upload
+    # Routes to the correct insurance-type-specific branch
+    # ══════════════════════════════════════════════════════
+    def _medical_branch(self, profile, user_id):
+        """Determine the next stage after optional_medical_report based on
+        insurance type, main user conditions, and family conditions."""
+        ins       = (profile.get("insurance_type") or "").lower()
+        cond      = (profile.get("medical_conditions") or "").lower()
+        fam_cond  = (profile.get("family_medical_conditions") or "").lower()
+        # Consider condition present if main user OR family has one
+        has_condition      = bool(cond) and "none" not in cond
+        has_family_cond    = bool(fam_cond) and "none" not in fam_cond
+        any_condition      = has_condition or has_family_cond
+
+        # Health Insurance
+        if "health" in ins:
+            if has_condition:
+                # Main user has condition — upload condition report
+                self.db.upsert_user_profile(user_id, {"condition_report_uploaded": 0})
+                return "condition_report_upload"
+            if has_family_cond:
+                # Family has condition but main user is healthy — optional check still useful
+                return "optional_health_check"
+            # Nobody has conditions — optional general health check
+            return "optional_health_check"
+
+        # Vehicle Insurance
+        if "vehicle" in ins:
+            return "vehicle_history"
+
+        # Life / Term Insurance
+        if "life" in ins or "term" in ins:
+            return "life_docs"
+
+        # Travel Insurance
+        if "travel" in ins:
+            return "travel_declare"
+
+        # Property Insurance
+        if "property" in ins:
+            return "property_history"
+
+        # Accident Insurance
+        if "accident" in ins:
+            return "collect_budget"
+
+        return "collect_budget"
+
+    # ══════════════════════════════════════════════════════
     # STAGE-GATED EXTRACTION
     # ══════════════════════════════════════════════════════
     def _extract(self, message, stage):
@@ -611,16 +981,29 @@ class ConversationEngine:
                     break
 
         elif stage == "collect_name":
+            import re as _re
             text = message.strip()
-            if text.lower() not in _NOT_A_NAME:
-                words = text.split()
+            # Strip common name-introduction prefixes so "Call me Suresh" → "Suresh"
+            _prefix = _re.sub(
+                r"^(?:call\s+me|i\s+am|i'm|im|my\s+name\s+is|this\s+is|name\s+is)\s+",
+                '', text, flags=_re.IGNORECASE
+            ).strip()
+            # Remove trailing noise ("and I am ...", "age ...", "from ...", etc.)
+            _prefix = _re.sub(
+                r'\s+(?:and|my|age|aged|i|is|want|looking|years?|old|from|in|at).*',
+                '', _prefix, flags=_re.IGNORECASE
+            ).strip()
+            # Use cleaned version if it differs (i.e. a prefix was found)
+            candidate = _prefix if _prefix and _prefix.lower() != text.lower() else text
+            if candidate.lower() not in _NOT_A_NAME:
+                words = candidate.split()
                 if (1 <= len(words) <= 4
-                        and text[0].isalpha()
-                        and not any(c.isdigit() for c in text)
-                        and text.lower() not in _NOT_A_NAME
-                        and not any(kw in text.lower() for kw in
+                        and candidate[0].isalpha()
+                        and not any(c.isdigit() for c in candidate)
+                        and candidate.lower() not in _NOT_A_NAME
+                        and not any(kw in candidate.lower() for kw in
                                     ["insurance","health","vehicle","travel","property","accident","term"])):
-                    out["name"] = text.title()
+                    out["name"] = candidate.title()
 
         elif stage == "collect_age":
             nums = re.findall(r'\b(\d{1,3})\b', message)
@@ -644,6 +1027,108 @@ class ConversationEngine:
             text = message.strip()
             if text and len(text) >= 2 and not text.isdigit() and text.lower() not in _NOT_A_NAME:
                 out["city"] = text.title()
+
+        elif stage == "collect_coverage":
+            cov_map = {
+                "myself only":    "Myself only",
+                "only myself":    "Myself only",
+                "just me":        "Myself only",
+                "only me":        "Myself only",
+                "myself":         "Myself only",
+                "spouse and children": "My spouse and children",
+                "spouse & children":   "My spouse and children",
+                "spouse and kids":     "My spouse and children",
+                "wife and kids":       "My spouse and children",
+                "family and children": "My spouse and children",
+                "whole family":   "Whole family",
+                "entire family":  "Whole family",
+                "full family":    "Whole family",
+                "all family":     "Whole family",
+                "family":         "Whole family",
+                "everyone":       "Whole family",
+            }
+            for phrase, value in sorted(cov_map.items(), key=lambda x: -len(x[0])):
+                if phrase in msg:
+                    out["coverage_type"] = value
+                    break
+            # Numeric shortcut: "1" → Myself only, "2" → spouse+children, "3" → whole family
+            if not out.get("coverage_type"):
+                if msg.strip() == "1":
+                    out["coverage_type"] = "Myself only"
+                elif msg.strip() == "2":
+                    out["coverage_type"] = "My spouse and children"
+                elif msg.strip() == "3":
+                    out["coverage_type"] = "Whole family"
+
+        elif stage == "collect_family_count":
+            nums = re.findall(r'\b(\d{1,2})\b', message)
+            for n in nums:
+                v = int(n)
+                if 1 <= v <= 20:
+                    out["family_member_count"] = v
+                    break
+            # word numbers
+            if not out.get("family_member_count"):
+                word_map = {"one":1,"two":2,"three":3,"four":4,"five":5,
+                            "six":6,"seven":7,"eight":8,"nine":9,"ten":10}
+                for w, v in word_map.items():
+                    if w in msg:
+                        out["family_member_count"] = v
+                        break
+
+        elif stage == "collect_family_medical":
+            # "Does anyone in the family have a medical condition?" — yes/no + brief mention
+            no_keywords  = ["no ", "none", "healthy", "nothing", "no condition",
+                            "fit", "nope", "nah", "not any", "no medical", "no one"]
+            if any(kw in msg for kw in no_keywords) or msg.strip() in ("no", "1", "none"):
+                out["family_medical_conditions"] = "None"
+            else:
+                # Any other answer — treat as description of condition(s)
+                out["family_medical_conditions"] = message.strip() or "None"
+
+        elif stage == "collect_family_members":
+            # Expect "Spouse, 40" or "Child, 12" or "relationship: X age: Y" style
+            rel_map = {
+                "spouse":"Spouse", "wife":"Spouse", "husband":"Spouse",
+                "son":"Son", "daughter":"Daughter",
+                "child":"Child", "kid":"Child",
+                "father":"Father", "dad":"Father",
+                "mother":"Mother", "mom":"Mother",
+                "parent":"Parent", "sibling":"Sibling",
+                "brother":"Brother", "sister":"Sister",
+                "grandfather":"Grandfather", "grandmother":"Grandmother",
+                "grandparent":"Grandparent",
+            }
+            rel_found = None
+            for k, v in rel_map.items():
+                if k in msg:
+                    rel_found = v
+                    break
+            # Extract age
+            age_found = None
+            age_m = re.search(r'\b(\d{1,3})\b', message)
+            if age_m:
+                av = int(age_m.group(1))
+                if 1 <= av <= 120:
+                    age_found = av
+            if rel_found and age_found:
+                out["family_member_entry"] = {"relationship": rel_found, "age": age_found}
+            elif rel_found:
+                out["family_member_entry"] = {"relationship": rel_found, "age": None}
+
+        elif stage == "collect_medical_status":
+            # Yes/No gate — maps to "None" or "HasConditions"
+            no_keywords  = ["no ", "none", "no existing", "no condition", "healthy",
+                            "nothing", "fit", "nope", "nah", "not any", "no medical"]
+            yes_keywords = ["yes", "have ", "has ", "condition", "disease", "medical",
+                            "suffer", "diagnosed", "diabetes", "heart", "blood pressure",
+                            "asthma", "cancer", "thyroid", "kidney", "hypertension"]
+            # Check "No" first (more specific phrases)
+            if any(kw in msg for kw in no_keywords) or msg.strip() in ("no", "1"):
+                out["medical_conditions_status"] = "None"
+                out["medical_conditions"]        = "None"
+            elif any(kw in msg for kw in yes_keywords) or msg.strip() == "2":
+                out["medical_conditions_status"] = "HasConditions"
 
         elif stage == "collect_family":
             fam_map = {
@@ -768,8 +1253,57 @@ class ConversationEngine:
                 out["property_history"] = message.strip()
 
         elif stage == "collect_budget":
-            if message.strip():
+            msg_stripped = message.strip()
+            # Only save as budget if it looks like an actual budget value
+            # Reject generic confirm words that get sent after budget was already saved
+            _budget_noise = {"ok","okay","sure","proceed","continue","yes","no",
+                             "confirm","correct","next","go","done","right",
+                             "looks good","all good","go ahead","great","fine",
+                             "budget","premium","monthly","amount","range","cost",
+                             "ok proceed","ok proeed","proeed","hmm","yeah","yep",
+                             "what","skip","please","now","let","let's","lets"}
+            if msg_stripped and msg_stripped.lower() not in _budget_noise:
+                out["budget_range"] = msg_stripped
+
+        elif stage == "edit_details":
+            # Allow user to update any of: city, coverage_type, medical_conditions, budget_range, family_medical_conditions
+            msg_l = message.lower().strip()
+            # City update: "update city to Chennai" or "Chennai" alone
+            city_match = re.search(
+                r'(?:city|location|from|to|in|at)\s+([a-zA-Z][a-zA-Z\s]{2,24})',
+                message, re.IGNORECASE
+            )
+            if city_match:
+                candidate = city_match.group(1).strip().title()
+                words = candidate.split()
+                if 1 <= len(words) <= 3 and not any(c.isdigit() for c in candidate):
+                    out["city"] = candidate
+            # Budget update: any budget keyword or amount
+            budget_keywords = ["budget","premium","₹","rs ","inr","per month","monthly"]
+            if any(k in msg_l for k in budget_keywords):
                 out["budget_range"] = message.strip()
+            # Medical update: "update medical to Diabetes" or just "Diabetes, Blood Pressure"
+            med_match = re.search(
+                r'(?:medical|condition|conditions|health)\s*(?:is|are|:)?\s*(.+)',
+                message, re.IGNORECASE
+            )
+            if med_match:
+                out["medical_conditions"] = med_match.group(1).strip().title()
+            # Coverage update
+            cov_map = {
+                "myself only": "Myself only",
+                "just me": "Myself only",
+                "only me": "Myself only",
+                "spouse": "My spouse and children",
+                "children": "My spouse and children",
+                "whole family": "Whole family",
+                "entire family": "Whole family",
+                "whole": "Whole family",
+            }
+            for k, v in cov_map.items():
+                if k in msg_l:
+                    out["coverage_type"] = v
+                    break
 
         return out
 
@@ -785,6 +1319,26 @@ class ConversationEngine:
 
         if stage == "collect_gender":
             return (["Male","Female","Other"], "radio")
+
+        # ── NEW: Coverage selection ──────────────────────────────────────
+        if stage == "collect_coverage":
+            return (["Myself only","My spouse and children","Whole family"], "radio")
+
+        # ── Family count — no buttons, text input ───────────────────
+        if stage == "collect_family_count":
+            return ([], "none")
+
+        # ── Family medical condition — yes/no radio ──────────────────
+        if stage == "collect_family_medical":
+            return (["No, everyone is healthy","Yes, there are medical conditions"], "radio")
+
+        # ── NEW: Medical status yes/no gate ─────────────────────────────
+        if stage == "collect_medical_status":
+            return (["No existing medical conditions","Yes, there are medical conditions"], "radio")
+
+        # ── NEW: Optional medical report upload ─────────────────────────
+        if stage == "optional_medical_report":
+            return (["Upload medical report","Skip"], "radio")
 
         if stage == "collect_family":
             return (["Only Me","Spouse","Children","Parents","Full Family"], "multi")
@@ -826,6 +1380,14 @@ class ConversationEngine:
         if stage == "collect_budget":
             return (["Under ₹500","₹500–₹1,000","₹1,000–₹2,000",
                      "₹2,000–₹5,000","Above ₹5,000"], "radio")
+
+        if stage == "review_details":
+            return (["✅ Continue","✏️ Change Details"], "radio")
+
+        if stage == "edit_details":
+            return (["📍 Update Location","🏥 Update Medical Conditions",
+                     "💰 Update Budget","👨‍👩‍👧 Update Coverage",
+                     "✅ Done, Show Review"], "radio")
 
         if stage == "recommendation":
             # Build plan radio options from KB recommendations cache
@@ -914,18 +1476,34 @@ class ConversationEngine:
             "age":              profile.get("age",""),
             "gender":           profile.get("gender",""),
             "city":             profile.get("city",""),
+            "coverage_type":    profile.get("coverage_type",""),
+            "family_member_count": profile.get("family_member_count",""),
             "family_members":   profile.get("family_members",""),
+            "family_medical_conditions": profile.get("family_medical_conditions",""),
+            "medical_conditions_status": profile.get("medical_conditions_status",""),
             "medical_conditions":profile.get("medical_conditions",""),
             "budget_range":     profile.get("budget_range",""),
+            "risk_score":       profile.get("risk_score",""),
+            "risk_category":    profile.get("risk_category",""),
+            "premium_prediction": profile.get("premium_prediction",""),
+            "fraud_status":     profile.get("fraud_status",""),
             "gov_id_verified":  profile.get("gov_id_verified",0),
             "selected_plan":    profile.get("selected_plan",""),
             "condition_report_uploaded": profile.get("condition_report_uploaded",0),
+            "medical_report_uploaded":   profile.get("medical_report_uploaded",0),
         }.items() if v not in ("",None,0)}
 
         recent = "\n".join(
             f"User: {h.get('message','')}\nBot: {h.get('bot_reply','')}"
             for h in history[-5:]
         )
+
+        # ── Conversation Memory context ─────────────────────────────────────
+        _mem_ctx = memory_manager.get_context_summary(profile.get("user_id",""))
+        _mem_should_skip = {
+            k: memory_manager.get(profile.get("user_id","")).should_skip_question(k)
+            for k in ["name","age","city","insurance_type","coverage_type","budget_range","medical_conditions"]
+        }
 
         instructions = {
             # ── Original steps 1-10 ──────────────────────────────────────────
@@ -937,18 +1515,28 @@ class ConversationEngine:
             ),
             "collect_name":(
                 f"STEP 2: User chose '{ins}'. "
-                "NOW ask their name. SAY EXACTLY: "
-                "'Nice choice 👍 May I know your name?' "
-                "Do NOT ask anything else. JUST ask name."
+                + (
+                    f"Smart extraction already found name='{profile.get('name','')}'. "
+                    f"Acknowledge it warmly: 'Nice to meet you, {profile.get('name','')}! 😊 "
+                    f"How old are you?' Then advance to asking age."
+                    if profile.get("name") else
+                    "NOW ask their name. SAY EXACTLY: "
+                    "'Nice choice 👍 May I know your name?' "
+                    "Do NOT ask anything else. JUST ask name."
+                )
             ),
             "collect_age":(
                 f"STEP 3: User's name is '{name}'. "
                 f"Ask age. Say: 'Thanks {name or 'there'}! How old are you? 😊'"
             ),
             "doc_upload":(
-                "STEP 4: Ask user to upload Government ID using the upload widget on the left. "
+                f"STEP 4: Got it{', ' + name if name else ''}! "
+                + (f"I've noted your name as '{name}' and age as {profile.get('age','')}. " if name and profile.get('age') else "")
+                + "Now ask user to upload their Government ID. The upload widget will appear automatically in the sidebar. "
                 "Accepted: Aadhaar, PAN, Driving License, Passport, Voter ID. "
-                "Say they can type 'skip' if they prefer not to verify."
+                f"Say something like: 'Great{', ' + name if name else ''}! Please upload your Government ID using the upload section 📎 "
+                "You can type \"skip\" if you prefer not to verify right now.' "
+                "Keep it warm and brief — 2 sentences max."
             ),
             "verify_wait":(
                 "STEP 5: User uploaded document. "
@@ -956,49 +1544,74 @@ class ConversationEngine:
                 "please wait a moment.' Ask NO questions."
             ),
             "collect_gender":(
-                f"STEP 6: ID is verified. "
-                f"If user just said 'yes details are correct', say: "
-                f"'Perfect! Your details are confirmed ✅ What is your gender{', ' + name if name else ''}? 😊' "
+                f"STEP 6: ID verified. Gender was auto-extracted from the document. "
+                f"Profile already has gender='{profile.get('gender','')}'. "
+                f"If user just said 'yes details are correct', confirm and ask city: "
+                f"'Perfect! Details confirmed ✅ Which city do you live in{', ' + name if name else ''}? 🏙️' "
                 f"Otherwise say: 'Great! ✅ Your ID is verified! "
-                f"What is your gender{', ' + name if name else ''}? 😊' "
-                "Gender radio buttons appear automatically."
+                f"Which city do you live in{', ' + name if name else ''}? 🏙️' "
+                "Move directly to asking city — do NOT ask gender manually."
             ),
             "collect_city":(
                 f"STEP 7: Ask city. "
                 f"Say: 'Which city do you live in{', ' + name if name else ''}? 🏙️'"
             ),
+            # ── NEW stages 8-10 ──────────────────────────────────────────────
+            "collect_coverage":(
+                f"STEP 8: Ask who the policy should cover{', ' + name if name else ''}. "
+                "Say: 'Who would you like the insurance policy to cover? 😊' "
+                "Radio buttons appear: Myself only / My spouse and children / Whole family."
+            ),
+            "collect_family_count":(
+                f"STEP 9a: User wants family coverage ({profile.get('coverage_type','')}). "
+                f"Ask: 'How many family members should be covered? 👨‍👩‍👧‍👦 (Please enter a number)'"
+            ),
+            "collect_family_medical":(
+                f"STEP 9b: Got {profile.get('family_member_count','')} family member(s). "
+                "Ask ONE simple question only: 'Does anyone in your family have any existing medical conditions? 🏥' "
+                "Radio buttons: No, everyone is healthy / Yes, there are medical conditions. "
+                "IMPORTANT: Do NOT ask each member individually. Do NOT ask for documents from family members."
+            ),
+            "collect_family_members":(
+                "STEP 9b (legacy): Ask family member details briefly. Example: Spouse, 40 😊"
+            ),
             "collect_family":(
-                "STEP 8: Ask family members to cover. "
+                "STEP 8 (legacy): Ask family members to cover. "
                 "Say: 'Who would you like to include in your insurance coverage? 👨‍👩‍👧‍👦' "
                 "Multi-select buttons appear automatically."
             ),
+            # ── Medical status gate ──────────────────────────────────────────
+            "collect_medical_status":(
+                f"STEP 10: Ask {name or 'the user'} about their own medical conditions. "
+                "Say: 'Do you have any existing medical conditions? 🏥' "
+                "Radio buttons: No existing medical conditions / Yes, there are medical conditions. "
+                "NOTE: This is for the main user only, NOT family members (already asked separately)."
+            ),
             "collect_medical":(
                 (
-                    "STEP 9: Ask about pre-existing injuries or disabilities for Accident Insurance. "
-                    f"Say: 'Do you or any family members have any pre-existing injuries, "
-                    "disabilities, or occupational hazards? ⚡ (Select all that apply)' "
-                    "Buttons appear automatically."
-                ) if "accident" in ins.lower() else (
-                    "STEP 9: Ask about lifestyle risks and critical illness for Term/Life Insurance. "
-                    f"Say: 'Do you or any family members have any health history or lifestyle habits to declare? 📋 "
-                    "(This helps us find better term rates — select all that apply)' "
-                    "Buttons appear automatically."
-                ) if ("term" in ins.lower() or "life" in ins.lower()) else (
-                    "STEP 9: Ask about travel health conditions for Travel Insurance. "
-                    f"Say: 'Any medical conditions that may affect your travel coverage? ✈️ "
-                    "(Select all that apply, or choose None to continue)' "
-                    "Buttons appear automatically."
-                ) if "travel" in ins.lower() else (
-                    f"STEP 9: Ask medical conditions sensitively for {ins}. "
-                    "Say: 'Do you or any family members have any medical conditions? 🏥 "
+                    "STEP 11: User said YES to medical conditions. Ask for details. "
+                    f"Say: 'Please briefly mention the medical condition(s) — for example: Diabetes, Heart condition, High blood pressure. "
                     "(Select all that apply)' "
+                    "Buttons appear automatically."
+                ) if (profile.get("medical_conditions_status") == "HasConditions"
+                      or not profile.get("medical_conditions_status")) else (
+                    "STEP 11: Ask about medical conditions (multi-select). "
                     "Buttons appear automatically."
                 )
             ),
-            # ── NEW: Condition-based branches ────────────────────────────────
+            # ── Optional medical report (main user only) ──────────────────────
+            "optional_medical_report":(
+                f"STEP 12: Ask {name or 'the user'} to optionally upload their personal health report. "
+                "Say: 'Since you have no medical conditions, uploading a recent health report will help us "
+                f"recommend better plans for you{', ' + name if name else ''} 📋 "
+                "You can upload it now or skip this step.' "
+                "Options: Upload medical report / Skip. Upload widget is on the left. "
+                "IMPORTANT: This is for the MAIN USER only — do NOT ask family members to upload documents."
+            ),
+            # ── Condition-based branches ────────────────────────────────
             "condition_report_upload":(
                 f"STEP 9a (Health condition found: {cond}): "
-                "Ask user to upload their health/medical report using the upload widget. "
+                "The upload widget will appear automatically. Ask user to upload their health/medical report. "
                 f"Say: 'Since you have {cond}, please upload your latest health report or "
                 "prescription so I can recommend the best plan for your condition 🏥 "
                 "You can type \"skip\" if you don't have it handy.' "
@@ -1028,7 +1641,7 @@ class ConversationEngine:
                 f"STEP 9e: User has vehicle history. "
                 "Ask to upload previous policy or accident claim document. "
                 "Say: 'Please upload your previous policy or accident claim document using "
-                "the upload widget on the left 📄 You can type \"skip\" if unavailable.' "
+                "the upload section 📄 You can type \"skip\" if unavailable.' "
             ),
             "life_docs":(
                 f"STEP 9f: Life/Term insurance. "
@@ -1048,16 +1661,64 @@ class ConversationEngine:
                 f"Say: 'Almost there {name or ''}! Any previous damage or insurance claim history for your property? 🏠' "
                 "Radio buttons appear (Fire Damage / Flood Damage / Previous Claim / None)."
             ),
-            # ── Steps 10-15 (unchanged) ───────────────────────────────────────
+            # ── Steps 10-15 ───────────────────────────────────────────────
             "collect_budget":(
-                "STEP 10: Ask monthly budget. "
+                f"STEP 10: Ask monthly budget{', ' + name if name else ''}. "
                 "Say: 'Almost there! 🎯 What is your monthly budget for insurance premiums? 💰' "
                 "Budget radio buttons appear automatically."
+            ),
+            # ── Review Details ────────────────────────────────────────────
+            "review_details":(
+                (lambda: (
+                    lambda p: (
+                        "STEP 11: CRITICAL — Do NOT say thanks for budget. Do NOT say 'let me check'. "
+                        "Do NOT say 'ready to proceed'. The profile is already complete. "
+                        "IMMEDIATELY start with EXACTLY this line: '📋 Here are your details — please review before we generate recommendations:' "
+                        "Then list ALL fields on separate lines with emojis. "
+                        "End with: 'Would you like to continue? 😊' "
+                        "Then show this summary in a clean, readable format using emojis:\n"
+                        + f"👤 Name: {p.get('name','—')}\n"
+                        + f"🎂 Age: {p.get('age','—')}\n"
+                        + (f"⚧ Gender: {p.get('gender','—')}\n" if p.get('gender') else "")
+                        + f"📍 Location: {p.get('city','—')}\n"
+                        + f"🏥 Insurance Type: {p.get('insurance_type','—')}\n"
+                        + f"👨‍👩‍👧 Coverage: {p.get('coverage_type','—')}\n"
+                        + (
+                            f"👨‍👩‍👧‍👦 Family Members: {p.get('family_member_count',0)} member(s)\n"
+                            if (p.get('coverage_type','') or '').lower() not in ('','myself only')
+                            else ""
+                        )
+                        + (
+                            f"🏥 Family Health: {p.get('family_medical_conditions','—')}\n"
+                            if p.get('family_medical_conditions') and
+                               (p.get('family_medical_conditions','') or '').lower() != 'none'
+                            else ""
+                        )
+                        + (
+                            f"🩺 Your Medical Conditions: {p.get('medical_conditions','None')}\n"
+                        )
+                        + (
+                            f"📄 Medical Report Summary: {p.get('medical_report_summary','—')}\n"
+                            if p.get('medical_report_summary') else ""
+                        )
+                        + f"💰 Budget: {p.get('budget_range','—')}\n"
+                        + "\nEnd with: 'Would you like to continue with these details? 😊' "
+                        + "Radio buttons: ✅ Continue / ✏️ Change Details"
+                    )
+                )(profile))()
+            ),
+            "edit_details":(
+                "STEP 11b: User wants to update their details. "
+                "Ask warmly: 'Sure! Which details would you like to update? 😊 "
+                "You can change: Location, Coverage type, Medical conditions, or Budget.' "
+                "Edit buttons appear automatically. "
+                "After user updates, confirm the change warmly and say they can continue when ready. "
+                "Do NOT ask for verification docs again."
             ),
             "recommendation":(
                 (
                     # Plans already shown — do NOT repeat the list
-                    "STEP 11: Plans were ALREADY shown to this user. "
+                    "STEP 13: Plans were ALREADY shown to this user. "
                     "DO NOT list plans again. "
                     "User said: '" + message + "'. "
                     "If they said 'none', 'ok thanks', 'no' → ask warmly: "
@@ -1066,11 +1727,33 @@ class ConversationEngine:
                     "If they asked a question about a plan → answer it briefly. "
                     "Radio buttons with plan names remain visible."
                 ) if profile.get("_plans_already_shown") else (
-                    "STEP 11: Recommend exactly 2-3 insurance plans from the Policy Knowledge Base. "
+                    "STEP 13: Recommend exactly 2-3 insurance plans from the Policy Knowledge Base. "
                     "KB recommendations are shown ABOVE this prompt — use them as the PRIMARY source. "
-                    "For each plan clearly state: name, company, premium, coverage, waiting period, "
+                    + (
+                        f"\n🔮 Estimated Premium Range: {profile.get('premium_prediction','')} — "
+                        "mention this estimate naturally in your recommendation. "
+                        if profile.get("premium_prediction") else ""
+                    )
+                    + (
+                        f"\n📊 Risk Category: {profile.get('risk_category','')} — "
+                        "tailor plan suggestions to this risk level. "
+                        if profile.get("risk_category") else ""
+                    )
+                    + "For each plan clearly state: name, company, premium, coverage, waiting period, "
                     "why it specifically suits THIS user's age/budget/medical conditions/city. "
-                    "End with: 'Which plan would you like to know more about?' "
+                    + (
+                        f"\nFAMILY CONDITIONS: {profile.get('family_medical_conditions') or ''} — "
+                        "PRIORITISE family floater plans or plans with family pre-existing disease cover. "
+                        if (profile.get("family_medical_conditions") or "").lower() not in ("","none")
+                        else ""
+                    )
+                    + (
+                        f"\nMAIN USER CONDITIONS: {profile.get('medical_conditions') or ''} — "
+                        "PRIORITISE plans that cover pre-existing diseases with minimal waiting period. "
+                        if (profile.get("medical_conditions") or "").lower() not in ("","none")
+                        else "\nNo conditions detected — recommend standard health plans with broad coverage. "
+                    )
+                    + "End with: 'Which plan would you like to know more about?' "
                     "Radio buttons with plan names appear automatically. "
                     "RAG CONTEXT:\n" + (rag_ctx or "(Use built-in knowledge for Indian insurance)")
                 )
@@ -1099,13 +1782,21 @@ class ConversationEngine:
         }.get(stage, "Continue the conversation following the PolicyBot flow.")
 
         lang_rule = f"CRITICAL: Reply ONLY in {language}. Do NOT use any other language regardless of what the user wrote."
+        # ── Build skip-awareness note for AI ───────────────────────────────
+        _skip_note = ""
+        _known = [k for k, skip in _mem_should_skip.items() if skip]
+        if _known:
+            _skip_note = f"\nALREADY KNOWN (DO NOT ask again): {', '.join(_known)}"
         return f"""CURRENT STEP: {stage}
 LANGUAGE: {language}
 USER NAME: {name or '(not yet provided)'}
 INSURANCE TYPE: {ins}
+{_skip_note}
 
 SESSION PROFILE:
 {json.dumps(safe_p, indent=2)}
+
+{_mem_ctx}
 
 RECENT CONVERSATION:
 {recent or '(start of conversation)'}
@@ -1127,9 +1818,14 @@ Reply as PolicyBot (warm, 2-3 sentences, correct step only):"""
                 else "Low ⚠️ — Verify your ID for better rates & faster approval.")
 
     def _rag_query(self, profile):
+        # Include both main user and family conditions for RAG matching
+        fam_cond = profile.get("family_medical_conditions","")
+        fam_tag  = ("family conditions " + fam_cond) if fam_cond and fam_cond.lower() != "none" else ""
         return " ".join(filter(None,[
             profile.get("insurance_type",""),
             profile.get("medical_conditions",""),
+            fam_tag,
+            profile.get("coverage_type",""),
             profile.get("family_members",""),
             profile.get("budget_range",""),
             profile.get("city",""),
@@ -1152,13 +1848,25 @@ Reply as PolicyBot (warm, 2-3 sentences, correct step only):"""
             "insurance_type":"welcome","collect_name":"onboarding","collect_age":"onboarding",
             "doc_upload":"verification","verify_wait":"verification",
             "collect_gender":"profiling","collect_city":"profiling",
-            "collect_family":"profiling","collect_medical":"profiling",
+            "collect_coverage":"profiling",
+            "collect_family_count":"profiling",
+            "collect_family_medical":"profiling",  # NEW
+            "collect_family_members":"profiling",  # legacy
+            "collect_family":"profiling",
+            "collect_medical_status":"profiling",    # NEW
+            "collect_medical":"profiling",
+            "optional_medical_report":"condition_check",  # NEW
             "condition_report_upload":"condition_check","condition_report_wait":"condition_check",
             "optional_health_check":"condition_check",
             "vehicle_history":"condition_check","vehicle_doc_upload":"condition_check",
             "life_docs":"condition_check","travel_declare":"condition_check",
             "property_history":"condition_check",
-            "collect_budget":"profiling","recommendation":"recommendation",
+            "collect_budget":"profiling",
+            "review_details":"review",
+            "edit_details":"review",
+            "fraud_check":"analysis",
+            "risk_scoring":"analysis",
+            "recommendation":"recommendation",
             "explain_plan":"recommendation","ask_escalation":"escalation",
             "ask_rating":"feedback","farewell":"feedback",
         }

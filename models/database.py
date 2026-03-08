@@ -31,6 +31,20 @@ class Database:
                 life_docs TEXT,
                 travel_declare TEXT,
                 property_history TEXT,
+                coverage_type TEXT,
+                family_member_count INTEGER DEFAULT 0,
+                family_members_json TEXT,
+                family_medical_conditions TEXT,
+                medical_conditions_status TEXT,
+                medical_report_uploaded INTEGER DEFAULT 0,
+                medical_report_conditions TEXT,
+                medical_report_summary TEXT,
+                fraud_status TEXT DEFAULT 'PENDING',
+                fraud_issues TEXT,
+                risk_score INTEGER DEFAULT 0,
+                risk_category TEXT,
+                premium_prediction TEXT,
+                review_confirmed INTEGER DEFAULT 0,
                 theme_preference TEXT DEFAULT 'neon', language TEXT DEFAULT 'English',
                 onboarding_stage TEXT DEFAULT 'insurance_type',
                 plans_shown INTEGER DEFAULT 0,
@@ -62,6 +76,13 @@ class Database:
                 id INTEGER PRIMARY KEY AUTOINCREMENT, filename TEXT, file_path TEXT,
                 doc_type TEXT, user_id TEXT, active INTEGER DEFAULT 1,
                 deleted INTEGER DEFAULT 0, uploaded_at TEXT
+            );
+            CREATE TABLE IF NOT EXISTS user_xp (
+                user_id       TEXT PRIMARY KEY,
+                xp_total      INTEGER DEFAULT 0,
+                xp_stages_done TEXT DEFAULT '',
+                badges_earned TEXT DEFAULT '',
+                updated_at    TEXT
             );
             CREATE TABLE IF NOT EXISTS selected_options (
                 id INTEGER PRIMARY KEY AUTOINCREMENT, user_id TEXT, stage TEXT,
@@ -146,6 +167,23 @@ class Database:
             ("doc_type_found",            "TEXT"),
             ("occupation",                "TEXT"),
             ("annual_income",             "TEXT"),
+            # v10 columns
+            ("coverage_type",             "TEXT"),
+            ("family_member_count",       "INTEGER DEFAULT 0"),
+            ("family_members_json",       "TEXT"),
+            ("family_medical_conditions", "TEXT"),
+            ("medical_conditions_status", "TEXT"),
+            ("medical_report_uploaded",   "INTEGER DEFAULT 0"),
+            ("medical_report_conditions", "TEXT"),
+            ("medical_report_summary",    "TEXT"),
+            # v11 columns — fraud, risk, premium, review
+            ("fraud_status",          "TEXT DEFAULT 'PENDING'"),
+            ("claim_probability",     "INTEGER DEFAULT 0"),
+            ("fraud_issues",          "TEXT"),
+            ("risk_score",            "INTEGER DEFAULT 0"),
+            ("risk_category",         "TEXT"),
+            ("premium_prediction",    "TEXT"),
+            ("review_confirmed",      "INTEGER DEFAULT 0"),
         ]
         with self._conn() as conn:
             for col, defn in new_columns:
@@ -153,6 +191,19 @@ class Database:
                     conn.execute(f"ALTER TABLE users ADD COLUMN {col} {defn}")
                 except Exception:
                     pass  # column already exists — safe to ignore
+
+            # ── v22 migration: create user_xp table if it doesn't exist ──────
+            # This handles databases created before v22 that are missing the table.
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS user_xp (
+                    user_id        TEXT PRIMARY KEY,
+                    xp_total       INTEGER DEFAULT 0,
+                    xp_stages_done TEXT    DEFAULT '',
+                    badges_earned  TEXT    DEFAULT '',
+                    updated_at     TEXT
+                )
+            """)
+            conn.commit()
 
     def _now(self): return datetime.datetime.utcnow().isoformat()
 
@@ -202,6 +253,23 @@ class Database:
             "condition_report_result": None,
             "vehicle_history": None, "life_docs": None,
             "travel_declare": None, "property_history": None,
+            # NEW fields
+            "coverage_type": None,
+            "family_member_count": 0,
+            "family_members_json": None,
+            "family_medical_conditions": None,
+            "medical_conditions_status": None,
+            "medical_report_uploaded": 0,
+            "medical_report_conditions": None,
+            "medical_report_summary": None,
+            # v11 fields
+            "fraud_status": "PENDING",
+            "fraud_issues": None,
+            "risk_score": 0,
+            "claim_probability": 0,
+            "risk_category": None,
+            "premium_prediction": None,
+            "review_confirmed": 0,
             "onboarding_stage": "insurance_type",
             "plans_shown": 0,
             "plans_shown_names": None,

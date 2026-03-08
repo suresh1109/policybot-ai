@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Broker Dashboard — PolicyBot</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="/static/css/broker.css?v=2">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="broker-nav">
+  <div class="bn-logo">
+    <div class="bn-logo-icon"><i class="fas fa-handshake"></i></div>
+    <div>
+      <div class="bn-logo-name">Broker Portal</div>
+      <div class="bn-logo-sub">PolicyBot Partner</div>
+    </div>
+  </div>
+  <div class="bn-links">
+    <a class="bn-link active" data-tab="dashboard" onclick="showTab('dashboard')">
+      <i class="fas fa-gauge-high"></i> Dashboard
+    </a>
+    <a class="bn-link" data-tab="leads" onclick="showTab('leads')">
+      <i class="fas fa-users"></i> Leads
+      <span class="bn-badge" id="leads-count-badge">—</span>
+    </a>
+    <a class="bn-link" data-tab="hot" onclick="showTab('hot')">
+      <i class="fas fa-fire"></i> Hot Leads
+    </a>
+    <a class="bn-link" data-tab="called" onclick="showTab('called')">
+      <i class="fas fa-phone-volume"></i> Called
+    </a>
+    <a class="bn-link" data-tab="converted" onclick="showTab('converted')">
+      <i class="fas fa-trophy"></i> Converted
+    </a>
+  </div>
+  <div class="bn-footer">
+    <a href="/" class="bn-ext-btn"><i class="fas fa-comments"></i> Live Chat</a>
+    <a href="/broker/logout" class="bn-logout"><i class="fas fa-right-from-bracket"></i> Logout</a>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="broker-main">
+
+  <!-- DASHBOARD TAB -->
+  <section class="broker-tab" id="tab-dashboard">
+    <div class="bk-header">
+      <div>
+        <h1 class="bk-title">Dashboard</h1>
+        <p class="bk-sub">Your leads and performance overview</p>
+      </div>
+      <div class="bk-header-actions">
+        <button class="bk-refresh-btn" onclick="loadAll()"><i class="fas fa-rotate-right"></i> Refresh</button>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:linear-gradient(135deg,#3b82f6,#6366f1)">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-body">
+          <div class="stat-val" id="s-total">—</div>
+          <div class="stat-lbl">Total Leads</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:linear-gradient(135deg,#ef4444,#f97316)">
+          <i class="fas fa-fire"></i>
+        </div>
+        <div class="stat-body">
+          <div class="stat-val" id="s-hot">—</div>
+          <div class="stat-lbl">Hot Leads</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:linear-gradient(135deg,#10b981,#059669)">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <div class="stat-body">
+          <div class="stat-val" id="s-conv">—</div>
+          <div class="stat-lbl">Converted</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">
+          <i class="fas fa-percent"></i>
+        </div>
+        <div class="stat-body">
+          <div class="stat-val" id="s-rate">—</div>
+          <div class="stat-lbl">Conv. Rate</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)">
+          <i class="fas fa-calendar-week"></i>
+        </div>
+        <div class="stat-body">
+          <div class="stat-val" id="s-recent">—</div>
+          <div class="stat-lbl">Last 7 Days</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insurance type breakdown -->
+    <div class="bk-card" style="margin-top:24px">
+      <div class="bk-card-title"><i class="fas fa-chart-pie"></i> Leads by Insurance Type</div>
+      <div class="type-bars" id="type-bars">
+        <div class="bk-loading"><i class="fas fa-spinner fa-spin"></i> Loading…</div>
+      </div>
+    </div>
+
+    <!-- Latest 5 hot leads preview -->
+    <div class="bk-card" style="margin-top:20px">
+      <div class="bk-card-title"><i class="fas fa-fire"></i> Latest Hot Leads</div>
+      <div id="hot-preview"></div>
+    </div>
+  </section>
+
+  <!-- LEADS TAB -->
+  <section class="broker-tab hidden" id="tab-leads">
+    <div class="bk-header">
+      <div>
+        <h1 class="bk-title">All Leads</h1>
+        <p class="bk-sub">Every user who expressed interest in a plan</p>
+      </div>
+      <div class="bk-header-actions">
+        <input class="bk-search" id="leads-search" placeholder="Search by name, city, plan…" oninput="filterLeads()">
+      </div>
+    </div>
+    <div class="leads-table-wrap">
+      <table class="leads-table">
+        <thead>
+          <tr>
+            <th>User</th><th>Insurance Type</th><th>Plan</th>
+            <th>Premium</th><th>Risk</th><th>Interest</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="leads-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- HOT LEADS TAB -->
+  <section class="broker-tab hidden" id="tab-hot">
+    <div class="bk-header">
+      <h1 class="bk-title">🔥 Hot Leads</h1>
+      <p class="bk-sub">High-interest users — call now for best conversion</p>
+    </div>
+    <div class="hot-grid" id="hot-grid">
+      <div class="bk-loading"><i class="fas fa-spinner fa-spin"></i> Loading hot leads…</div>
+    </div>
+  </section>
+
+  <!-- CALLED TAB -->
+  <section class="broker-tab hidden" id="tab-called">
+    <div class="bk-header"><h1 class="bk-title">📞 Called</h1></div>
+    <div class="leads-table-wrap">
+      <table class="leads-table">
+        <thead><tr><th>User</th><th>Plan</th><th>Phone</th><th>Best Time</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="called-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- CONVERTED TAB -->
+  <section class="broker-tab hidden" id="tab-converted">
+    <div class="bk-header"><h1 class="bk-title">🏆 Converted</h1></div>
+    <div class="leads-table-wrap">
+      <table class="leads-table">
+        <thead><tr><th>User</th><th>Plan</th><th>Insurance Type</th><th>Budget</th><th>Date</th></tr></thead>
+        <tbody id="converted-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- STATUS UPDATE MODAL -->
+<div class="broker-modal hidden" id="status-modal" onclick="if(event.target===this)closeStatusModal()">
+  <div class="bm-box">
+    <div class="bm-header">
+      <div class="bm-title">Update Lead Status</div>
+      <button class="bm-close" onclick="closeStatusModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="bm-body">
+      <div class="bm-field">
+        <label>Status</label>
+        <select id="modal-status">
+          <option value="new">New</option>
+          <option value="called">Called</option>
+          <option value="follow_up">Follow Up</option>
+          <option value="not_interested">Not Interested</option>
+          <option value="converted">Converted ✅</option>
+        </select>
+      </div>
+      <div class="bm-field">
+        <label>Phone Number</label>
+        <input type="text" id="modal-phone" placeholder="+91 XXXXX XXXXX">
+      </div>
+      <div class="bm-field">
+        <label>Best Call Time</label>
+        <input type="text" id="modal-time" placeholder="e.g. 10am–12pm">
+      </div>
+    </div>
+    <div class="bm-footer">
+      <button class="bm-cancel" onclick="closeStatusModal()">Cancel</button>
+      <button class="bm-save" onclick="saveLeadStatus()">
+        <i class="fas fa-check"></i> Save Changes
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="broker-toast-wrap" style="position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px"></div>
+
+<script src="/static/js/broker.js?v=2"></script>
+</body>
+</html>

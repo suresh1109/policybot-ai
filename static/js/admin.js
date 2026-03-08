@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   showSection(p.get('section') || 'dashboard');
   loadAll();
   setInterval(loadAll, 30000);
+  initFraudBell();
 });
 
 /* ── Section router ───────────────────────────────────────────────────── */
@@ -864,4 +865,116 @@ function typeIcon(t) {
     'Accident Insurance': '⚡',
   };
   return map[t] || '🛡️';
+}
+
+
+/* ════════════════════════════════════════════════════════════════════════
+   REAL-TIME FRAUD ALERT BELL
+   Polls /api/admin/fraud-alerts/live every 15 seconds.
+   Shows animated bell + count badge when HIGH risk users detected.
+   ════════════════════════════════════════════════════════════════════════ */
+
+let _fraudBellSeen   = new Set();   // user_ids already notified
+let _fraudPollTimer  = null;
+let _lastFraudAlerts = [];
+
+function initFraudBell() {
+  pollFraudBell();
+  _fraudPollTimer = setInterval(pollFraudBell, 15000);
+}
+
+async function pollFraudBell() {
+  try {
+    const r = await fetch('/api/admin/fraud-alerts/live');
+    if (!r.ok) return;
+    const d = await r.json();
+    const alerts = d.alerts || [];
+    _lastFraudAlerts = alerts;
+
+    const badge = document.getElementById('fraud-bell-badge');
+    const bell  = document.getElementById('fraud-bell-wrap');
+    const count = alerts.length;
+
+    if (count > 0) {
+      if (badge) { badge.textContent = count; badge.classList.remove('hidden'); }
+      if (bell)  bell.classList.add('bell-ring');
+
+      // Toast for NEW alerts only (not seen before)
+      alerts.forEach(a => {
+        if (!_fraudBellSeen.has(a.user_id)) {
+          _fraudBellSeen.add(a.user_id);
+          showAdminToast(
+            `🚨 HIGH RISK: ${a.user_name} (${a.insurance || 'insurance'}) — ${(a.flags||[]).slice(0,2).join(', ')}`,
+            'error', 7000
+          );
+        }
+      });
+    } else {
+      if (badge) { badge.textContent = '0'; badge.classList.add('hidden'); }
+      if (bell)  bell.classList.remove('bell-ring');
+    }
+
+    // Refresh panel if open
+    if (!document.getElementById('fraud-alert-panel')?.classList.contains('hidden')) {
+      renderFraudPanel(alerts);
+    }
+  } catch(e) { /* silent — don't spam console */ }
+}
+
+function openFraudAlerts() {
+  const panel    = document.getElementById('fraud-alert-panel');
+  const backdrop = document.getElementById('fraud-backdrop');
+  if (!panel) return;
+  panel.classList.remove('hidden');
+  backdrop?.classList.remove('hidden');
+  renderFraudPanel(_lastFraudAlerts);
+}
+
+function closeFraudPanel() {
+  document.getElementById('fraud-alert-panel')?.classList.add('hidden');
+  document.getElementById('fraud-backdrop')?.classList.add('hidden');
+}
+
+function renderFraudPanel(alerts) {
+  const body = document.getElementById('fraud-panel-body');
+  if (!body) return;
+  if (!alerts || !alerts.length) {
+    body.innerHTML = `<div class="fraud-panel-empty">
+      <i class="fas fa-check-circle" style="color:#10b981;font-size:28px;margin-bottom:8px"></i><br>
+      No HIGH risk alerts right now
+    </div>`;
+    return;
+  }
+  body.innerHTML = alerts.map(a => `
+    <div class="fraud-panel-item">
+      <div class="fpi-top">
+        <div class="fpi-name">${escAdm(a.user_name)}</div>
+        <span class="fpi-badge">HIGH RISK</span>
+      </div>
+      <div class="fpi-meta">
+        <span><i class="fas fa-heart-pulse"></i> ${escAdm(a.insurance || '—')}</span>
+        <span><i class="fas fa-location-dot"></i> ${escAdm(a.city || '—')}</span>
+      </div>
+      <div class="fpi-flags">${(a.flags||[]).map(f => `<span class="fpi-flag">${escAdm(f)}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+function showAdminToast(msg, type='info', duration=4000) {
+  let wrap = document.getElementById('admin-toast-wrap');
+  if (!wrap) {
+    wrap = document.createElement('div');
+    wrap.id = 'admin-toast-wrap';
+    wrap.style.cssText = 'position:fixed;top:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:8px;max-width:380px;';
+    document.body.appendChild(wrap);
+  }
+  const t = document.createElement('div');
+  const bg = type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#4f46e5';
+  t.style.cssText = `background:${bg};color:#fff;padding:12px 16px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,.4);animation:toastIn .3s ease;line-height:1.5;`;
+  t.textContent = msg;
+  wrap.appendChild(t);
+  setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(30px)'; t.style.transition='all .3s'; setTimeout(()=>t.remove(),300); }, duration);
+}
+
+function escAdm(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }

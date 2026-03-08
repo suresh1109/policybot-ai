@@ -345,6 +345,15 @@ class DocumentParser:
         r'(?:Full\s*Name|Holder\s*Name)[\s:]+([A-Z][A-Za-z\s]{2,40})',
         # Aadhaar: all caps line after "Government of India"
         r'Government\s+of\s+India\s*\n+([A-Z][A-Z\s]{4,40})',
+        # Aadhaar DOCX bilingual: Tamil script followed by English name on same line
+        # e.g. "சுேரஷ் ச Suresh S" or "राहुल कुमार Rahul Kumar"
+        r'[\u0B80-\u0BFF\u0900-\u097F][\u0B80-\u0BFF\u0900-\u097F\s]+([A-Z][a-zA-Z\s\.]{2,35})\s*$',
+        # Aadhaar: English name appears before S/O or D/O line
+        r'^([A-Z][a-zA-Z\s\.]{2,35})\s*\n\s*(?:S/O|D/O|W/O|C/O)',
+        # Aadhaar DOCX: English name on line before DOB line
+        r'([A-Z][a-zA-Z][a-zA-Z\s\.]{1,33})\s*\n[^\n]*(?:DOB|பிறந்த|Birth)',
+        # Name after "To\n" (Aadhaar letter format)
+        r'(?:^|\n)To\s*\n+[^\n]*\n+([A-Z][a-zA-Z][a-zA-Z\s\.]{1,35})\n',
     ]
 
     # ── ID type keywords ──────────────────────────────────────────────────
@@ -387,10 +396,34 @@ class DocumentParser:
             "id_type":       cls._detect_id_type(text_lower),
             "dob":           cls._extract_dob(text),
             "name_found":    cls._extract_name(text),
+            "gender":        cls._extract_gender_from_id(text),
             "raw_text_len":  len(text),
             "text_snippet":  text[:300].replace('\n', ' '),
         }
         return result
+
+    @classmethod
+    def _extract_gender_from_id(cls, text: str) -> str:
+        """
+        Extract gender from Government ID text.
+        Returns 'Male', 'Female', 'Other', or '' if not found.
+        """
+        patterns = [
+            r'\b(?:Sex|Gender)\s*[:/]?\s*(Male|Female|Transgender|M|F)\b',
+            r'\b(Male|Female|Transgender)\b',
+            r'\bSEX\s*:\s*([MF])\b',
+        ]
+        for pat in patterns:
+            m = re.search(pat, text, re.IGNORECASE)
+            if m:
+                raw = m.group(1).strip().upper()
+                if raw in ('M', 'MALE'):
+                    return 'Male'
+                elif raw in ('F', 'FEMALE'):
+                    return 'Female'
+                elif raw in ('TRANSGENDER', 'OTHER', 'T'):
+                    return 'Other'
+        return ''
 
     @classmethod
     def parse_health_report(cls, text: str) -> dict:
@@ -656,27 +689,37 @@ class OCRVerifier:
                 quality=quality, id_type=id_type,
                 options=["Upload Different ID", "Continue Without Verification"])
 
-        # ── Step 4b: Name comparison (if stated_name provided) ────────────
-        name_from_id = parsed.get("name", "")
+        # ── Step 4b: Name comparison — STRICT: both name AND age must match ────
+        name_from_id = parsed.get("name_found") or parsed.get("name") or ""
+        log.info(f"[OCR-VERIFY] Name from ID: '{name_from_id}' | Stated name: '{stated_name}'")
+
         if stated_name and name_from_id:
+            # STRICT: name on Aadhaar must match name the user gave the bot
             name_matched = self._compare_names(stated_name, name_from_id)
             log.info(f"[OCR-VERIFY] Name check: stated='{stated_name}' id='{name_from_id}' match={name_matched}")
             if not name_matched:
+                # HARD REJECT — name mismatch means this is not the user's own Aadhaar
+                log.warning(f"[OCR-VERIFY] HARD name mismatch: stated='{stated_name}' id='{name_from_id}'")
                 return self._result("name_mismatch", False,
-                    f"😊 The name on your {id_type} ('{name_from_id}') doesn't match the name you gave me ('{stated_name}'). "
-                    "Please upload a matching ID or continue without verification.",
+                    f"❌ The name on your {id_type} is '{name_from_id}', but you told me your name is '{stated_name}'. "
+                    f"These don't match. Please upload YOUR OWN {id_type} that matches the name you gave me.",
                     quality=quality, id_type=id_type,
-                    options=["Upload Different ID", "Continue Without Verification"])
+                    options=["Upload My Own ID", "Continue Without Verification"])
+        elif stated_name and not name_from_id:
+            # Name not found on document — let it pass (OCR may have missed it)
+            log.warning(f"[OCR-VERIFY] Name not found on {id_type}, skipping name check")
 
         # ── Both Age AND Name verified ─────────────────────────────────────
+        # Extract gender from parsed ID (never asked from user)
+        id_gender = parsed.get("gender", "")
         verified_details = f"✅ Your {id_type} has been verified successfully! 👍"
         if name_from_id:
-            verified_details += f" Name confirmed: {name_from_id}."
+            verified_details += f" Name: {name_from_id} ✅."
         verified_details += " Identity confirmed — let's continue!"
         return self._result("verified", True,
             verified_details,
             quality=quality, id_type=id_type, dob_year=dob_year,
-            name_on_id=name_from_id,
+            name_on_id=name_from_id, id_gender=id_gender,
             handoff_to_gemini=True)
 
     def analyze_health_report(self, file_bytes: bytes, file_ext: str,
@@ -1060,38 +1103,65 @@ class OCRVerifier:
 
     # ── Helpers ────────────────────────────────────────────────────────────
     def _compare_names(self, stated: str, from_id: str) -> bool:
-        """Fuzzy name match — at least one meaningful word must match."""
+        """
+        Strict fuzzy name match.
+        Rules:
+          1. Exact word match (case-insensitive) — "Suresh" == "Suresh" ✅
+          2. Substring prefix — stated word must be a REAL prefix of the ID word AND
+             cover >= 85% of the ID word length.
+             e.g. "sures" (5) vs "suresh" (6): 5/6 = 83% → FAIL (below 85%)
+             e.g. "suresh" (6) vs "suresh" (6): exact → PASS
+             e.g. "surya" (5) vs "suryakumar" (10): 5/10 = 50% → FAIL
+          3. If either side is empty after cleaning → can't compare → benefit of doubt.
+        Fail examples:  "sures"  vs "Suresh S"   → ❌ (83% < 85%)
+                        "Mithun" vs "Suresh S"   → ❌ (zero overlap)
+        Pass examples:  "Suresh" vs "Suresh S"   → ✅ (exact)
+                        "suresh" vs "Suresh"     → ✅ (exact, lowercased)
+        """
         import re as _re
-        stop = {"mr","mrs","ms","dr","shri","smt","kumari","late","s/o","d/o","w/o"}
+        stop = {"mr","mrs","ms","dr","shri","smt","kumari","late","s/o","d/o","w/o","c/o"}
         def clean(s):
             s = _re.sub(r"[^a-z ]", "", s.strip().lower())
-            return {w for w in s.split() if len(w) > 1 and w not in stop}
+            return [w for w in s.split() if len(w) >= 2 and w not in stop]
         s_words = clean(stated)
         d_words = clean(from_id)
-        if not s_words or not d_words:
-            return True   # can't compare, give benefit of doubt
-        common = s_words & d_words
-        # Need at least one word match OR high overlap ratio
-        if common:
+        if not d_words:
+            return True   # can't extract name from ID — OCR missed it — benefit of doubt
+        if not s_words:
+            return False  # stated name is too short/incomplete to verify
+        s_set = set(s_words)
+        d_set = set(d_words)
+        # Rule 1: exact word match
+        if s_set & d_set:
             return True
-        # Soundex-style: check first 3 chars of each word
-        s_prefixes = {w[:3] for w in s_words}
-        d_prefixes = {w[:3] for w in d_words}
-        return bool(s_prefixes & d_prefixes)
+        # Rule 2: real substring prefix — stated word must be actual prefix of ID word
+        # AND must cover >= 85% of ID word (prevents "sures" matching "suresh" at 83%)
+        for sw in s_words:
+            if len(sw) < 4:   # too short to prefix-match reliably
+                continue
+            for dw in d_words:
+                if len(dw) < 4:
+                    continue
+                # sw must be a true prefix of dw (or vice-versa) with >=85% coverage
+                if dw.startswith(sw) and len(sw) / len(dw) >= 0.88:
+                    return True
+                if sw.startswith(dw) and len(dw) / len(sw) >= 0.88:
+                    return True
+        return False
 
     def _compare_age(self, dob: datetime.date | None, stated_age) -> tuple:
         if dob is None or stated_age is None:
             return None, ""
         try:
             calc_age = (datetime.date.today() - dob).days // 365
-            match = abs(calc_age - int(stated_age)) <= 2
+            match = abs(calc_age - int(stated_age)) <= 3   # ±3 yr tolerance (accounts for birthday not yet passed)
             return match, str(dob.year)
         except (ValueError, TypeError):
             return None, ""
 
     def _result(self, status, verified, message, quality="", id_type="",
                 dob_year="", notes="", options=None, handoff_to_gemini=False,
-                name_on_id="") -> dict:
+                name_on_id="", id_gender="") -> dict:
         return {
             "status":           status,
             "verified":         verified,
@@ -1105,6 +1175,7 @@ class OCRVerifier:
             "handoff_to_gemini": handoff_to_gemini,
             "engine":           "offline_ocr",
             "name_on_id":       name_on_id,
+            "id_gender":        id_gender,   # extracted from ID, never asked manually
         }
 
 
