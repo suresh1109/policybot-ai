@@ -38,14 +38,14 @@ const UPLOAD_STAGES = [
   'doc_upload','verify_wait',
   'optional_medical_report',
   'condition_report_upload','condition_report_wait',
-  'optional_health_check','vehicle_history','vehicle_doc_upload',
+  'optional_health_check','vehicle_doc_upload',
   'life_docs','travel_declare','property_history'
 ];
 
 const SKIPPABLE_STAGES = [
   'optional_medical_report',
   'optional_health_check','vehicle_doc_upload','life_docs',
-  'travel_declare','property_history','condition_report_upload','vehicle_history'
+  'travel_declare','property_history','condition_report_upload'
 ];
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
@@ -253,6 +253,7 @@ function setLang(lang) {
 
 // ─── Start bot ────────────────────────────────────────────────────────────────
 function startBot() {
+  window._recInjected = false;  // reset rec table guard on new chat
   // Reset flags for fresh session
   isFirstMessage = true;
   currentStage   = 'insurance_type';
@@ -272,6 +273,8 @@ function startBot() {
   document.getElementById('confidence-card')?.classList.add('hidden');
   document.getElementById('chat-messages').innerHTML = '';
   document.getElementById('options-zone').innerHTML  = '';
+  document.getElementById('session-quick-bar')?.remove();
+  window._recInjected = false;
 
   const badge = document.getElementById('vb-govid');
   if (badge) { badge.className = 'verif-badge pending'; badge.textContent = 'Pending'; }
@@ -301,6 +304,12 @@ async function sendMsg() {
   const inp  = document.getElementById('chat-input');
   const text = inp.value.trim();
   if (!text) return;
+  // health_report_confirm is a pure-frontend pseudo-stage — block any text input
+  if (currentStage === 'health_report_confirm') {
+    inp.value = '';
+    showToast('Please choose Re-upload or Continue above 😊', 'info');
+    return;
+  }
   inp.value = '';
   autoH(inp);
   await doSend(text, null);
@@ -347,7 +356,16 @@ async function doSend(text, selectedOption) {
       if (d.stage && d.stage !== _prevStage) {
         document.dispatchEvent(new CustomEvent('policybot:stage', {detail:{stage:d.stage, userId}}));
       }
-      addBotBubble(d.reply, d.options || [], d.option_type || 'none');
+      // Block ALL text bubbles at recommendation and follow-up stages.
+      // The hero card + comparison table ARE the complete recommendation — no text bubble needed.
+      const _REC_SUPPRESS_STAGES = new Set(['recommendation','explain_plan','ask_escalation']);
+      if (!_REC_SUPPRESS_STAGES.has(d.stage)) {
+        addBotBubble(d.reply, d.options || [], d.option_type || 'none');
+      } else if (d.options && d.options.length) {
+        // Still render option buttons (e.g. "Tell me more / Change budget") but NO text
+        const zone = document.getElementById('options-zone');
+        if (zone) renderOptions(d.options, d.option_type || 'radio');
+      }
       renderSuggestions(d.stage);
       updateProgress(d.progress, d.stage_label, d.stage);
       setTimeout(fetchMemory, 300);
@@ -363,9 +381,11 @@ async function doSend(text, selectedOption) {
         }
       }
 
-      // ── recommendation: show comparison table + action buttons ────────
-      if (d.stage === 'recommendation' && d.module === 'recommendation') {
-        showToast('🔍 Profile analyzed — showing best plans for you!', 'success');
+      // ── recommendation: inject rich table card directly into chat ────────
+      // _recInjected flag prevents duplicate injection on re-renders
+      if (d.stage === 'recommendation' && d.module === 'recommendation' && !window._recInjected) {
+        window._recInjected = true;
+        showToast('🎯 Best plans found for your profile!', 'success');
         // Load hospital network for health insurance
         fetch(`/api/profile?user_id=${encodeURIComponent(userId)}`)
           .then(r=>r.json()).then(p=>{
@@ -374,13 +394,13 @@ async function doSend(text, selectedOption) {
               setTimeout(() => loadHospitalNetwork(prof.city, prof.insurance_type), 1200);
             }
           }).catch(()=>{});
-        // Inject comparison table (only once per session)
-        if (!document.getElementById('plan-compare-table') && d.plans_table && d.plans_table.length) {
-          setTimeout(() => injectPlanCompareTable(d.plans_table), 700);
+        // Inject the rich recommendation table (replaces both bubble + old table)
+        if (!document.getElementById('plan-compare-table')) {
+          setTimeout(() => injectRecTable(d.plans_table || [], d.reply || ''), 300);
         }
-        // Inject action buttons (Download + WhatsApp)
+        // Inject action buttons (Download PDF)
         if (!document.getElementById('inline-report-btn')) {
-          setTimeout(() => injectReportButtons(), 1400);
+          setTimeout(() => injectReportButtons(), 900);
         }
       }
       // Upload card visibility
@@ -560,7 +580,25 @@ function handleUpload(input) {
 // ─── Document Upload Pipeline ─────────────────────────────────────────────────
 async function processUpload(file) {
   const sel = document.getElementById('up-doc-type');
-  const docType = sel ? sel.value : 'aadhaar';
+  // Derive doc_type from currentStage — never trust just the dropdown
+  // because autoSelectDocType may not have run yet when the user drags a file in
+  const stageDocTypeMap = {
+    'optional_medical_report': 'medical_report',
+    'condition_report_upload': 'health_report',
+    'condition_report_wait':   'health_report',
+    'optional_health_check':   'health_report',
+    'vehicle_doc_upload':      'vehicle_insurance',
+    'vehicle_history':         'vehicle_insurance',
+    'life_docs':               'life_doc',
+    'travel_declare':          'travel_doc',
+    'property_history':        'property_doc',
+    'doc_upload':              'aadhaar',
+    'verify_wait':             'aadhaar',
+  };
+  // Stage wins; dropdown is fallback
+  const docType = stageDocTypeMap[currentStage] || (sel ? sel.value : 'aadhaar');
+  // Also sync dropdown so it shows correctly
+  if (sel && stageDocTypeMap[currentStage]) sel.value = stageDocTypeMap[currentStage];
   const ext = file.name.split('.').pop().toLowerCase();
 
   const ALLOWED = ['jpg','jpeg','png','webp','gif','bmp','tiff','tif','pdf','docx','doc','txt'];
@@ -1328,75 +1366,231 @@ async function triggerCleanup() {
   } catch(e) {}
 }
 // ─── Download Analysis Report (PDF) ──────────────────────────────────────────
-// ─── Plan Comparison Table ────────────────────────────────────────────────────
-function injectPlanCompareTable(plans) {
+// ─── Rich Recommendation Table (replaces plain bubble + old table) ──────────────
+function injectRecTable(plans, replyText) {
   const chatBox = document.getElementById('chat-messages');
-  if (!chatBox || !plans || !plans.length) return;
+  if (!chatBox) return;
 
-  const medals = ['🥇', '🥈', '🥉'];
-  const cols = plans.length;
+  const medals = ['🥇','🥈','🥉'];
+  const best   = (plans && plans.length > 0) ? plans[0] : null;
 
-  // Build header cells
-  let headerCells = '<th class="pct-label">Feature</th>';
-  plans.forEach((p, i) => {
-    headerCells += `
-      <th class="pct-plan">
-        <div class="pct-medal">${medals[i] || '✅'}</div>
-        <div class="pct-name">${escHtml(p.name)}</div>
-        <div class="pct-company">${escHtml(p.company)}</div>
-      </th>`;
-  });
+  /* ═══════════════════════════════════════════════════════════════
+     PART 1 — FLOATING HERO RECOMMENDATION CARD
+     Fixed overlay, centered on screen, springs in with animation.
+     Shows the #1 best plan with ALL data crystal-clear.
+     User dismisses it → it flies out → comparison table visible.
+  ═══════════════════════════════════════════════════════════════ */
+  if (best) {
+    // score can be 0–10 (float) or 0–100 (int)
+    const rawScore = best.score || 0;
+    const scorePct = Math.min(100, Math.max(0, rawScore > 10 ? Math.round(rawScore) : Math.round(rawScore * 10)));
+    const scoreCol = scorePct >= 80 ? '#10b981' : scorePct >= 55 ? '#f59e0b' : '#a78bfa';
 
-  // Build data rows
-  const rows = [
-    { label: '💰 Premium',       key: 'premium'   },
-    { label: '🛡️ Coverage',      key: 'coverage'  },
-    { label: '⏱️ Waiting Period', key: 'waiting'   },
-    { label: '👤 Eligible Age',   key: 'age'       },
-    { label: '⭐ Key Benefit',    key: 'benefits'  },
-    { label: '✅ Why This Plan',  key: 'reason'    },
+    // Remove any existing hero overlay first
+    document.getElementById('rhc-overlay')?.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'rhc-overlay';
+    overlay.className = 'rhc-overlay';
+    overlay.innerHTML = `
+      <div class="rhc-backdrop" id="rhc-backdrop"></div>
+      <div class="rhc-card" id="rhc-card" role="dialog" aria-modal="true">
+
+        <!-- Glow orbs -->
+        <div class="rhc-orb rhc-orb1"></div>
+        <div class="rhc-orb rhc-orb2"></div>
+
+        <!-- Top bar: tag + close -->
+        <div class="rhc-topbar">
+          <div class="rhc-tag">
+            <span class="rhc-tag-dot"></span>
+            <span>🏆 &nbsp;#1 Best Plan For You</span>
+          </div>
+          <button class="rhc-close" id="rhc-close-btn" title="View full comparison">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Plan name + company -->
+        <div class="rhc-identity">
+          <div class="rhc-medal">🥇</div>
+          <div class="rhc-name-wrap">
+            <div class="rhc-plan-name">${escHtml(best.name || 'Top Recommended Plan')}</div>
+            <div class="rhc-company">${escHtml(best.company || '')}</div>
+          </div>
+        </div>
+
+        <!-- 2×2 stats grid — all data explicit -->
+        <div class="rhc-chips">
+          <div class="rhc-chip">
+            <div class="rhc-chip-icon">💰</div>
+            <div class="rhc-chip-label">Premium / Year</div>
+            <div class="rhc-chip-val">${escHtml(best.premium || '—')}</div>
+          </div>
+          <div class="rhc-chip">
+            <div class="rhc-chip-icon">🛡️</div>
+            <div class="rhc-chip-label">Coverage</div>
+            <div class="rhc-chip-val">${escHtml(best.coverage || '—')}</div>
+          </div>
+          <div class="rhc-chip">
+            <div class="rhc-chip-icon">⏱️</div>
+            <div class="rhc-chip-label">Waiting Period</div>
+            <div class="rhc-chip-val">${escHtml(best.waiting || '—')}</div>
+          </div>
+          <div class="rhc-chip">
+            <div class="rhc-chip-icon">👤</div>
+            <div class="rhc-chip-label">Eligible Age</div>
+            <div class="rhc-chip-val">${escHtml(best.age || '—')}</div>
+          </div>
+        </div>
+
+        <!-- Why this plan — clearly visible -->
+        ${best.reason ? `
+        <div class="rhc-why">
+          <span class="rhc-why-icon">✅</span>
+          <span class="rhc-why-text">${escHtml(best.reason)}</span>
+        </div>` : ''}
+
+        <!-- Key benefits -->
+        ${best.benefits ? `
+        <div class="rhc-benefits">
+          <span class="rhc-benefits-icon">⭐</span>
+          <span class="rhc-benefits-text">${escHtml(best.benefits)}</span>
+        </div>` : ''}
+
+        <!-- Match score -->
+        <div class="rhc-score-row">
+          <span class="rhc-score-label">Match Score</span>
+          <div class="rhc-score-track">
+            <div class="rhc-score-fill" style="--sw:${scorePct}%;--sc:${scoreCol}"></div>
+          </div>
+          <span class="rhc-score-num" style="color:${scoreCol}">${scorePct}%</span>
+        </div>
+
+        <!-- CTA footer -->
+        <div class="rhc-cta-row">
+          <button class="rhc-cta-primary" id="rhc-cta-more">
+            <i class="fas fa-info-circle"></i> Tell Me More
+          </button>
+          <button class="rhc-cta-secondary" id="rhc-cta-compare">
+            <i class="fas fa-table-columns"></i> See All Plans
+          </button>
+        </div>
+
+      </div>`;
+
+    document.body.appendChild(overlay);
+    // Force reflow for animation
+    overlay.offsetHeight;
+    overlay.classList.add('rhc-visible');
+
+    function closeHeroCard() {
+      overlay.classList.remove('rhc-visible');
+      overlay.classList.add('rhc-closing');
+      setTimeout(() => overlay.remove(), 380);
+    }
+
+    document.getElementById('rhc-backdrop').addEventListener('click', closeHeroCard);
+    document.getElementById('rhc-close-btn').addEventListener('click', closeHeroCard);
+    document.getElementById('rhc-cta-compare').addEventListener('click', () => {
+      closeHeroCard();
+      setTimeout(() => {
+        const table = document.getElementById('plan-compare-table');
+        if (table) table.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 400);
+    });
+    document.getElementById('rhc-cta-more').addEventListener('click', () => {
+      closeHeroCard();
+      setTimeout(() => doSend('Tell me more about this plan', 'Tell me more'), 400);
+    });
+
+    // Escape key
+    const _escHandler = (e) => { if (e.key === 'Escape') { closeHeroCard(); document.removeEventListener('keydown', _escHandler); } };
+    document.addEventListener('keydown', _escHandler);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     PART 2 — COMPARISON TABLE (all plans)
+  ═══════════════════════════════════════════════════════════════ */
+  if (!plans || !plans.length) return;
+
+  const ROWS = [
+    { icon:'💰', label:'Premium',        key:'premium'  },
+    { icon:'🛡️', label:'Coverage',       key:'coverage' },
+    { icon:'⏱️', label:'Waiting Period',  key:'waiting'  },
+    { icon:'👤', label:'Eligible Age',    key:'age'      },
+    { icon:'⭐', label:'Key Benefits',    key:'benefits' },
+    { icon:'✅', label:'Why This Plan',   key:'reason'   },
   ];
 
-  let bodyRows = '';
-  rows.forEach(r => {
-    bodyRows += `<tr><td class="pct-label">${r.label}</td>`;
-    plans.forEach(p => {
-      const val = p[r.key] || '—';
-      bodyRows += `<td class="pct-cell">${escHtml(val)}</td>`;
-    });
-    bodyRows += '</tr>';
-  });
+  function scoreBarHtml(score) {
+    const pct = Math.min(100, Math.max(0, Math.round((score || 0) * 10)));
+    const col = pct >= 80 ? '#10b981' : pct >= 55 ? '#f59e0b' : '#a78bfa';
+    return `<div class="rct-sb-wrap">
+      <div class="rct-sb" style="--pct:${pct}%;--col:${col}"></div>
+      <span class="rct-sb-num">${pct}%</span>
+    </div>`;
+  }
+
+  const colCount = plans.length;
+  const gridCols = `150px repeat(${colCount}, minmax(170px, 1fr))`;
 
   const tableHtml = `
-    <div class="plan-compare-wrap" id="plan-compare-table">
-      <div class="pct-header">
-        <i class="fas fa-table-columns"></i> Plan Comparison
-        <span class="pct-badge">${cols} Plans</span>
+    <div class="rct-wrap" id="plan-compare-table">
+
+      <div class="rct-hdr">
+        <div class="rct-hdr-left">
+          <div class="rct-hdr-icon"><i class="fas fa-table-columns"></i></div>
+          <div>
+            <div class="rct-hdr-title">Full Plan Comparison</div>
+            <div class="rct-hdr-sub">${colCount} plan${colCount !== 1 ? 's' : ''} matched your profile</div>
+          </div>
+        </div>
+        <div class="rct-hdr-badge">${colCount} Plans</div>
       </div>
-      <div class="pct-scroll">
-        <table class="pct-table">
-          <thead><tr>${headerCells}</tr></thead>
-          <tbody>${bodyRows}</tbody>
-        </table>
+
+      <div class="rct-scroll">
+        <div class="rct-thead" style="grid-template-columns:${gridCols}">
+          <div class="rct-th-spacer"></div>
+          ${plans.map((p, i) => `
+            <div class="rct-th-plan ${i === 0 ? 'rct-th-top' : ''}">
+              <div class="rct-th-medal">${medals[i] || '✅'}</div>
+              <div class="rct-th-name">${escHtml(p.name || '—')}</div>
+              <div class="rct-th-company">${escHtml(p.company || '')}</div>
+              ${i === 0 ? '<div class="rct-th-badge">Best Match</div>' : ''}
+            </div>`).join('')}
+        </div>
+
+        ${ROWS.map(r => `
+          <div class="rct-row" style="grid-template-columns:${gridCols}">
+            <div class="rct-row-lbl"><span class="rct-lbl-icon">${r.icon}</span>${r.label}</div>
+            ${plans.map((p, i) => `
+              <div class="rct-row-cell ${i === 0 ? 'rct-cell-best' : ''}">${escHtml(p[r.key] || '—')}</div>
+            `).join('')}
+          </div>`).join('')}
+
+        <div class="rct-row rct-score-row" style="grid-template-columns:${gridCols}">
+          <div class="rct-row-lbl"><span class="rct-lbl-icon">📊</span>Match Score</div>
+          ${plans.map((p, i) => `
+            <div class="rct-row-cell ${i === 0 ? 'rct-cell-best' : ''}">${scoreBarHtml(p.score)}</div>
+          `).join('')}
+        </div>
       </div>
-      <div class="pct-footer">
-        Tap a plan name above to select it · Powered by PolicyBot AI
+
+      <div class="rct-foot">
+        <span><i class="fas fa-robot"></i> PolicyBot AI · Ask me anything about these plans</span>
+        <span>${new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' })}</span>
       </div>
     </div>`;
 
-  const row = document.createElement('div');
-  row.className = 'msg-row bot pct-row';
-  row.innerHTML = `
-    <div class="msg-av"><i class="fas fa-robot"></i></div>
-    <div class="msg-inner" style="max-width:100%;width:100%">
-      <div class="msg-bubble-bot" style="padding:0;overflow:hidden;border-radius:14px;">${tableHtml}</div>
-      <div class="msg-time">${nowStr()}</div>
-    </div>`;
-  chatBox.appendChild(row);
-  chatBox.scrollTop = chatBox.scrollHeight;
+  const tableWrap = document.createElement('div');
+  tableWrap.className = 'rct-table-msg';
+  tableWrap.innerHTML = tableHtml;
+  chatBox.appendChild(tableWrap);
+  setTimeout(() => chatBox.scrollTop = chatBox.scrollHeight, 100);
 }
 
-// ─── Report Action Buttons (Download + WhatsApp) ──────────────────────────────
+// ─── Report Action Buttons// ─── Report Action Buttons (Download + WhatsApp) ──────────────────────────────
 function injectReportButtons() {
   const chatBox = document.getElementById('chat-messages');
   if (!chatBox) return;
@@ -2178,6 +2372,8 @@ function showLevelUp(levelName, levelIcon) {
 
 // Hook XP into doSend — award XP whenever stage advances
 const _origDoSend_xp = doSend;
+
+
 // Patch: call awardXP after successful stage change
 document.addEventListener('policybot:stage', e => {
   if (e.detail?.stage) awardXP(e.detail.stage);

@@ -11,76 +11,36 @@ NEW IN v7:
 import json, re
 from models.conversation_memory import memory_manager, ALL_STEPS, FIELD_TO_STEP
 
-SYSTEM_PROMPT = """You are PolicyBot, a warm AI Insurance Advisor for India.
+SYSTEM_PROMPT = """You are PolicyBot, a warm, natural AI Insurance Advisor for India.
 
-PERSONALITY: Friendly, concise (2-3 sentences max), emoji-natural 😊 👍 ✨
-Never use markdown headers or bullet symbols in chat messages.
-Address user by first name when known.
+PERSONALITY: Friendly, conversational, concise (2-3 sentences max). Use emojis naturally 😊 👍 ✨
+Never use markdown headers or bullet symbols. Address user by first name when known.
 
-LANGUAGE RULE (CRITICAL — NO EXCEPTIONS):
-- Every prompt contains a LANGUAGE field (English / Tamil / Hindi).
-- You MUST reply in that exact language ONLY.
-- If user writes in Tamil but LANGUAGE=English → reply in English.
-- If LANGUAGE=Tamil → reply entirely in Tamil script.
-- If LANGUAGE=Hindi → reply entirely in Hindi script.
-- NEVER mix languages in a single reply.
+LANGUAGE RULE (CRITICAL):
+- Every prompt has a LANGUAGE field. Reply ONLY in that language.
+- LANGUAGE=English → reply in English only, regardless of what user wrote.
+- LANGUAGE=Tamil → reply entirely in Tamil script.
+- LANGUAGE=Hindi → reply entirely in Hindi script.
 
-CRITICAL LANGUAGE RULE:
-- The UI language is specified in every prompt as LANGUAGE field.
-- ALWAYS reply in that exact language — English, Tamil, or Hindi.
-- NEVER mix languages. If user writes in Tamil but LANGUAGE=English → reply in English.
-- If LANGUAGE=Tamil → reply entirely in Tamil.
-- If LANGUAGE=Hindi → reply entirely in Hindi.
-- Language of user's message does NOT change your reply language. Only LANGUAGE field matters.
+NATURAL CONVERSATION RULES — READ CAREFULLY:
+- The SESSION PROFILE shows everything already collected. NEVER re-ask a field that is already in the profile.
+- The ALREADY COLLECTED section in each prompt explicitly lists what is known — skip those questions entirely.
+- If the user mentions name, age, city, or insurance type naturally in any message — acknowledge it and move on.
+- Example: User says "I am Suresh, 25 years old, want health insurance" → You already have name+age+type → go straight to asking for Gov ID upload. Do NOT ask name. Do NOT ask age.
+- Example: User says "I am Suresh 20 yrs old" after choosing insurance → You have name+age → skip to Gov ID.
+- Transitions should feel natural: "Great Suresh! 😊 Could you upload your Gov ID so I can verify your details?"
 
-STRICT STEP ORDER — DO NOT BREAK UNDER ANY CIRCUMSTANCE:
-1. Insurance type (radio shown)
-2. NAME — ALWAYS ask "Nice choice 👍 May I know your name?" after insurance type
-3. Age — ask "Thanks [name]! How old are you?"
-4. Gov ID upload — upload widget appears automatically in sidebar
-5. Verification wait — ONLY say waiting message
-   → Gender is AUTOMATICALLY extracted from ID. NEVER ask gender as a question.
-6. City — ask which city
-7. Coverage — ask who the policy should cover (radio: Myself only / Spouse and children / Whole family)
-8. Family (ONLY if coverage ≠ "Myself only"):
-   a. How many members to cover (number input)
-   b. Does anyone in the family have medical conditions? (YES/NO only — do NOT ask per-member docs)
-9. Main user medical — "Do you have any existing medical conditions?" (main user only)
-   → If YES: ask them to briefly describe the condition(s)
-   → If NO: ask to upload health report for verification (main user only, optional)
-10. Optional medical report — upload widget for MAIN USER ONLY
-    → Health report analysis applies only to main user, NOT family
-11. Insurance-type-specific branch (health report / vehicle / life / travel / property)
-12. Budget (radio shown)
-13. REVIEW DETAILS — Show full summary of collected info. Ask "Continue or Change Details?"
-    → Continue: proceed silently (backend runs fraud check + risk scoring + premium prediction)
-    → Change Details: let user update specific fields, then show review again
-14. Recommend 2-3 plans with full details + estimated premium range from risk analysis
-    → If family has conditions: recommend family plans covering pre-existing diseases
-    → If main user has condition: recommend plans for pre-existing disease cover
-    → If no conditions + normal health report: recommend standard plans
-15. Explain selected plan
-16. Ask about human advisor
-17. Ask for 1-5 star rating
-18. Farewell
-
-SMART EXTRACTION RULE:
-- If the user mentions their name, age, insurance type, or city in their FIRST message, do NOT ask for that info again.
-- Example: "I am Suresh, age 45, want health insurance" → skip to asking for ID upload.
-- Check the SESSION PROFILE before asking any question — if already filled, skip to next unfilled field.
+FLOW (follow the CURRENT STEP in each prompt — skip steps for already-known fields):
+→ Insurance type → Name → Age → Gov ID upload → City → Coverage → Family → Medical → Budget → Review → Recommend → Explain → Rate → Farewell
 
 ABSOLUTE RULES:
-- After insurance_type → NEXT is ALWAYS name. NO EXCEPTIONS
-- Never say document verified unless backend confirmed it
-- Never recommend before budget is collected
-- At verify_wait / condition_report_wait: ONLY say waiting message, ask NO questions
-- Skippable stages: user types "skip" / "later" / "no thanks" to bypass
-- At recommendation: ALWAYS show plans as radio button options (handled by backend)
-- At explain_plan: end ALWAYS with "Would you like to apply now or compare other plans?"
-- GOV ID VERIFICATION: BOTH name AND age must match for verified status
-- RECOMMENDATION MEMORY: Plans are shown ONLY ONCE per session. If already shown, NEVER re-list them.
-  If user says "none", "ok thanks", "no" at recommendation → ask: Apply now? Speak to advisor? Change budget?
-  Do NOT re-list the plans.
+- NEVER ask for a field already shown in SESSION PROFILE or ALREADY COLLECTED.
+- NEVER say document verified unless backend confirms it.
+- NEVER recommend before budget is collected.
+- At verify_wait / condition_report_wait: say ONLY the waiting message, ask NO questions.
+- Gender is AUTOMATICALLY extracted from Gov ID. NEVER ask gender manually.
+- At explain_plan: end with "Would you like to apply now or compare other plans?"
+- RECOMMENDATION MEMORY: Plans shown ONLY ONCE per session. If already shown, never re-list them.
 """
 
 _NOT_A_NAME = {
@@ -1508,105 +1468,100 @@ class ConversationEngine:
         instructions = {
             # ── Original steps 1-10 ──────────────────────────────────────────
             "insurance_type":(
-                "STEP 1: Welcome warmly. Ask what insurance they need. "
+                "Welcome the user warmly. Ask what insurance they need. "
                 "Say: 'Hi 😊 I'm PolicyBot, your AI insurance advisor! "
                 "What type of insurance are you looking for today?' "
-                "Insurance type radio buttons will appear automatically."
+                "Insurance type radio buttons appear automatically."
             ),
             "collect_name":(
-                f"STEP 2: User chose '{ins}'. "
+                f"Insurance chosen: {ins}. "
                 + (
-                    f"Smart extraction already found name='{profile.get('name','')}'. "
-                    f"Acknowledge it warmly: 'Nice to meet you, {profile.get('name','')}! 😊 "
-                    f"How old are you?' Then advance to asking age."
+                    f"You already know: name='{profile.get('name','')}', age='{profile.get('age','')}'. "
+                    f"Skip name and age — go straight to Gov ID. "
+                    f"Say warmly: 'Great {profile.get('name','')}! 😊 Could you upload your Government ID for a quick verification? 📎 Type \"skip\" if you prefer not to.'"
+                    if profile.get("name") and profile.get("age") else
+                    f"You already know name='{profile.get('name','')}'. "
+                    f"Don't ask name again. Just ask age naturally: 'Nice to meet you, {profile.get('name','')}! 😊 How old are you?'"
                     if profile.get("name") else
-                    "NOW ask their name. SAY EXACTLY: "
-                    "'Nice choice 👍 May I know your name?' "
-                    "Do NOT ask anything else. JUST ask name."
+                    "Ask for the user's name. Say: 'Nice choice 👍 May I know your name?'"
                 )
             ),
             "collect_age":(
-                f"STEP 3: User's name is '{name}'. "
-                f"Ask age. Say: 'Thanks {name or 'there'}! How old are you? 😊'"
+                f"User's name: '{name}'. "
+                + (
+                    f"Age already known: {profile.get('age','')}. "
+                    f"Do NOT ask age. Move to Gov ID: 'Got it{', ' + name if name else ''}! 😊 Please upload your Government ID for verification 📎 or type \"skip\".'"
+                    if profile.get("age") else
+                    f"Ask age warmly: 'Thanks {name or 'there'}! How old are you? 😊'"
+                )
             ),
             "doc_upload":(
-                f"STEP 4: Got it{', ' + name if name else ''}! "
-                + (f"I've noted your name as '{name}' and age as {profile.get('age','')}. " if name and profile.get('age') else "")
-                + "Now ask user to upload their Government ID. The upload widget will appear automatically in the sidebar. "
-                "Accepted: Aadhaar, PAN, Driving License, Passport, Voter ID. "
-                f"Say something like: 'Great{', ' + name if name else ''}! Please upload your Government ID using the upload section 📎 "
-                "You can type \"skip\" if you prefer not to verify right now.' "
-                "Keep it warm and brief — 2 sentences max."
+                f"Profile: name='{name}', age='{profile.get('age','')}'. "
+                "Ask for Government ID upload. The upload widget is visible in the sidebar. "
+                f"Say: 'Great{', ' + name if name else ''}! Please upload your Government ID 📎 "
+                "(Aadhaar, PAN, Driving License, Passport, or Voter ID). Type \"skip\" to continue without verifying.' "
+                "2 sentences max."
             ),
             "verify_wait":(
-                "STEP 5: User uploaded document. "
-                "Say ONLY: 'Thanks for uploading 😊 I'm checking your document now, "
-                "please wait a moment.' Ask NO questions."
+                "User just uploaded a document. "
+                "Say ONLY: 'Thanks for uploading 😊 I'm checking your document now, please wait a moment.' "
+                "Ask NO questions whatsoever."
             ),
             "collect_gender":(
-                f"STEP 6: ID verified. Gender was auto-extracted from the document. "
-                f"Profile already has gender='{profile.get('gender','')}'. "
-                f"If user just said 'yes details are correct', confirm and ask city: "
-                f"'Perfect! Details confirmed ✅ Which city do you live in{', ' + name if name else ''}? 🏙️' "
-                f"Otherwise say: 'Great! ✅ Your ID is verified! "
-                f"Which city do you live in{', ' + name if name else ''}? 🏙️' "
-                "Move directly to asking city — do NOT ask gender manually."
+                f"ID verified. Gender auto-extracted: '{profile.get('gender','')}'. "
+                f"Say: 'Your ID is verified ✅ Which city do you live in{', ' + name if name else ''}? 🏙️' "
+                "Do NOT ask gender. Go straight to city."
             ),
             "collect_city":(
-                f"STEP 7: Ask city. "
-                f"Say: 'Which city do you live in{', ' + name if name else ''}? 🏙️'"
+                f"Already know: name='{name}', age='{profile.get('age','')}'. "
+                "Do NOT ask name or age again. "
+                f"Ask city only: 'Which city do you live in{', ' + name if name else ''}? 🏙️'"
             ),
-            # ── NEW stages 8-10 ──────────────────────────────────────────────
+            # ── Coverage + Family ─────────────────────────────────────────────
             "collect_coverage":(
-                f"STEP 8: Ask who the policy should cover{', ' + name if name else ''}. "
+                f"Ask who the policy should cover. "
                 "Say: 'Who would you like the insurance policy to cover? 😊' "
                 "Radio buttons appear: Myself only / My spouse and children / Whole family."
             ),
             "collect_family_count":(
-                f"STEP 9a: User wants family coverage ({profile.get('coverage_type','')}). "
-                f"Ask: 'How many family members should be covered? 👨‍👩‍👧‍👦 (Please enter a number)'"
+                f"User wants family coverage ({profile.get('coverage_type','')}). "
+                f"Ask: 'How many family members should be covered? 👨‍👩‍👧‍👦 (Enter a number)'"
             ),
             "collect_family_medical":(
-                f"STEP 9b: Got {profile.get('family_member_count','')} family member(s). "
-                "Ask ONE simple question only: 'Does anyone in your family have any existing medical conditions? 🏥' "
+                f"Got {profile.get('family_member_count','')} family member(s). "
+                "Ask ONE question: 'Does anyone in your family have any existing medical conditions? 🏥' "
                 "Radio buttons: No, everyone is healthy / Yes, there are medical conditions. "
-                "IMPORTANT: Do NOT ask each member individually. Do NOT ask for documents from family members."
+                "Do NOT ask per-member details or request documents from family members."
             ),
             "collect_family_members":(
-                "STEP 9b (legacy): Ask family member details briefly. Example: Spouse, 40 😊"
+                "Ask family member details briefly. Example: Spouse, 40 😊"
             ),
             "collect_family":(
-                "STEP 8 (legacy): Ask family members to cover. "
-                "Say: 'Who would you like to include in your insurance coverage? 👨‍👩‍👧‍👦' "
+                "Ask who to include in coverage: 'Who would you like to include in your insurance coverage? 👨‍👩‍👧‍👦' "
                 "Multi-select buttons appear automatically."
             ),
-            # ── Medical status gate ──────────────────────────────────────────
+            # ── Medical ───────────────────────────────────────────────────────
             "collect_medical_status":(
-                f"STEP 10: Ask {name or 'the user'} about their own medical conditions. "
+                f"Ask {name or 'the user'} about their own medical conditions (main user only, NOT family). "
                 "Say: 'Do you have any existing medical conditions? 🏥' "
-                "Radio buttons: No existing medical conditions / Yes, there are medical conditions. "
-                "NOTE: This is for the main user only, NOT family members (already asked separately)."
+                "Radio buttons: No existing medical conditions / Yes, there are medical conditions."
             ),
             "collect_medical":(
                 (
-                    "STEP 11: User said YES to medical conditions. Ask for details. "
-                    f"Say: 'Please briefly mention the medical condition(s) — for example: Diabetes, Heart condition, High blood pressure. "
-                    "(Select all that apply)' "
-                    "Buttons appear automatically."
+                    "User said YES to medical conditions. Ask for details. "
+                    f"Say: 'Please briefly mention your condition(s) — e.g. Diabetes, Heart condition, Blood pressure. "
+                    "(Select all that apply)' Buttons appear automatically."
                 ) if (profile.get("medical_conditions_status") == "HasConditions"
                       or not profile.get("medical_conditions_status")) else (
-                    "STEP 11: Ask about medical conditions (multi-select). "
-                    "Buttons appear automatically."
+                    "Ask about medical conditions (multi-select). Buttons appear automatically."
                 )
             ),
-            # ── Optional medical report (main user only) ──────────────────────
+            # ── Optional medical report ───────────────────────────────────────
             "optional_medical_report":(
-                f"STEP 12: Ask {name or 'the user'} to optionally upload their personal health report. "
-                "Say: 'Since you have no medical conditions, uploading a recent health report will help us "
-                f"recommend better plans for you{', ' + name if name else ''} 📋 "
-                "You can upload it now or skip this step.' "
-                "Options: Upload medical report / Skip. Upload widget is on the left. "
-                "IMPORTANT: This is for the MAIN USER only — do NOT ask family members to upload documents."
+                f"Ask {name or 'the user'} to optionally upload a personal health report (main user only). "
+                "Say: 'Since you have no medical conditions, a recent health report helps us "
+                f"find better plans for you{', ' + name if name else ''} 📋 You can upload now or skip.' "
+                "Upload widget is on the left. Main user only — do NOT ask family members."
             ),
             # ── Condition-based branches ────────────────────────────────
             "condition_report_upload":(
@@ -1638,10 +1593,13 @@ class ConversationEngine:
                 "Radio buttons will appear (Previous Policy / Accident Claim / None)."
             ),
             "vehicle_doc_upload":(
-                f"STEP 9e: User has vehicle history. "
-                "Ask to upload previous policy or accident claim document. "
-                "Say: 'Please upload your previous policy or accident claim document using "
-                "the upload section 📄 You can type \"skip\" if unavailable.' "
+                f"STEP 9e: User has vehicle history ({profile.get('vehicle_history','')}). "
+                "Upload widget is NOW VISIBLE in the sidebar. "
+                "Warmly ask them to upload their previous policy or accident claim document. "
+                f"Say: 'Thanks {name or 'there'}! 📄 To get you the best rates, please upload your "
+                "previous vehicle insurance policy or accident claim document using the upload section on the left. "
+                "This helps us tailor the recommendation. You can also type \"skip\" if you don't have it handy.' "
+                "Keep it warm and brief — 2 sentences max."
             ),
             "life_docs":(
                 f"STEP 9f: Life/Term insurance. "
@@ -1782,11 +1740,24 @@ class ConversationEngine:
         }.get(stage, "Continue the conversation following the PolicyBot flow.")
 
         lang_rule = f"CRITICAL: Reply ONLY in {language}. Do NOT use any other language regardless of what the user wrote."
-        # ── Build skip-awareness note for AI ───────────────────────────────
+        # ── Build skip-awareness note for AI — use actual profile values ───
+        _already = {}
+        if profile.get("name"):          _already["name"]           = profile["name"]
+        if profile.get("age"):           _already["age"]            = profile["age"]
+        if profile.get("insurance_type"):_already["insurance_type"] = profile["insurance_type"]
+        if profile.get("city"):          _already["city"]           = profile["city"]
+        if profile.get("coverage_type"): _already["coverage_type"]  = profile["coverage_type"]
+        if profile.get("budget_range"):  _already["budget_range"]   = profile["budget_range"]
+        if profile.get("medical_conditions"): _already["medical_conditions"] = profile["medical_conditions"]
+
         _skip_note = ""
-        _known = [k for k, skip in _mem_should_skip.items() if skip]
-        if _known:
-            _skip_note = f"\nALREADY KNOWN (DO NOT ask again): {', '.join(_known)}"
+        if _already:
+            _skip_note = "ALREADY COLLECTED — DO NOT ask for these again:\n" + \
+                         "\n".join(f"  • {k}: {v}" for k, v in _already.items())
+        # Also add memory manager skips
+        _mem_known = [k for k, skip in _mem_should_skip.items() if skip and k not in _already]
+        if _mem_known:
+            _skip_note += f"\nALSO KNOWN FROM MEMORY: {', '.join(_mem_known)}"
         return f"""CURRENT STEP: {stage}
 LANGUAGE: {language}
 USER NAME: {name or '(not yet provided)'}
