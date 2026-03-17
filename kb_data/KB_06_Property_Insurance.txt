@@ -1,0 +1,169 @@
+================================================================================
+POLICYBOT KNOWLEDGE BASE — SECTOR 06: PROPERTY & HOME INSURANCE
+INDIA | 10 PLANS | UPDATED 2025-26
+FORMAT: DIRECT PARSER v2 (structured key:value)
+================================================================================
+
+PLAN 01
+----------------------------------------
+plan_name: Home Insurance Comprehensive Policy
+company_name: HDFC ERGO General Insurance
+insurance_type: Property Insurance
+coverage_amount: Rs.10 Lakh to Rs.5 Crore (structure + contents combined)
+premium_range: Rs.2,000 to Rs.15,000 per year
+waiting_period: 30 days; no waiting for fire and theft
+eligibility_age: Property owner or tenant; any age
+conditions_covered: Building structure fire, Natural disaster flood earthquake cyclone storm, Theft burglary, Damage from water pipe bursting, Short circuit fire, Accidental damage, Contents cover, Valuable items jewellery cover up to Rs.5 Lakh
+exclusions: Pre-existing damage, wear and tear, war, nuclear, willful neglect, empty property 30+ days unoccupied
+claim_process: Surveyor visit within 48 hours; cashless repair through HDFC ERGO network contractors; repair completion within 30 days for standard claims
+network_hospitals: 3,000+ contractor network for repair and reconstruction
+special_benefits: Structure + contents in one policy; jewellery cover up to Rs.5 Lakh; temporary accommodation Rs.5,000/day if home uninhabitable; portable electronics cover; all-risk option for premium protection
+raw_summary: HDFC ERGO Home Insurance Comprehensive provides building structure and household contents protection under one policy at affordable premiums starting Rs.2,000 per year. The temporary accommodation benefit pays Rs.5,000 per day for up to 30 days if your home becomes uninhabitable due to covered damage — covering hotel stay during repairs. Jewellery cover up to Rs.5 Lakh is included. Portable electronics like laptops, cameras and phones are covered against theft and accidental damage. 3,000+ contractor network ensures professional repairs through vetted vendors. Essential for homeowners and renters with valuable household contents.
+
+PLAN 02
+----------------------------------------
+plan_name: Home Safe Policy
+company_name: Bajaj Allianz General Insurance
+insurance_type: Property Insurance
+coverage_amount: Rs.5 Lakh to Rs.3 Crore (structure and/or contents)
+premium_range: Rs.1,500 to Rs.12,000 per year
+waiting_period: 30 days for natural disasters; immediate for fire and theft
+eligibility_age: Any property owner or tenant
+conditions_covered: Fire, Lightning, Explosion, Aircraft damage, Earthquake, Cyclone, Flood, Storm, Tempest, Landslide, Theft, Burglary, Riots, Strike, Malicious damage, Water pipe burst
+exclusions: Willful neglect, pre-existing damage, war, nuclear, vacancy 60+ days
+claim_process: Online claim FIR and photos submission; surveyor within 24 hours; 30-day claim settlement for straightforward claims
+network_hospitals: Bajaj Allianz contractor panel for repairs
+special_benefits: Alternative accommodation Rs.6,000/day for 60 days; contents can be insured separately without structure; all India coverage for second homes and ancestral property; landlord property damage by tenants cover optional
+raw_summary: Bajaj Allianz Home Safe provides one of the highest alternative accommodation benefits — Rs.6,000 per day for up to 60 days if your home is damaged and uninhabitable. The ability to insure contents independently without the building structure makes it ideal for tenants who don't own the building but have valuable furniture and electronics. Landlord protection option covers structural damage caused by tenants — useful for property investors who rent out their apartments. Coverage extends to second homes, farmhouses and ancestral property across India under one policy. Best for property owners with multiple properties or renters with valuable contents.
+
+PLAN 03
+----------------------------------------
+plan_name: Griha Suraksha Home Insurance
+company_name: New India Assurance (Government PSU)
+insurance_type: Property Insurance
+coverage_amount: Rs.5 Lakh to Rs.50 Lakh
+premium_range: Rs.1,500 to Rs.10,000 per year
+waiting_period: 30 days standard
+eligibility_age: Any property owner or tenant
+conditions_covered: Fire, Lightning, Explosion, Earthquake, Storm, Flood, Cyclone, Inundation, Landslide, Aircraft, Riot, Strike, Malicious damage, Burglary, Theft, Water pipe damage
+exclusions: Willful neglect, pre-existing damage, war, nuclear, gradual deterioration
+claim_process: Government PSU branch claim; surveyor assessment; government guarantee of settlement
+network_hospitals: Government contractor empanelment
+special_benefits: Government PSU absolute claim security; no rejection on financial grounds; bank requirement met for home loan; accepted for housing loan insurance requirement; nationwide branch claim filing including rural
+raw_summary: New India Assurance Griha Suraksha is the government PSU home insurance policy that satisfies mandatory home loan insurance requirements mandated by banks for property mortgages. Being a government insurer New India provides absolute claim certainty — no insolvency risk and no financial reason to deny legitimate claims. Available at all New India branches across rural and semi-urban India providing claim support where private insurers have limited service. Comprehensive fire and natural disaster coverage at competitive government premium rates. Best choice for government employees, cooperative society members and those who prefer government-backed insurance for their most valuable asset.
+
+PLAN 04
+----------------------------------------
+plan_name: Home Shield Comprehensive Property Insurance
+company_name: Tata AIG General Insurance
+insurance_type: Property Insurance
+coverage_amount: Rs.10 Lakh to Rs.10 Crore (ultra-high for luxury properties)
+premium_range: Rs.2,500 to Rs.35,000 per year
+waiting_period: 30 days
+eligibility_age: Any property owner or tenant; residential and commercial
+conditions_covered: Building structure fire and natural disasters, Contents, Jewellery and valuables up to Rs.10 Lakh, Electronics, Art and collectibles, Identity theft cover, Personal liability, Domestic servant personal accident
+exclusions: Pre-existing damage, willful neglect, gradual wear, war, nuclear, unoccupied 60+ days
+claim_process: Cashless repair at 4,000+ contractor network; surveyor within 48 hours; 30-day settlement
+network_hospitals: 4,000+ contractor network for repairs
+special_benefits: Jewellery and valuables up to Rs.10 Lakh — highest; art and collectibles specific cover; identity theft protection; domestic servant accident cover; ultra-high coverage up to Rs.10 Crore for luxury properties; personal liability Rs.50 Lakh
+raw_summary: Tata AIG Home Shield covers jewellery and valuables up to Rs.10 Lakh — the highest among standard home insurance plans — making it suitable for families with inherited jewellery collections and valuables. Art and collectibles can be separately scheduled for specifically covered amounts. Identity theft protection — which compensates for financial losses from identity fraud — is an unusual and forward-looking inclusion. Personal liability cover of Rs.50 Lakh protects homeowners from legal claims if someone is injured on their property. Domestic servant personal accident coverage is provided free. Best for affluent homeowners with high-value contents, antiques or jewellery requiring maximum property protection.
+
+PLAN 05
+----------------------------------------
+plan_name: Home Secure All Risk Property Plan
+company_name: ICICI Lombard General Insurance
+insurance_type: Property Insurance
+coverage_amount: Rs.5 Lakh to Rs.5 Crore
+premium_range: Rs.2,000 to Rs.20,000 per year
+waiting_period: 30 days; immediate for accidental damage
+eligibility_age: Any property owner or tenant
+conditions_covered: All-risk coverage — any physical damage to building or contents; Fire, Natural disaster, Theft, Accidental damage, Terrorism, Riot, Impact damage by vehicles
+exclusions: Intentional damage, war, nuclear, gradual deterioration, pre-existing damage
+claim_process: InstaSpect video-based claim assessment; 24-hour surveyor; 15-day settlement
+network_hospitals: Contractor network via ICICI Lombard
+special_benefits: All-risk basis — any physical damage covered including accidental; terrorism cover included; InstaSpect video assessment from home; ICICI bank customer integration; rent default insurance option for landlords
+raw_summary: ICICI Lombard Home Secure provides all-risk coverage meaning any physical damage to your property from any cause is covered unless specifically excluded — a significantly broader approach than named-peril policies that only cover listed events. Terrorism cover is included as standard given the security concerns in certain locations. InstaSpect video assessment lets claimants demonstrate damage via video call without waiting for a physical surveyor — dramatically speeding the process. Rent default insurance option for landlords covers lost rental income if tenant defaults. Best for urban apartment owners who want broadest possible protection including accidental damage.
+
+PLAN 06
+----------------------------------------
+plan_name: Bharat Griha Raksha Standard Policy
+company_name: All IRDAI-Licensed Insurers (Standard)
+insurance_type: Property Insurance
+coverage_amount: Actual rebuilding cost (not market value) for structure; Rs.20 Lakh contents optional
+premium_range: Rs.1,000 to Rs.8,000 per year
+waiting_period: 30 days
+eligibility_age: Any residential property owner
+conditions_covered: Structure rebuilding cost for fire, flood, earthquake, cyclone, storm; optional contents up to Rs.20 Lakh
+exclusions: Land value, wear and tear, willful neglect, war, nuclear
+claim_process: IRDAI standard claim process across all insurers; rebuilding cost basis (not IDV)
+network_hospitals: IRDAI-standard contractor empanelment
+special_benefits: IRDAI standard product — no complex terms; rebuilding cost basis protects against inflation; cannot be denied on technical grounds; same across all insurers; long-term policy option with discount
+raw_summary: Bharat Griha Raksha is IRDAI's standardised home insurance policy that covers structures at rebuilding cost — not market value or IDV — ensuring inflation protection. If your home needs Rs.40 Lakh to rebuild today the policy pays Rs.40 Lakh even if you paid Rs.15 Lakh for it in 2010. The standard IRDAI design ensures identical terms across all insurers eliminating complex exclusions and claim disputes that affect customised products. Long-term policy options with discounts encourage continuous coverage. Home loan borrowers are often required by banks to take this minimum standard coverage. Best for first-time home insurance buyers wanting simple, reliable, inflation-protected coverage.
+
+PLAN 07
+----------------------------------------
+plan_name: Shop and Office Insurance (SME)
+company_name: Bajaj Allianz General Insurance
+insurance_type: Property Insurance
+coverage_amount: Rs.5 Lakh to Rs.1 Crore (stock + structure + cash + liability)
+premium_range: Rs.3,000 to Rs.25,000 per year
+waiting_period: 30 days
+eligibility_age: Any business owner; registered business
+conditions_covered: Stock and inventory fire and theft, Business property structure, Cash in safe up to Rs.1 Lakh, Electronic equipment, Business interruption (optional), Employee dishonesty, Public liability, Sign boards
+exclusions: Pre-existing damage, wear and tear, willful neglect, war, unexplained stock loss
+claim_process: Survey within 48 hours; stock loss assessed by valuer; 45-day settlement for complex commercial claims
+network_hospitals: Commercial contractor network
+special_benefits: Stock and inventory protection; cash in safe cover; business interruption optional replaces lost profits; employee dishonesty fidelity cover; public liability protects against customer injury claims
+raw_summary: Bajaj Allianz Shop and Office Insurance is designed for small retailers, kirana store owners, boutiques, clinics, salons and small offices protecting their business property comprehensively. Stock and inventory cover is the most critical benefit — a fire destroying Rs.15 Lakh of inventory can bankrupt a small business without insurance. Cash in safe cover protects up to Rs.1 Lakh of business cash. Business interruption option compensates for lost profits during repair period after damage. Public liability protects against customer injury lawsuits. Employee dishonesty fidelity cover guards against employee theft. Essential for any small business owner who's serious about business continuity.
+
+PLAN 08
+----------------------------------------
+plan_name: Office Package Policy — Corporate
+company_name: New India Assurance (Government PSU)
+insurance_type: Property Insurance
+coverage_amount: Rs.10 Lakh to Rs.10 Crore (office specific)
+premium_range: Rs.5,000 to Rs.50,000 per year
+waiting_period: 30 days
+eligibility_age: Any registered business entity
+conditions_covered: Office building or leasehold improvements, Electronic equipment and computers, Money and cash in safe, Faithful performance of employees, Public liability, Glass breakage, Neon signs, Workmen compensation
+exclusions: Pre-existing damage, war, nuclear, electrical overload long-term, willful neglect, consequential loss without BI option
+claim_process: Government PSU branch claim; commercial loss adjuster; 60-day settlement for complex claims
+network_hospitals: Government and commercial contractor network
+special_benefits: Government PSU claim certainty; workmen compensation integration; neon sign cover; glass breakage; electronic equipment specific sub-limits; GST credit for businesses; comprehensive business coverage in one policy
+raw_summary: New India Assurance Office Package Policy bundles all a corporate office needs into one comprehensive policy — building, electronics, cash, employee fidelity, public liability, neon signs and workmen compensation. Government PSU backing ensures claim payment security even for large commercial claims. The workmen compensation integration satisfies statutory employer liability under Workmen's Compensation Act. GST-registered businesses claim input tax credit on the premium reducing net cost. All-in-one office policy simplifies insurance management versus maintaining separate policies for each risk. Best for medium-to-large offices, professional service firms and businesses with significant IT infrastructure.
+
+PLAN 09
+----------------------------------------
+plan_name: Industrial All Risk (IAR) Policy
+company_name: ICICI Lombard General Insurance
+insurance_type: Property Insurance
+coverage_amount: Rs.1 Crore to Rs.500 Crore (large industrial)
+premium_range: Rs.50,000 to Rs.25 Lakh+ per year
+waiting_period: 30 days
+eligibility_age: Manufacturing and industrial units; any age
+conditions_covered: All material damage to property (all-risk basis), Fire, Explosion, Machinery breakdown, Sabotage, Flood, Earthquake, Business interruption (optional), Third-party liability
+exclusions: War, nuclear, gradual deterioration, latent defect, inherent vice, willful neglect
+claim_process: Dedicated industrial claims team; expert surveyor within 48 hours; large loss specialist for claims over Rs.1 Crore
+network_hospitals: Industrial repair and contractor network
+special_benefits: All-risk basis for maximum coverage; machinery breakdown included; business interruption covers lost profit; dedicated ICICI Lombard industrial team; highest coverage limits; global reinsurance backing
+raw_summary: ICICI Lombard Industrial All Risk provides comprehensive all-risk protection for manufacturing plants, factories, warehouses and large industrial units up to Rs.500 Crore. Machinery breakdown cover is included alongside fire and natural disaster — critical for manufacturing units where machinery failure can cause millions in production loss. Business interruption coverage compensates for lost profits and fixed costs during repair periods preventing business insolvency after major damage. The dedicated industrial claims team with expert surveyors ensures large commercial claims are handled professionally. Global reinsurance backing means even the largest claims are financially secured. The definitive choice for manufacturers and industrial businesses.
+
+PLAN 10
+----------------------------------------
+plan_name: Bharat Sookshma Udyam Suraksha (MSME)
+company_name: All IRDAI-Licensed Insurers (Standard)
+insurance_type: Property Insurance
+coverage_amount: Rs.5 Crore maximum (MSME-specific)
+premium_range: Rs.4,000 to Rs.35,000 per year
+waiting_period: 30 days
+eligibility_age: Any MSME business entity
+conditions_covered: Building, machinery, stock, furniture all covered; fire; natural disaster; burglary; business interruption optional; workmen compensation included
+exclusions: War, nuclear, willful neglect, gradual wear, consequential loss without BI rider
+claim_process: IRDAI standard process; surveyor within 72 hours; 60-day settlement; same across all insurers
+network_hospitals: Commercial contractor empanelment
+special_benefits: IRDAI-mandated standard product for MSMEs; single policy for all business assets; affordable MSME-specific rates; business interruption option; no complex terms — same across insurers; government-encouraged scheme for Atmanirbhar Bharat
+raw_summary: Bharat Sookshma Udyam Suraksha is IRDAI's standardised insurance product designed specifically for Micro Small and Medium Enterprises (MSMEs) covering all business assets — building, machinery, stock and furniture — under one simple policy up to Rs.5 Crore. Identical terms across all insurers eliminate confusion and claim disputes. Government policy actively encourages MSMEs to adopt this coverage as part of Atmanirbhar Bharat business resilience initiative. The business interruption optional add-on ensures operational continuity after damage. Workmen compensation is included to satisfy statutory employee protection requirements. The most accessible and transparent property insurance for India's 63 million+ MSME businesses.
+
+================================================================================
+END OF KB_06 | TOTAL PLANS: 10 | SECTOR: PROPERTY & HOME INSURANCE
+================================================================================

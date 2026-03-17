@@ -1,0 +1,217 @@
+================================================================================
+POLICYBOT KNOWLEDGE BASE — SECTOR 05: ACCIDENT & CRITICAL ILLNESS INSURANCE
+INDIA | 13 PLANS | UPDATED 2025-26
+FORMAT: DIRECT PARSER v2 (structured key:value)
+================================================================================
+
+PLAN 01
+----------------------------------------
+plan_name: Personal Guard Comprehensive Accident Plan
+company_name: Bajaj Allianz General Insurance
+insurance_type: Accident Insurance
+coverage_amount: Rs.2.5 Lakh to Rs.1 Crore
+premium_range: Rs.800 to Rs.5,000 per year
+waiting_period: No waiting period; immediate coverage
+eligibility_age: 18 to 65 years; children 5+ years
+conditions_covered: Accidental death (full sum insured), Permanent total disability, Permanent partial disability, Temporary total disability weekly benefit, Fractures, Burns, Education benefit for dependent children
+exclusions: Self-inflicted injury, suicide, war, intoxication, adventure sports without add-on, pre-existing disability
+claim_process: Online and branch claim; standard document submission; 30-day settlement for disability; death claim 7 days
+network_hospitals: N/A (cash benefit plan — pay to individual not hospital)
+special_benefits: Education benefit — pays children's school/college fees if policyholder dies in accident; double benefit for public transport accidents; weekly income during temporary disability; fracture-specific benefit
+raw_summary: Bajaj Allianz Personal Guard accident plan pays full sum insured for accidental death and graduated amounts for permanent and temporary disability. The Education Benefit is unique — it continues paying children's education fees up to age 23 if the policyholder dies in an accident. Double benefit for accidents occurring on public transport like buses and trains. Weekly income benefit during temporary total disability replaces lost salary during recovery. Fracture-specific benefit pays a defined amount for each bone fracture regardless of hospitalisation. Ideal for breadwinners in physical occupations.
+
+PLAN 02
+----------------------------------------
+plan_name: Accident Guard Plus
+company_name: Tata AIG General Insurance
+insurance_type: Accident Insurance
+coverage_amount: Rs.5 Lakh to Rs.2 Crore
+premium_range: Rs.1,500 to Rs.8,000 per year
+waiting_period: No waiting period; immediate
+eligibility_age: 18 to 70 years
+conditions_covered: Accidental death, Permanent total disability, Permanent partial disability, Temporary total disability, Fracture benefit, Coma benefit, Ambulance charges, Funeral expenses
+exclusions: Self-inflicted, suicide, war, intoxication, natural disease leading to accident
+claim_process: Online claim; 24x7 helpline; 15-day settlement for disability; 7-day death claim
+network_hospitals: N/A (lump sum payout plan)
+special_benefits: Double benefit for accident on public transport 2x sum insured; triple benefit for death while driving 3x sum insured; coma benefit Rs.5,000/day; funeral expense Rs.5,000; family discount 10%
+raw_summary: Tata AIG Accident Guard Plus provides 2x sum insured for accidents on public transport and 3x sum insured for accidents while driving — recognising that commuting and driving are highest accident risk activities in India where 150,000+ people die in road accidents annually. The coma benefit pays Rs.5,000 per day if the victim is in a coma providing income during extended incapacitation before disability determination. Family discount of 10% when covering all family members. Ideal for daily commuters, truck and auto drivers, and factory workers with occupational accident exposure.
+
+PLAN 03
+----------------------------------------
+plan_name: Securemax Personal Accident Plan
+company_name: HDFC ERGO General Insurance
+insurance_type: Accident Insurance
+coverage_amount: Rs.5 Lakh to Rs.50 Lakh
+premium_range: Rs.1,200 to Rs.6,500 per year
+waiting_period: No waiting period; immediate
+eligibility_age: 18 to 65 years
+conditions_covered: Accidental death, Permanent total disability 100%, Permanent partial disability schedule, Temporary total disability weekly, Hospitalisation expenses due to accident, Burns, Fracture benefit
+exclusions: Self-inflicted, suicide, war, criminal act, intoxication, natural disease
+claim_process: Cashless hospitalisation at HDFC ERGO network; cash benefit for disability; 7-day claim settlement
+network_hospitals: 13,000+ for hospitalisation part of claim
+special_benefits: Hospitalisation expenses cover for accident-related treatment — unique combination; Rs.13,000 network for cashless accident treatment; cumulative bonus on disability benefit; occupation class adjustment
+raw_summary: HDFC ERGO Securemax uniquely combines personal accident cash benefit with cashless hospitalisation for accident-related treatment — most accident plans only pay lump sum and don't cover hospital bills. If you're hospitalised after an accident the plan covers the medical bills through HDFC ERGO's 13,000+ cashless network AND pays the disability benefit separately. Occupation-based premium adjustment means office workers pay less than construction workers fairly reflecting actual risk. Cumulative bonus on disability benefit grows with claim-free years. Best for those who want accident protection plus accident hospitalisation cover in one plan.
+
+PLAN 04
+----------------------------------------
+plan_name: PMSBY — Pradhan Mantri Suraksha Bima Yojana
+company_name: Government of India through PSU banks and LIC
+insurance_type: Accident Insurance
+coverage_amount: Rs.2 Lakh accidental death; Rs.2 Lakh permanent total disability; Rs.1 Lakh partial disability
+premium_range: Rs.20 per year (fixed) — auto-debit from bank account
+waiting_period: No waiting period; renews annually on June 1
+eligibility_age: 18 to 70 years — any bank account holder
+conditions_covered: Accidental death Rs.2 Lakh, Permanent total disability Rs.2 Lakh, Permanent partial disability Rs.1 Lakh
+exclusions: Suicide, self-inflicted, natural disease, war
+claim_process: Bank branch claim; nominee or claimant files at linked bank; 30-day processing
+network_hospitals: N/A (lump sum benefit plan)
+special_benefits: Rs.20 per year — 5.5 paisa per day — cheapest accident insurance in the world; government-backed; auto-renews via bank account; 250+ million enrollees — largest accident scheme globally
+raw_summary: PMSBY at Rs.20 per year or 5.5 paisa per day is literally the world's cheapest accident insurance. Auto-debited from any Indian bank account annually on June 1st it requires zero active renewal. With 250+ million enrolled it is the world's largest accident protection scheme. For Rs.20 per year a family gets Rs.2 Lakh protection against accidental death or total disability — an exceptional value proposition for daily wage workers, farmers and low-income families. Every bank account holder in India should enroll. Should be the first insurance product for anyone entering the workforce without any other coverage.
+
+PLAN 05
+----------------------------------------
+plan_name: New India Accident Shield Individual
+company_name: New India Assurance (Government PSU)
+insurance_type: Accident Insurance
+coverage_amount: Rs.1 Lakh to Rs.50 Lakh
+premium_range: Rs.700 to Rs.4,500 per year
+waiting_period: No waiting period
+eligibility_age: 18 to 70 years
+conditions_covered: Accidental death, Permanent total disability, Permanent partial disability, Temporary total disability, Education benefit, Medical expenses
+exclusions: Suicide, self-inflicted, war, criminal, intoxication
+claim_process: Government PSU branch and online claim; government reliability guarantee
+network_hospitals: N/A (lump sum and medical expense reimbursement plan)
+special_benefits: Government PSU absolute claim security; education benefit for children; temporary total disability income; occupation-based premium (fair pricing); available at all New India branches across rural India
+raw_summary: New India Assurance Accident Shield is the government insurer's flagship accident plan combining lump-sum benefits with medical expense reimbursement for accident treatment. Government PSU backing guarantees claim payment — no insolvency risk. Available at all New India Assurance branches across rural India where private accident insurers have limited presence making it the most accessible accident plan for rural and semi-urban populations. Occupation-based pricing means farmers and agricultural workers have separate affordable premium classes. Education benefit ensures children's schooling continues after accidental death. The trusted government option for accident protection.
+
+PLAN 06
+----------------------------------------
+plan_name: iCancer Care Critical Illness
+company_name: ICICI Lombard General Insurance
+insurance_type: Accident Insurance
+coverage_amount: Rs.3 Lakh to Rs.1 Crore lump sum on cancer diagnosis
+premium_range: Rs.3,000 to Rs.15,000 per year
+waiting_period: 90-day waiting period after policy issuance
+eligibility_age: 20 to 65 years
+conditions_covered: Early stage cancer diagnosis payout, Advanced stage cancer full payout, 30 types of cancer covered, Treatment costs worldwide, Carcinoma in situ, Bone marrow transplant
+exclusions: Pre-existing cancer, AIDS-related cancers, skin cancers non-melanoma, self-inflicted, war
+claim_process: Diagnosis report required; oncologist confirmation; lump sum payment within 30 days of diagnosis; no hospitalisation requirement
+network_hospitals: N/A (lump sum paid to individual)
+special_benefits: Payout on diagnosis not on death; early-stage cancer gets 25% payout; advanced cancer full sum insured; can pay for treatment abroad; HDFC ERGO hospital network for India treatment
+raw_summary: ICICI Lombard iCancer Care pays a lump sum on cancer diagnosis — not on death or hospitalisation — giving the patient immediate financial resources to pursue the best treatment. Early stage cancer diagnosis receives 25% payout helping fund early treatment when success rates are highest. Advanced stage cancer triggers full sum insured payout. 30 types of cancer including common Indian cancers like breast, cervical, colon, prostate, lung and oral cancer are covered. The lump sum can be used for expensive immunotherapy, targeted therapy or treatment abroad in specialised cancer centres. Cancer is India's second leading cause of premature death making this plan increasingly essential.
+
+PLAN 07
+----------------------------------------
+plan_name: Critical Illness Policy (10 Conditions)
+company_name: HDFC ERGO General Insurance
+insurance_type: Accident Insurance
+coverage_amount: Rs.1 Lakh to Rs.50 Lakh lump sum
+premium_range: Rs.2,000 to Rs.12,000 per year
+waiting_period: 90-day survival period after diagnosis required
+eligibility_age: 18 to 65 years
+conditions_covered: Cancer, Heart attack, Coronary bypass surgery, Stroke, Kidney failure, Major organ transplant, Paralysis, Aorta surgery, Heart valve replacement, Coma
+exclusions: Pre-existing diagnosis, AIDS, self-inflicted, war, non-covered conditions
+claim_process: Medical diagnosis proof; 30-day survival confirmation; lump sum within 15 days
+network_hospitals: N/A (lump sum benefit)
+special_benefits: Lump sum on diagnosis — use freely for treatment, income replacement, loan payment; covers 10 most common critical illnesses in India; no requirement to spend on treatment; pay off home loan option
+raw_summary: HDFC ERGO Critical Illness Policy covers India's 10 most prevalent critical illnesses providing a tax-free lump sum that can be used for anything — treatment costs, paying off home loan, replacing lost income or family maintenance. Critical illness creates a double financial burden — massive treatment costs plus income loss from inability to work. The lump sum addresses both. Survival for 30 days after diagnosis is required to confirm recovery intent before payment. Premium under 80D is tax-deductible. Can be combined with any health insurance policy as an additional layer. Ideal for sole breadwinners aged 35-55 with dependents and a home loan.
+
+PLAN 08
+----------------------------------------
+plan_name: Critical Illness Insurance (Bajaj Allianz)
+company_name: Bajaj Allianz General Insurance
+insurance_type: Accident Insurance
+coverage_amount: Rs.5 Lakh to Rs.50 Lakh lump sum
+premium_range: Rs.3,500 to Rs.18,000 per year
+waiting_period: 90-day survival after diagnosis
+eligibility_age: 18 to 65 years
+conditions_covered: Cancer, Heart attack, Stroke, Kidney failure, Open heart surgery, Bone marrow transplant, Liver failure, Lung disease, Coma, Paralysis
+exclusions: Pre-existing illness, AIDS, self-inflicted, war, non-listed conditions
+claim_process: Specialist certification of diagnosis; 30-day survival; lump sum payment 15 days after approval
+network_hospitals: N/A (lump sum)
+special_benefits: 10 critical conditions covered; income replacement benefit option Rs.20,000/month for 12 months; waiver of premium after claim; return of premium option at maturity if no claim
+raw_summary: Bajaj Allianz Critical Illness Insurance adds an income replacement benefit option — Rs.20,000 per month for 12 months — on top of the lump sum payout to replace lost salary during recovery. After making a critical illness claim all future premiums are waived while coverage continues through the policy term. The return of premium option refunds all premiums at policy maturity if no critical illness claim was made — making it a zero-cost protection if you remain healthy. This combination of lump sum, monthly income replacement, premium waiver and return of premium creates comprehensive financial security around a critical illness event.
+
+PLAN 09
+----------------------------------------
+plan_name: Star Critical Illness Multipay
+company_name: Star Health and Allied Insurance
+insurance_type: Accident Insurance
+coverage_amount: Rs.5 Lakh to Rs.1 Crore per condition
+premium_range: Rs.5,000 to Rs.25,000 per year
+waiting_period: 90-day waiting; 30-day survival per condition
+eligibility_age: 18 to 65 years
+conditions_covered: 37 critical conditions covered including Cancer, Heart attack, Stroke, Kidney failure, Aplastic anaemia, Alzheimer's, Parkinson's, Muscular dystrophy, Motor neuron disease, Meningitis and more
+exclusions: Pre-existing conditions at policy start, AIDS, self-inflicted, war, non-listed conditions
+claim_process: Diagnosis proof; specialist certification; 30-day survival period; lump sum paid
+network_hospitals: N/A (lump sum benefit)
+special_benefits: 37 conditions — widest coverage in India; MultiPay feature — claim multiple times for different conditions in same policy; separate sum insured per condition; covers rare conditions like Parkinson's and Alzheimer's
+raw_summary: Star Critical Illness Multipay covers 37 critical conditions — the widest in India's critical illness insurance market. The unique MultiPay feature allows claiming multiple times for different critical conditions in the same policy — if you suffer a heart attack and later develop cancer you can claim both separately with the full sum insured each time. Rare diseases like Alzheimer's, Parkinson's, Muscular Dystrophy and Motor Neuron Disease that are excluded by most plans are covered here. Separate sum insured per condition means each condition has its own full coverage. For comprehensive critical illness protection without gaps Star Multipay is the gold standard.
+
+PLAN 10
+----------------------------------------
+plan_name: Hospi Cash Daily Hospital Cash Benefit
+company_name: Care Health Insurance
+insurance_type: Accident Insurance
+coverage_amount: Rs.500 to Rs.3,000 per day hospitalisation cash benefit
+premium_range: Rs.1,200 to Rs.5,000 per year
+waiting_period: 30 days; 2 years for pre-existing illness hospitalisation
+eligibility_age: 18 to 65 years
+conditions_covered: Daily cash benefit for each hospitalisation day (accident and illness), ICU daily cash double benefit, Hospitalisation from any cause, Ambulance benefit
+exclusions: Cosmetic, dental, self-inflicted, OPD, war, pre-existing in first 2 years
+claim_process: Discharge summary and hospital bill submission; payment within 7 days to bank account directly
+network_hospitals: N/A (cash benefit plan — works with any hospital)
+special_benefits: Works with any hospital in India — not network-limited; double cash for ICU admission; can layer over existing health insurance to cover incidental costs; ambulance benefit Rs.2,000 per hospitalisation
+raw_summary: Care Health Hospi Cash daily benefit plan pays Rs.500-3,000 cash per hospitalisation day directly to your bank account — money you can spend on anything from hospital attendant fees to family transport and food. It works with ANY hospital in India without being limited to a network. Double cash for ICU admissions compensates for the higher incidental costs of intensive care. This plan layers perfectly over your existing health insurance — your main plan covers medical bills and Hospi Cash covers everything else the main plan doesn't. Ideal for anyone hospitalised frequently or covering elderly parents who need daily attendant support.
+
+PLAN 11
+----------------------------------------
+plan_name: New India Personal Accident (Individual / Group)
+company_name: New India Assurance (Government PSU)
+insurance_type: Accident Insurance
+coverage_amount: Rs.1 Lakh to Rs.25 Lakh (individual); unlimited aggregate (group)
+premium_range: Rs.600 to Rs.5,000 per year individual; group negotiated rates
+waiting_period: No waiting period; immediate
+eligibility_age: 18 to 70 years; group covers any employee age
+conditions_covered: Accidental death, Permanent total disability, Permanent partial disability, Temporary total disability weekly benefit, Education expenses benefit
+exclusions: Suicide, self-inflicted, war, criminal, intoxication, natural disease
+claim_process: Government PSU branch and online; nationally accessible claims process; government trust
+network_hospitals: N/A (cash benefit lump sum)
+special_benefits: Government PSU — claim guaranteed regardless of insurer financial health; group employer-employee scheme available; workmen compensation integration; low premium at all occupation categories; rural India access
+raw_summary: New India Personal Accident is India's most widespread accident insurance plan available at government PSU branches, post offices and banks across rural and semi-urban India. The group employer scheme allows companies to cover all employees under one policy which qualifies as employee benefit deductible for the employer. Temporary total disability weekly benefit replaces income during recovery. Education benefit for children continues their schooling after parental accidental death. Being a PSU new India guarantee means there is zero insolvency risk and no claim can be denied on financial grounds. The backbone of India's mass-market accident insurance coverage.
+
+PLAN 12
+----------------------------------------
+plan_name: Global Cancer Care
+company_name: Niva Bupa Health Insurance
+insurance_type: Accident Insurance
+coverage_amount: Rs.10 Lakh to Rs.3 Crore cancer-specific coverage
+premium_range: Rs.5,000 to Rs.30,000 per year
+waiting_period: 180-day waiting period from policy issuance
+eligibility_age: 18 to 65 years
+conditions_covered: All stages of cancer, International cancer treatment, Targeted therapy, Immunotherapy, Chemotherapy, Radiation, Stem cell transplant, Second opinion at top global cancer centres
+exclusions: Pre-existing cancer at time of purchase, AIDS-related cancer, non-melanoma skin cancer, self-inflicted
+claim_process: Oncologist diagnosis confirmation; payment on stage determination; international cashless treatment coordination
+network_hospitals: AIIMS, Tata Memorial, Apollo Cancer, Rajiv Gandhi Cancer Institute, top US/UK cancer centres
+special_benefits: International cancer treatment covered — access to MD Anderson, Sloan Kettering, Mayo Clinic; mandatory second opinion facilitation; genetic testing benefit; palliative care included; family counselling benefit; survivor benefit
+raw_summary: Niva Bupa Global Cancer Care is India's premium cancer-only plan covering the full spectrum from early diagnosis through palliative care with the unique ability to fund treatment at top international cancer centres like MD Anderson in Houston, Memorial Sloan Kettering in New York or Mayo Clinic. India's 5-year cancer survival rates are significantly lower than in the US and Europe making international treatment genuinely life-extending for serious cases. The plan covers expensive modern treatments — targeted therapy, immunotherapy, CAR-T cell therapy — that can cost Rs.30-50 Lakh per year and are not covered by standard health plans. Mandatory second opinion facilitation ensures optimal treatment protocol. For high-income families who want the absolute best cancer care globally.
+
+PLAN 13
+----------------------------------------
+plan_name: Aditya Birla Activ Secure Critical Illness
+company_name: Aditya Birla Health Insurance
+insurance_type: Accident Insurance
+coverage_amount: Rs.5 Lakh to Rs.60 Lakh lump sum
+premium_range: Rs.4,000 to Rs.22,000 per year
+waiting_period: 90-day waiting; 30-day survival period
+eligibility_age: 18 to 65 years
+conditions_covered: 64 critical conditions — widest in market; Cancer, Heart attack, Stroke, Kidney failure, Blindness, Deafness, Burns, Loss of limbs, Multiple sclerosis, Aplastic anaemia, Primary pulmonary hypertension, Systemic lupus erythematosus and 52 more
+exclusions: Pre-existing diagnosis, AIDS, self-inflicted, war, conditions not on list
+claim_process: Specialist certification; 30-day survival confirmation; 15-day payment after approval; dedicated critical illness claims team
+network_hospitals: N/A (lump sum plan)
+special_benefits: 64 conditions — most comprehensive in India; HealthReturns for premium discount; Activ app health monitoring; wellness incentives reduce premium over time; Aditya Birla group financial strength
+raw_summary: Aditya Birla Activ Secure Critical Illness covers 64 critical conditions — the most comprehensive critical illness coverage available in India — including many rare autoimmune, neurological and degenerative conditions that competitors exclude. Conditions like Systemic Lupus Erythematosus, Primary Pulmonary Hypertension and aplastic anaemia are covered alongside the common critical illnesses. Integration with the Activ health app means staying healthy and meeting wellness goals earns HealthReturns that reduce future premiums — incentivising prevention. The Aditya Birla group's exceptional financial strength provides long-term policy security. The most comprehensive critical illness plan available for buyers who want maximum condition coverage.
+
+================================================================================
+END OF KB_05 | TOTAL PLANS: 13 | SECTOR: ACCIDENT & CRITICAL ILLNESS INSURANCE
+================================================================================

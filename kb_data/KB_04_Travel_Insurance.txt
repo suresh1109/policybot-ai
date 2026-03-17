@@ -1,0 +1,201 @@
+================================================================================
+POLICYBOT KNOWLEDGE BASE — SECTOR 04: TRAVEL INSURANCE
+INDIA | 12 PLANS | UPDATED 2025-26
+FORMAT: DIRECT PARSER v2 (structured key:value)
+================================================================================
+
+PLAN 01
+----------------------------------------
+plan_name: Travel Assurance International Comprehensive
+company_name: Bajaj Allianz General Insurance
+insurance_type: Travel Insurance
+coverage_amount: USD 50,000 to USD 500,000 medical emergency; trip cancellation up to Rs.1 Lakh
+premium_range: Rs.500 to Rs.2,500 per trip (7-30 days); Rs.8,000 to Rs.25,000 annual multi-trip
+waiting_period: No waiting period; immediate coverage from departure
+eligibility_age: 6 months to 70 years
+conditions_covered: Emergency medical, Evacuation, Trip cancellation, Baggage loss, Passport loss, Flight delay, Accidental death abroad, Personal liability abroad, Dental emergency
+exclusions: Pre-existing conditions (unless declared), adventure sports (unless rider), pregnancy complications (unless declared), war zones, suicide, self-inflicted
+claim_process: 24x7 international helpline +91-22-6786-9999; cashless treatment at partner hospitals worldwide; emergency assistance and repatriation
+network_hospitals: Global network through AXA Assistance and International SOS
+special_benefits: Up to USD 500,000 medical cover; cashless treatment worldwide through AXA global network; 24x7 multilingual helpline from anywhere; emergency medical evacuation; passport loss assistance; adventure sports add-on
+raw_summary: Bajaj Allianz Travel Assurance International provides up to USD 500,000 emergency medical cover for overseas trips — critical as a single hospitalisation in the US or Europe can cost USD 50,000+ per day. The global cashless network through AXA Assistance means Indian travellers can get cashless treatment at partner hospitals in 190+ countries without paying upfront. The 24x7 multilingual helpline provides emergency assistance in any country at any hour. Mandatory for Schengen visa (EUR 30,000 minimum) and strongly recommended for all international travel. Best comprehensive plan for frequent international travellers.
+
+PLAN 02
+----------------------------------------
+plan_name: Travel Guard International Plan
+company_name: Tata AIG General Insurance
+insurance_type: Travel Insurance
+coverage_amount: USD 50,000 to USD 1,000,000 medical; various sub-limits for other benefits
+premium_range: Rs.600 to Rs.3,000 per trip; Rs.9,000 to Rs.30,000 annual
+waiting_period: Immediate from departure date
+eligibility_age: 6 months to 70 years (senior version up to 85)
+conditions_covered: Medical emergency, Evacuation, Trip cancellation, Baggage delay, Missed connection, Adventure sports (optional), Hijacking, Bounced hotel/airline, Study interruption, Home burglary during travel
+exclusions: Pre-existing illness (unless endorsed), self-inflicted, war, pregnancy unless sudden complication
+claim_process: 24x7 Tata AIG international assistance; cashless treatment at partner hospitals; direct billing for hospitalisation
+network_hospitals: 900,000+ hospitals worldwide through Tata AIG global network
+special_benefits: USD 1 million medical cover option; adventure sports cover optional; home burglary cover while abroad — unique; bounced booking cover; Tata brand trust; senior traveller version up to 85 years
+raw_summary: Tata AIG Travel Guard International uniquely covers home burglary while you are travelling abroad — something no other standard travel plan covers. The bounced booking coverage compensates for hotel or airline booking failures that leave travellers stranded. Adventure sports coverage is available as an add-on for trekking, skiing, scuba diving and similar activities. With a senior traveller version valid up to age 85 it serves elderly international travellers. Access to 900,000+ hospitals worldwide through the global assistance network ensures care is available anywhere.
+
+PLAN 03
+----------------------------------------
+plan_name: Travel Ease International Policy
+company_name: HDFC ERGO General Insurance
+insurance_type: Travel Insurance
+coverage_amount: USD 50,000 to USD 500,000 medical emergency
+premium_range: Rs.450 to Rs.2,200 per trip; Rs.7,500 to Rs.22,000 annual
+waiting_period: Immediate from departure
+eligibility_age: 6 months to 80 years (high age limit)
+conditions_covered: Medical emergency, Evacuation, Trip cancellation, Baggage loss, Delayed baggage, Flight delay, Personal accident, Personal liability abroad, Dental emergency abroad
+exclusions: Pre-existing not declared, self-inflicted, pregnancy complication unless sudden, war, suicide
+claim_process: 24x7 helpline via HDFC ERGO international number; direct cashless billing at partner hospitals; app-based claim filing from abroad
+network_hospitals: Global through HDFC ERGO international network partnership
+special_benefits: Entry age up to 80 years — one of the highest in travel insurance; app-based claim from abroad; customisable coverage tiers; HDFC Ergo's strong claim servicing
+raw_summary: HDFC ERGO Travel Ease International accepts travellers up to age 80 — significantly higher than most travel plans' limit of 65-70 years — making it ideal for senior citizens travelling abroad for medical treatment, visits to children settled overseas or religious tours. The app-based claim filing allows submitting bills and documents from anywhere in the world without physical paperwork. Three coverage tiers let buyers choose between basic, standard and premium plans. Affordable premiums starting Rs.450 per trip for basic coverage. Best for senior travellers and those who want strong service backup from India's most trusted general insurer.
+
+PLAN 04
+----------------------------------------
+plan_name: iTravel Overseas Travel Insurance
+company_name: ICICI Lombard General Insurance
+insurance_type: Travel Insurance
+coverage_amount: USD 25,000 to USD 500,000 medical
+premium_range: Rs.400 to Rs.2,000 per trip
+waiting_period: Immediate from departure
+eligibility_age: 3 months to 70 years
+conditions_covered: Medical emergency, Medical evacuation, Trip cancellation, Baggage loss, Passport loss, Home burglary while travelling, Check-in baggage delay, Flight delay compensation, Bounced hotel
+exclusions: Pre-existing not declared, war zones, self-inflicted, pregnancy routine
+claim_process: 24x7 ICICI Lombard international helpline; InstaSpect video claim from abroad; app claim
+network_hospitals: Global via ICICI Lombard international network
+special_benefits: Home burglary cover while abroad; InstaSpect video claim from any country; ICICI bank customer discount; student version available; family floater option
+raw_summary: ICICI Lombard iTravel covers home burglary while you're travelling abroad protecting your home contents from theft during your absence. InstaSpect video claim technology works internationally — you can file claims from abroad via video call without any physical paperwork. ICICI Bank customers receive premium discounts through the bank's insurance partnership. A dedicated student version covers academic interruption, tuition fee loss and course-related benefits for students studying abroad. Family floater option covers the entire family under one travel policy at discounted rates.
+
+PLAN 05
+----------------------------------------
+plan_name: Asia Travel Insurance Plan
+company_name: Bajaj Allianz General Insurance
+insurance_type: Travel Insurance
+coverage_amount: USD 25,000 to USD 100,000 medical; trip up to Rs.50,000
+premium_range: Rs.350 to Rs.1,200 per trip (cheaper than worldwide)
+waiting_period: Immediate from departure
+eligibility_age: 6 months to 65 years
+conditions_covered: Medical emergency, Evacuation, Trip cancellation, Baggage delay, Personal accident, Dental emergency
+exclusions: Pre-existing not declared, adventure sports without rider, pregnancy, war
+claim_process: 24x7 Asia helpline; network hospitals in South-East Asia, Middle East, Far East
+network_hospitals: 50,000+ hospitals in Asia-Pacific region
+special_benefits: Lower premium specifically for Asia/Middle East travel; covers Dubai, Singapore, Bangkok, Malaysia, Japan; comprehensive Asian hospital network; Thailand medical tourism coverage
+raw_summary: Bajaj Allianz Asia Travel Plan is specifically priced for travel within Asia including popular destinations like Dubai, Singapore, Thailand, Malaysia, Japan and South Korea at 30-40% lower premiums than worldwide cover. With medical tourism to Thailand and Malaysia growing among Indians the plan's strong Southeast Asian hospital network ensures cashless treatment at top hospitals in Bangkok, Kuala Lumpur and Singapore. Ideal for business travellers, holiday-makers and medical tourists travelling within Asia who want focused coverage at optimal cost.
+
+PLAN 06
+----------------------------------------
+plan_name: Domestic Travel Insurance Plan
+company_name: Care Health Insurance
+insurance_type: Travel Insurance
+coverage_amount: Rs.1 Lakh to Rs.5 Lakh medical; trip cover up to Rs.25,000
+premium_range: Rs.150 to Rs.600 per trip (very affordable)
+waiting_period: Immediate from departure
+eligibility_age: 3 months to 70 years
+conditions_covered: Medical emergency within India, Accidental hospitalisation, Trip cancellation, Baggage loss by airline, Flight delay compensation Rs.1,000/hour, Personal accident
+exclusions: Pre-existing, routine illness, self-inflicted, war
+claim_process: 24x7 Care Health helpline; cashless at 19,000+ Care network hospitals; reimbursement within 7 days
+network_hospitals: 19,000+ Care Health domestic network hospitals
+special_benefits: Covers domestic air and train travel; flight delay hourly compensation; baggage loss by domestic airlines; cashless at 19,000 hospitals — best domestic network; very low premium Rs.150+ per trip
+raw_summary: Care Health Domestic Travel Insurance at Rs.150 per trip is exceptional value for air and train travel within India. Flight delay compensation pays Rs.1,000 per hour delay (up to 4 hours) making your delay profitable. Access to Care's 19,000+ hospital network ensures cashless treatment in emergencies across all Indian cities including tier 2 and 3 destinations. Baggage loss by domestic airlines is covered — Air India and IndiGo delays are common. Essential for frequent domestic business travellers and those making long-distance family trips within India.
+
+PLAN 07
+----------------------------------------
+plan_name: Annual Multi-Trip International Insurance
+company_name: Tata AIG General Insurance
+insurance_type: Travel Insurance
+coverage_amount: USD 50,000 to USD 500,000 per trip medical; unlimited trips
+premium_range: Rs.8,000 to Rs.30,000 per year (all trips covered)
+waiting_period: Immediate from each departure date
+eligibility_age: 6 months to 70 years; senior version available
+conditions_covered: Medical emergency (each trip), Evacuation, Trip cancellation (each), Baggage loss (each), Missed connection (each); per trip sub-limits apply
+exclusions: Pre-existing (declared exceptions available), war zones, pregnancy advanced stage
+claim_process: 24x7 international helpline; same claim process for each trip
+network_hospitals: 900,000+ worldwide hospital network
+special_benefits: Unlimited trips in a year; significant savings vs buying per-trip; each trip covered up to 30 or 60 days; perfect for frequent fliers; corporate rate for company-sponsored travel; waiver of per-trip administration
+raw_summary: Tata AIG Annual Multi-Trip Insurance is designed for frequent international travellers making 4+ trips per year — the annual premium of Rs.8,000-30,000 makes economic sense versus buying individual trip policies each time. Each trip is independently covered up to 30 or 60 days per trip depending on variant. Business travellers can use this for unlimited corporate trips while leisure travellers cover family holidays throughout the year. No per-trip administration eliminates the risk of forgetting to buy insurance before a trip. A must-have for corporate executives and frequent international fliers.
+
+PLAN 08
+----------------------------------------
+plan_name: Student Travel Overseas Insurance
+company_name: Bajaj Allianz General Insurance
+insurance_type: Travel Insurance
+coverage_amount: USD 50,000 to USD 200,000 medical; academic specific benefits
+premium_range: Rs.2,500 to Rs.12,000 per year of study abroad
+waiting_period: Immediate from arrival in study destination
+eligibility_age: 16 to 35 years (students)
+conditions_covered: Medical emergency, Medical evacuation, Tuition fee reimbursement if study interrupted, Sponsor protection if sponsor dies, Bail bond, Personal liability, Baggage loss, Mental health treatment
+exclusions: Pregnancy, self-inflicted, criminal activity, pre-existing not declared
+claim_process: 24x7 international student helpline; direct billing at university health centres; repatriation assistance
+network_hospitals: University-area hospitals in US, UK, Australia, Canada, Germany, New Zealand
+special_benefits: Tuition fee reimbursement if medical emergency forces return; sponsor protection — pays tuition if sponsor dies; bail bond cover; mental health counselling sessions included; study interruption benefit
+raw_summary: Bajaj Allianz Student Travel Insurance is purpose-built for Indian students studying abroad with unique features like tuition fee reimbursement if a medical emergency forces them to return mid-semester, and sponsor protection that pays tuition fees if the parent or sponsor who funds education passes away. Mental health counselling sessions are included — recognising the psychological challenges of studying in a foreign country. Bail bond coverage provides legal fund access if a student faces legal issues abroad. Coverage in top study destinations — US, UK, Australia, Canada, Germany. Essential for students on F1, Tier 4, Student and other study visas.
+
+PLAN 09
+----------------------------------------
+plan_name: Schengen Visa Travel Insurance
+company_name: ICICI Lombard General Insurance
+insurance_type: Travel Insurance
+coverage_amount: EUR 30,000 to EUR 100,000 medical emergency (Schengen compliant)
+premium_range: Rs.500 to Rs.2,500 per trip
+waiting_period: Immediate from departure
+eligibility_age: 6 months to 70 years
+conditions_covered: Medical emergency EUR 30,000 minimum (Schengen required), Emergency dental, Evacuation, Repatriation, Personal accident, Trip cancellation, Baggage delay
+exclusions: Pre-existing unless declared, pregnancy beyond 28 weeks, suicide, war
+claim_process: 24x7 Europe helpline; direct hospital billing in all 27 Schengen countries; digital claim submission
+network_hospitals: Hospitals in all 27 Schengen countries through European assistance network
+special_benefits: IRDAI-approved for Schengen visa application; EUR 30,000 minimum meets Schengen requirement; covers all 27 Schengen countries; accepted by all European embassies; digital policy accepted by embassies
+raw_summary: ICICI Lombard Schengen Travel Insurance meets the mandatory EUR 30,000 minimum medical emergency requirement for all Schengen visa applications (26 European countries). The digital policy certificate is accepted by all European embassies and consulates for visa processing. Coverage includes all 27 Schengen member states under one policy — no separate coverage needed when travelling through multiple European countries. Emergency dental, repatriation and trip cancellation add essential protection beyond the visa minimum. The most streamlined solution for Indians applying for European Schengen visa travel.
+
+PLAN 10
+----------------------------------------
+plan_name: Senior Citizen International Travel Plan
+company_name: Star Health and Allied Insurance
+insurance_type: Travel Insurance
+coverage_amount: USD 50,000 to USD 250,000 medical
+premium_range: Rs.3,000 to Rs.15,000 per trip; Rs.20,000 to Rs.60,000 annual
+waiting_period: Immediate from departure
+eligibility_age: 60 to 80 years
+conditions_covered: Medical emergency, Pre-existing stable conditions (declared), Evacuation, Trip cancellation, Baggage, Accidental death abroad, Personal accident
+exclusions: Unstable pre-existing, war zones, high-risk adventure activities, pregnancy
+claim_process: 24x7 Star Health senior helpline; priority claim processing for seniors; repatriation assistance
+network_hospitals: Global network with senior-specialist hospitals
+special_benefits: Covers pre-existing stable conditions like hypertension and diabetes (declared); senior-priority helpline; repatriation of remains; emergency escort for spouse; covers up to age 80; higher medical cover for senior needs
+raw_summary: Star Health Senior Citizen International Travel Insurance covers stable pre-existing conditions like controlled hypertension, diabetes and thyroid conditions when declared — a critical feature since most travel policies explicitly exclude all pre-existing conditions. This makes it the only viable international travel plan for most senior citizens who have managed health conditions. Coverage to age 80 with dedicated senior-priority helpline and emergency spouse escort makes long-haul international travel safe for elderly parents visiting children abroad. Emergency repatriation of remains is included providing complete end-to-end security.
+
+PLAN 11
+----------------------------------------
+plan_name: Group Travel Insurance — Corporate
+company_name: New India Assurance (Government PSU)
+insurance_type: Travel Insurance
+coverage_amount: USD 50,000 per person medical; group aggregate Rs.50 Lakh+
+premium_range: Rs.300 to Rs.1,200 per person per trip (15-20% group discount)
+waiting_period: Immediate from departure
+eligibility_age: 18 to 65 years
+conditions_covered: Medical emergency (each member), Evacuation, Personal accident, Trip cancellation (group), Baggage loss, Missed connection, Liability
+exclusions: Pre-existing, pregnancy, self-inflicted, war
+claim_process: Group policy manager at New India for centralized claim; 24x7 assistance
+network_hospitals: Government and private empanelled hospitals worldwide
+special_benefits: 15-20% group discount for 15+ travellers; centralized policy management; GST ITC for companies; government PSU claim reliability; covers educational tours, incentive trips, conference groups
+raw_summary: New India Assurance Group Travel Insurance provides 15-20% group discount for corporate travel teams, educational tour groups, pilgrimage groups and incentive travel parties of 15 or more. Centralized policy management means HR or travel managers handle one policy for the entire group rather than individual policies. Government PSU backing ensures absolute claim reliability for overseas medical emergencies. GST-registered companies can claim input tax credit on group travel insurance premiums. Best for companies with frequent business travel, educational institutions sending students abroad and travel agencies conducting group tours.
+
+PLAN 12
+----------------------------------------
+plan_name: Adventure Travel Insurance
+company_name: Bajaj Allianz General Insurance
+insurance_type: Travel Insurance
+coverage_amount: USD 50,000 to USD 250,000 medical; Rs.10 Lakh accidental
+premium_range: Rs.800 to Rs.4,000 per trip depending on activities
+waiting_period: Immediate from departure
+eligibility_age: 18 to 60 years
+conditions_covered: Medical emergency, Adventure sports injuries (30+ activities), Mountain rescue, Helicopter evacuation from mountain, Equipment cover, Trip cancellation, Personal accident adventure-specific
+exclusions: Professional adventure competitions, self-inflicted, intoxication while adventuring, activities above 6000m (separate plan)
+claim_process: 24x7 adventure helpline with mountain rescue coordination; direct billing at base camp medical facilities; helicopter evacuation coordination
+network_hospitals: Mountain base camp hospitals, adventure medical facilities worldwide
+special_benefits: Covers 30+ adventure activities including trekking, skiing, paragliding, scuba, bungee, white water rafting; helicopter mountain rescue coordination; altitude-specific cover for Himalayan trekking; equipment cover
+raw_summary: Bajaj Allianz Adventure Travel Insurance is India's most comprehensive plan for adventure and extreme sports enthusiasts covering 30+ activities from trekking and skiing to paragliding, scuba diving, bungee jumping and white water rafting. Mountain rescue coordination and helicopter evacuation are included for Himalayan trekking emergencies — a potentially life-saving benefit given the remote terrain. Equipment cover protects expensive adventure gear like cameras and climbing equipment. Altitude-specific coverage for treks up to 6,000m covers the most popular Himalayan and international trekking routes. Essential for anyone doing outdoor adventure activities abroad.
+
+================================================================================
+END OF KB_04 | TOTAL PLANS: 12 | SECTOR: TRAVEL INSURANCE
+================================================================================

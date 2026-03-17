@@ -79,7 +79,3 @@ After failure, user sees radio buttons:
 - Only verification STATUS is stored (verified/failed/skipped)
 - Uploaded documents AUTO-DELETED at end of conversation
 - YYYY birth year stored only (no full DOB)
-- 
-
-Deployment 
-URL:https://web-production-c61f1.up.railway.app

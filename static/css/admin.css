@@ -320,17 +320,29 @@
 }
 .fraud-bell-wrap.bell-ring i {
   color: #ef4444;
-  animation: bellRing 1s ease-in-out;
+  animation: bellRing 0.8s ease-in-out;
+}
+/* Glow pulse on the wrap itself while alerts are active */
+.fraud-bell-wrap.bell-ring {
+  box-shadow: 0 0 0 0 rgba(239,68,68,.6);
+  animation: bellGlow 1.5s ease-in-out infinite;
 }
 @keyframes bellRing {
   0%,100% { transform: rotate(0); }
-  15%     { transform: rotate(14deg); }
-  30%     { transform: rotate(-12deg); }
-  45%     { transform: rotate(10deg); }
+  15%     { transform: rotate(15deg); }
+  30%     { transform: rotate(-13deg); }
+  45%     { transform: rotate(11deg); }
   60%     { transform: rotate(-8deg); }
-  75%     { transform: rotate(6deg); }
-  90%     { transform: rotate(-4deg); }
+  75%     { transform: rotate(5deg); }
+  90%     { transform: rotate(-3deg); }
 }
+@keyframes bellGlow {
+  0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,.5); border-color: rgba(239,68,68,.4); }
+  50%     { box-shadow: 0 0 0 7px rgba(239,68,68,.0); border-color: #ef4444; }
+}
+
+.fpi-badge-medium { background: #d97706 !important; }
+.fpi-medium { border-left: 3px solid #d97706; }
 
 .fraud-bell-badge {
   position: absolute; top: -6px; right: -6px;

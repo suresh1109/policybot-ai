@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Broker Portal — PolicyBot</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:#0a0f1e;font-family:'Segoe UI',system-ui,sans-serif;
+    background-image:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(14,165,233,.15),transparent);}
+  .card{width:400px;background:rgba(17,24,39,.95);border:1px solid rgba(14,165,233,.2);
+    border-radius:20px;padding:40px;box-shadow:0 30px 80px rgba(0,0,0,.6);}
+  .logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;}
+  .logo-icon{width:48px;height:48px;background:linear-gradient(135deg,#0ea5e9,#3b82f6);
+    border-radius:14px;display:flex;align-items:center;justify-content:center;
+    font-size:22px;color:#fff;box-shadow:0 8px 24px rgba(14,165,233,.35);}
+  .logo-text h1{font-size:20px;font-weight:800;color:#fff;}
+  .logo-text p{font-size:12px;color:#64748b;}
+  .badge{display:inline-flex;align-items:center;gap:5px;
+    background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.25);
+    color:#38bdf8;font-size:11px;font-weight:700;border-radius:6px;
+    padding:3px 10px;margin-bottom:20px;text-transform:uppercase;letter-spacing:.05em;}
+  h2{font-size:22px;font-weight:700;color:#f8fafc;margin-bottom:6px;}
+  .sub{font-size:13px;color:#64748b;margin-bottom:28px;}
+  .field{margin-bottom:16px;}
+  label{display:block;font-size:11px;font-weight:700;color:#94a3b8;
+    text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
+  input{width:100%;background:#0f172a;border:1px solid #1e293b;
+    border-radius:10px;padding:12px 14px;font-size:14px;color:#f1f5f9;
+    outline:none;transition:border-color .2s;font-family:inherit;}
+  input:focus{border-color:#0ea5e9;box-shadow:0 0 0 3px rgba(14,165,233,.1);}
+  .btn{width:100%;padding:13px;background:linear-gradient(135deg,#0ea5e9,#3b82f6);
+    color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;
+    font-family:inherit;cursor:pointer;margin-top:8px;
+    box-shadow:0 6px 20px rgba(14,165,233,.3);transition:all .2s;}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(14,165,233,.45);}
+  .error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);
+    color:#f87171;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:16px;}
+  .back{text-align:center;margin-top:20px;font-size:12px;color:#475569;}
+  .back a{color:#38bdf8;text-decoration:none;}
+  .features{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px;padding-top:20px;
+    border-top:1px solid #1e293b;}
+  .feat{display:flex;align-items:center;gap:5px;font-size:11px;color:#64748b;}
+  .feat i{color:#0ea5e9;font-size:10px;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-icon"><i class="fas fa-handshake"></i></div>
+    <div class="logo-text">
+      <h1>PolicyBot</h1>
+      <p>Broker Partner Portal</p>
+    </div>
+  </div>
+  <div class="badge"><i class="fas fa-shield-halved"></i> Agent Access</div>
+  <h2>Sign in to Portal</h2>
+  <p class="sub">Access your leads, client profiles and call dashboard.</p>
+
+  {% if error %}<div class="error"><i class="fas fa-triangle-exclamation"></i> {{ error }}</div>{% endif %}
+
+  <form method="POST">
+    <div class="field">
+      <label>Broker ID</label>
+      <input type="text" name="broker_id" placeholder="Enter your broker ID" required autofocus>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" name="password" placeholder="••••••••" required>
+    </div>
+    <button type="submit" class="btn"><i class="fas fa-right-to-bracket"></i> &nbsp;Sign In</button>
+  </form>
+
+  <div class="features">
+    <div class="feat"><i class="fas fa-users"></i> Lead Management</div>
+    <div class="feat"><i class="fas fa-phone"></i> Call Tracking</div>
+    <div class="feat"><i class="fas fa-chart-line"></i> Conversion Stats</div>
+    <div class="feat"><i class="fas fa-file-pdf"></i> Client Reports</div>
+  </div>
+
+  <div class="back"><a href="/">&larr; Back to PolicyBot</a></div>
+</div>
+</body>
+</html>

@@ -897,15 +897,21 @@ async function pollFraudBell() {
 
     if (count > 0) {
       if (badge) { badge.textContent = count; badge.classList.remove('hidden'); }
-      if (bell)  bell.classList.add('bell-ring');
+      // Re-trigger animation every poll: remove then force reflow then add
+      if (bell) {
+        bell.classList.remove('bell-ring');
+        void bell.offsetWidth;            // force reflow so animation restarts
+        bell.classList.add('bell-ring');
+      }
 
       // Toast for NEW alerts only (not seen before)
       alerts.forEach(a => {
         if (!_fraudBellSeen.has(a.user_id)) {
           _fraudBellSeen.add(a.user_id);
+          const lvlIcon = a.risk_level === 'HIGH' ? '🚨' : '⚠️';
           showAdminToast(
-            `🚨 HIGH RISK: ${a.user_name} (${a.insurance || 'insurance'}) — ${(a.flags||[]).slice(0,2).join(', ')}`,
-            'error', 7000
+            `${lvlIcon} ${a.risk_level}: ${a.user_name} (${a.insurance || 'insurance'}) — ${(a.flags||[]).slice(0,2).join(', ')}`,
+            a.risk_level === 'HIGH' ? 'error' : 'warn', 7000
           );
         }
       });
@@ -946,10 +952,10 @@ function renderFraudPanel(alerts) {
     return;
   }
   body.innerHTML = alerts.map(a => `
-    <div class="fraud-panel-item">
+    <div class="fraud-panel-item ${a.risk_level === 'MEDIUM' ? 'fpi-medium' : ''}">
       <div class="fpi-top">
         <div class="fpi-name">${escAdm(a.user_name)}</div>
-        <span class="fpi-badge">HIGH RISK</span>
+        <span class="fpi-badge ${a.risk_level === 'MEDIUM' ? 'fpi-badge-medium' : ''}">${a.risk_level === 'HIGH' ? '🚨 HIGH' : '⚠️ MEDIUM'}</span>
       </div>
       <div class="fpi-meta">
         <span><i class="fas fa-heart-pulse"></i> ${escAdm(a.insurance || '—')}</span>

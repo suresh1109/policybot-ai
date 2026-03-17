@@ -1,0 +1,249 @@
+================================================================================
+POLICYBOT KNOWLEDGE BASE — SECTOR 03: VEHICLE INSURANCE
+INDIA | 15 PLANS | UPDATED 2025-26
+FORMAT: DIRECT PARSER v2 (structured key:value)
+================================================================================
+
+PLAN 01
+----------------------------------------
+plan_name: HDFC ERGO Comprehensive Car Insurance
+company_name: HDFC ERGO General Insurance
+insurance_type: Vehicle Insurance
+coverage_amount: IDV (Insured Declared Value) as per vehicle market value
+premium_range: Rs.4,000 to Rs.18,000 per year (OD + TP combined)
+waiting_period: No waiting period; immediate coverage
+eligibility_age: Vehicle age 0 to 15 years; driver 18 years minimum
+conditions_covered: Own damage, Third-party liability (mandatory), Personal accident Rs.15 Lakh, Theft, Natural calamities, Fire, Road accident, Zero depreciation optional, Engine protection optional
+exclusions: Drunk driving, expired license, mechanical breakdown, war, nuclear, consequential loss
+claim_process: Cashless repair at 6,800+ garages; 24x7 spot claim registration; 30-minute survey; 7-day repair turnaround
+network_hospitals: 6,800+ network garages across India
+special_benefits: 24x7 cashless across 6,800+ garages; zero depreciation add-on; engine protection add-on; NCB (No Claim Bonus) up to 50%; roadside assistance; key replacement
+raw_summary: HDFC ERGO Comprehensive Car Insurance is India's top-rated private car insurance with access to 6,800+ cashless network garages and 24x7 spot claim registration. The zero depreciation add-on ensures full repair cost reimbursement without depreciation deduction — saving Rs.10,000+ on a typical accident claim. NCB (No Claim Bonus) rewards claim-free drivers with up to 50% premium discount over 5 years. Engine protection add-on covers expensive engine damage from water ingression during floods — critical in India's monsoon-prone regions. Ideal for new and premium car owners.
+
+PLAN 02
+----------------------------------------
+plan_name: Smart Drive Comprehensive Motor Insurance
+company_name: Bajaj Allianz General Insurance
+insurance_type: Vehicle Insurance
+coverage_amount: IDV based on vehicle age and model
+premium_range: Rs.3,500 to Rs.16,000 per year
+waiting_period: No waiting period; immediate
+eligibility_age: Vehicle 0-15 years; driver 18+
+conditions_covered: Own damage, Third-party (mandatory), Theft, Natural disaster, Fire, Personal accident, Tyre protection optional, Return to invoice optional
+exclusions: Drunk driving, expired DL, wear and tear, mechanical failure, war
+claim_process: Cashless at 4,000+ garages; 24x7 roadside assistance; 3-hour spot inspection service
+network_hospitals: 4,000+ network garages
+special_benefits: 24x7 roadside assistance included free; return to invoice cover — gets original invoice price not depreciated value; tyre protection add-on; 3-hour inspection SLA; motor OD floater for multiple vehicles
+raw_summary: Bajaj Allianz Smart Drive includes free 24x7 roadside assistance covering flat tyre, battery jump-start, fuel delivery, key lockout and towing — features most insurers charge extra for. The Return to Invoice cover is exceptional — in case of total loss or theft you receive the original purchase invoice price not the depreciated IDV saving lakhs on premium cars. Tyre protection covers tyre and tube damage separately. Best for buyers who want maximum add-on value bundled into base comprehensive cover.
+
+PLAN 03
+----------------------------------------
+plan_name: Complete Cover Comprehensive Motor
+company_name: ICICI Lombard General Insurance
+insurance_type: Vehicle Insurance
+coverage_amount: IDV as per vehicle; zero dep available
+premium_range: Rs.3,800 to Rs.17,000 per year
+waiting_period: No waiting period
+eligibility_age: Vehicle 0-15 years; driver 18+
+conditions_covered: Own damage, Third party (mandatory), Theft, Fire, Natural calamity, Personal accident Rs.15 Lakh, Consumables cover optional, NCB protect optional
+exclusions: Drunk driving, expired license, mechanical breakdown, war
+claim_process: Cashless at 7,500+ garages; InstaSpect AI video survey; 4-hour claim approval for minor repairs
+network_hospitals: 7,500+ garages — widest among private insurers
+special_benefits: InstaSpect AI video survey — no need to visit garage; 7,500 garages widest network; NCB protect add-on saves no-claim bonus after one claim; consumables cover (engine oil, coolant); pay-as-you-drive option
+raw_summary: ICICI Lombard Complete Cover motor insurance uses InstaSpect AI technology where policyholders can do a self-video survey from home without waiting for an inspector — dramatically speeding up the claim process. The 7,500+ cashless garages is the widest private insurer network in India. NCB Protect add-on is particularly valuable — it lets you make one claim per year without losing your accumulated No Claim Bonus which otherwise takes 5 claim-free years to rebuild. Best for tech-savvy car owners who want fast digital claim experience.
+
+PLAN 04
+----------------------------------------
+plan_name: Motor Plus Comprehensive Plan
+company_name: Tata AIG General Insurance
+insurance_type: Vehicle Insurance
+coverage_amount: IDV as declared
+premium_range: Rs.4,000 to Rs.17,500 per year
+waiting_period: No waiting period
+eligibility_age: Vehicle 0-15 years; driver 18+
+conditions_covered: Own damage, Third party (mandatory), Personal accident Rs.15 Lakh owner-driver, Passenger PA cover optional, Emergency hotel and transport cover
+exclusions: Drunk driving, expired DL, mechanical failure, war, nuclear
+claim_process: Cashless at 5,500+ garages; 1-hour spot claim response; 7-day repair commitment
+network_hospitals: 5,500+ garages
+special_benefits: Emergency hotel and transport reimbursement if car breaks down 50+ km from home; passenger PA cover for all co-passengers; 1-hour spot response; depreciation protection; 50% NCB protection
+raw_summary: Tata AIG Motor Plus uniquely covers emergency hotel accommodation and transport expenses if your car breaks down more than 50km away from home — a critical benefit for highway travellers and business users. Passenger PA cover protects all co-passengers in addition to the owner-driver. The 1-hour spot claim response SLA and 7-day repair commitment define clear service standards. 50% NCB protection is among the highest in the industry. Best for frequent highway drivers and those who carry passengers regularly.
+
+PLAN 05
+----------------------------------------
+plan_name: Comprehensive Car Insurance
+company_name: Go Digit General Insurance
+insurance_type: Vehicle Insurance
+coverage_amount: IDV as declared; self-inspection option
+premium_range: Rs.3,200 to Rs.14,000 per year (competitive pricing)
+waiting_period: No waiting period; immediate digital policy
+eligibility_age: Vehicle 0-15 years; driver 18+
+conditions_covered: Own damage, Third party (mandatory), Theft, Natural disaster, Fire, Personal accident, Zero dep optional, Bi-fuel cover for CNG/LPG
+exclusions: Drunk driving, expired DL, war, mechanical wear
+claim_process: Self-video inspection for minor claims; app-based claim; 6,400+ garages; 3-day settlement for minor claims
+network_hospitals: 6,400+ garages
+special_benefits: Self-video inspection — take photos yourself no waiting for surveyor; bi-fuel CNG/LPG cover built-in; fully digital policy issuance in 2 minutes; transparent policy wording; app-based claim tracking
+raw_summary: Go Digit Comprehensive Car Insurance revolutionised Indian motor insurance with self-video inspection where you photograph your car's damage yourself eliminating the wait for a surveyor. The fully digital policy is issued in 2 minutes. CNG/LPG bi-fuel cover is built-in at no extra charge — unlike traditional insurers who charge separately. With 6,400+ cashless garages and 3-day minor claim settlement Digit delivers an exceptionally fast modern experience. Ideal for tech-forward car owners, CNG car users and those frustrated by traditional motor insurance paperwork.
+
+PLAN 06
+----------------------------------------
+plan_name: Two-Wheeler Comprehensive Insurance
+company_name: HDFC ERGO General Insurance
+insurance_type: Vehicle Insurance
+coverage_amount: IDV of bike/scooter
+premium_range: Rs.1,200 to Rs.5,000 per year
+waiting_period: No waiting period
+eligibility_age: Bike 0-15 years; rider 18+; valid DL required
+conditions_covered: Own damage, Third party (mandatory), Theft, Fire, Natural disaster, Personal accident Rs.15 Lakh, Zero dep optional
+exclusions: Drunk riding, expired DL, helmet not worn, mechanical failure
+claim_process: Cashless at 6,800+ garages including 2-wheeler workshops; 24x7 helpline
+network_hospitals: 6,800+ garages including bike workshops
+special_benefits: Zero depreciation add-on for bikes; 24x7 spot assistance; fast claim for minor spills; NCB up to 50%; includes electric scooter coverage; helmet add-on coverage
+raw_summary: HDFC ERGO Two-Wheeler Comprehensive Insurance provides complete protection for bikes and scooters at Rs.1,200+ per year. Zero depreciation add-on is particularly valuable for new bikes — a typical 1-year-old bike has 15% depreciation applied to metal parts meaning you pay Rs.1,500+ extra without zero dep. Electric scooter coverage is available as India's EV two-wheeler market grows. The 6,800+ garage network includes small neighbourhood 2-wheeler workshops ensuring cashless repairs across the country. Helmet add-on covers helmet replacement after accidents.
+
+PLAN 07
+----------------------------------------
+plan_name: Two-Wheeler Comprehensive Bike Insurance
+company_name: Bajaj Allianz General Insurance
+insurance_type: Vehicle Insurance
+coverage_amount: IDV of motorcycle/scooter
+premium_range: Rs.1,000 to Rs.4,500 per year
+waiting_period: No waiting period
+eligibility_age: Bike 0-15 years; rider 18+ with valid DL
+conditions_covered: Own damage, Third party (mandatory), Theft, Fire, Natural disaster, Personal accident, Roadside assistance
+exclusions: Drunk riding, expired DL, mechanical breakdown, war
+claim_process: Cashless at 4,000+ garages; doorstep pickup for major damage; 24x7 helpline 1800-209-0144
+network_hospitals: 4,000+ garages including bike-specialist workshops
+special_benefits: Doorstep bike pickup for major damage; roadside assistance free; passenger PA cover optional; 5-year long-term policy with discount; instant digital policy in 60 seconds
+raw_summary: Bajaj Allianz offers doorstep bike pickup service for significantly damaged motorcycles — saving riders from the hassle of arranging transport to the garage themselves. The 5-year long-term two-wheeler policy provides 15-20% premium savings versus annual renewal and eliminates the risk of accidental policy lapse. Roadside assistance is included free covering towing, flat tyre and fuel assistance. Instant digital policy issued in 60 seconds at competitive premiums. Best for daily commuters using bikes who want hassle-free coverage with strong add-on value.
+
+PLAN 08
+----------------------------------------
+plan_name: Commercial Vehicle Comprehensive Insurance
+company_name: New India Assurance (Government PSU)
+insurance_type: Vehicle Insurance
+coverage_amount: IDV of commercial vehicle
+premium_range: Rs.8,000 to Rs.80,000 per year (based on vehicle type and GVW)
+waiting_period: No waiting period
+eligibility_age: Vehicle 0-20 years; driver 21+ with commercial DL
+conditions_covered: Own damage, Third party (mandatory higher for commercial), Goods in transit (optional), Driver PA, PA for hirer optional, Fire, Theft, Natural disaster
+exclusions: Overloading, unlicensed driver, drunk driving, war, mechanical breakdown
+claim_process: Branch and online claim; government PSU reliability; nationwide branch network
+network_hospitals: New India's nationwide branch network
+special_benefits: Government PSU — absolute claim reliability; goods in transit cover option; highest third-party TP coverage for commercial vehicles; nationwide branch presence in rural India; fleet discounts available
+raw_summary: New India Assurance Commercial Vehicle Insurance is the go-to cover for trucks, buses, tempos, tractors and other commercial vehicles. As a government PSU New India has absolute claim reliability and nationwide branch presence including rural areas where private insurers have limited presence. Goods in transit cover option protects the cargo being transported — critical for goods vehicles. Government commercial transport operators (state RTCs, government trucks) are mandated to use PSU insurers making New India the dominant player. Best for fleet operators and commercial vehicle owners who need reliable no-question-mark coverage.
+
+PLAN 09
+----------------------------------------
+plan_name: Third Party Motor Insurance (TP Only)
+company_name: All IRDAI-Licensed Insurers (Standard Mandatory)
+insurance_type: Vehicle Insurance
+coverage_amount: Unlimited third-party liability (bodily injury); Rs.7.5 Lakh property damage
+premium_range: Rs.2,072 (cars <1000cc) to Rs.7,897 (cars >1500cc) per year; bikes Rs.714-Rs.2,804
+waiting_period: No waiting period; legally mandatory for all vehicles
+eligibility_age: All vehicles regardless of age (mandatory by Motor Vehicles Act)
+conditions_covered: Third-party death or injury (unlimited cover); third-party property damage Rs.7.5 Lakh; owner-driver PA Rs.15 Lakh
+exclusions: Own vehicle damage, theft of own vehicle, natural disaster to own vehicle
+claim_process: Motor Accident Claims Tribunal (MACT) for bodily injury; insurer for property damage
+network_hospitals: N/A
+special_benefits: Legally mandatory — drives on road without this can result in Rs.2,000 fine or imprisonment; IRDAI fixed prices so comparison-shop only based on service; lifetime third-party policy for 2-wheelers
+raw_summary: Third Party Only Motor Insurance is legally mandatory under India's Motor Vehicles Act 1988 for every vehicle on the road. It covers unlimited compensation to any third party (person or property) you injure or damage while driving — protecting you from potentially crore-level legal liability. Own vehicle damage is NOT covered. IRDAI sets fixed premiums making all insurers equally priced. The Rs.2,072 to Rs.7,897 per year range for cars and Rs.714 to Rs.2,804 for bikes represents the bare minimum legal requirement. Anyone without comprehensive cover should at minimum carry this mandatory policy.
+
+PLAN 10
+----------------------------------------
+plan_name: Electric Vehicle Comprehensive Insurance
+company_name: Bajaj Allianz General Insurance
+insurance_type: Vehicle Insurance
+coverage_amount: IDV of electric vehicle
+premium_range: Rs.5,000 to Rs.25,000 per year (battery-included IDV)
+waiting_period: No waiting period
+eligibility_age: EV 0-10 years; driver 18+ with valid DL
+conditions_covered: Own damage (including battery), Third party (mandatory), Theft (vehicle and battery), Fire (battery fire), Charging station damage, Roadside assistance, Battery breakdown
+exclusions: Drunk driving, expired DL, battery warranty misuse, war, mechanical software failure
+claim_process: Cashless at EV-certified garages; EV specialist surveyor; 24x7 helpline
+network_hospitals: EV-certified Bajaj Allianz network garages
+special_benefits: Battery damage covered (most expensive EV component); charging cable cover; EV roadside assistance with EV recovery vehicles; EV-specialist surveyors; lower TP premium for EVs per IRDAI
+raw_summary: Bajaj Allianz Electric Vehicle Insurance is purpose-built for India's fast-growing EV market covering the most expensive component — the battery pack — for damage, malfunction and fire. Traditional comprehensive policies often have limitations on battery coverage. EV-specific roadside assistance includes EV recovery vehicles that can handle electric vehicles properly. Charging cable and home charger damage is covered. Lower third-party premiums for EVs per IRDAI guidelines mean EV insurance is often cheaper than equivalent petrol vehicles. Essential and specialised coverage for Tata Nexon EV, MG ZS EV, Ola Electric and other EV owners.
+
+PLAN 11
+----------------------------------------
+plan_name: Fleet Insurance — Commercial Vehicle Fleet
+company_name: ICICI Lombard General Insurance
+insurance_type: Vehicle Insurance
+coverage_amount: IDV of each vehicle in fleet; fleet aggregate cover option
+premium_range: 10-25% group discount on individual premiums (minimum 5 vehicles)
+waiting_period: No waiting period; fleet policy issued within 48 hours
+eligibility_age: Vehicles 0-15 years; commercial driver licence
+conditions_covered: Own damage for entire fleet, Third party for all vehicles, Personal accident for drivers, Goods in transit optional, Breakdown assistance fleet
+exclusions: Individual vehicle specific exclusions; drunk driving; expired licenses
+claim_process: Dedicated fleet account manager; centralized claim handling; 24x7 fleet helpline; InstaSpect for all fleet vehicles
+network_hospitals: 7,500+ garages with fleet priority service
+special_benefits: 10-25% volume discount; dedicated fleet account manager; centralized policy management; fleet analytics dashboard; staggered renewal management; GST credit on premium for businesses
+raw_summary: ICICI Lombard Fleet Insurance provides comprehensive cover for business vehicle fleets at 10-25% volume discount versus individual policies. A dedicated fleet account manager handles all claims centrally — saving business owners from managing multiple policies individually. The fleet analytics dashboard tracks vehicle performance, claim history and renewal dates. GST-registered businesses can claim input tax credit on the insurance premium reducing effective cost further. Staggered renewal management prevents the chaos of multiple simultaneous renewals. Best for taxi fleets, logistics companies, car rental businesses and corporate vehicle fleets.
+
+PLAN 12
+----------------------------------------
+plan_name: Roadside Assistance Add-On Coverage
+company_name: Tata AIG General Insurance
+insurance_type: Vehicle Insurance
+coverage_amount: Up to Rs.50,000 per incident reimbursement
+premium_range: Rs.500 to Rs.1,500 per year (add-on to base policy)
+waiting_period: No waiting period; add on at renewal or new policy
+eligibility_age: Any vehicle with base comprehensive policy
+conditions_covered: Towing (50km radius), Flat tyre, Battery jump-start, Fuel delivery, Key lockout, Minor on-road repair, Hotel accommodation if breakdown away from home, Taxi reimbursement
+exclusions: Breakdowns due to accident (covered under main policy), drunk driver breakdowns
+claim_process: Call 1800 call centre; 1-hour response time SLA; cashless service at all locations
+network_hospitals: 2,500+ service providers across India
+special_benefits: 1-hour nationwide response time; hotel stay covered if stranded; key lockout service; toll-free 24x7 helpline; free towing up to 50km; multiple assistance types in single add-on
+raw_summary: Tata AIG's Roadside Assistance add-on provides 24x7 nationwide breakdown rescue with a 1-hour response time SLA for just Rs.500-1,500 per year. Coverage includes towing up to 50km, flat tyre repair, battery jump-start, fuel delivery if you run dry, key lockout unlocking and minor on-road repairs. Hotel accommodation reimbursement kicks in if your vehicle breaks down more than 50km from home. With 2,500+ service providers across India including tier 2 and tier 3 cities coverage is genuinely nationwide. An essential add-on for highway travellers and night drivers.
+
+PLAN 13
+----------------------------------------
+plan_name: Zero Depreciation Comprehensive Car Plan
+company_name: New India Assurance (Government PSU)
+insurance_type: Vehicle Insurance
+coverage_amount: IDV without depreciation deduction
+premium_range: Rs.5,500 to Rs.22,000 per year (10-15% higher than standard comprehensive)
+waiting_period: No waiting period
+eligibility_age: Vehicle 0-5 years only (zero dep available for new cars)
+conditions_covered: Own damage at full replacement cost (no depreciation), Third party (mandatory), Theft, Fire, Natural calamity, Personal accident
+exclusions: Drunk driving, expired DL, mechanical breakdown, war, vehicles over 5 years
+claim_process: Cashless at government-empanelled and network garages; government PSU claim reliability
+network_hospitals: Government-empanelled garages nationwide
+special_benefits: Government PSU trust; zero depreciation means full claim value; ideal for new cars in first 5 years; engine protection add-on; consumables add-on; NCB protection optional
+raw_summary: New India Assurance Zero Depreciation plan covers repair costs at full replacement value for vehicles up to 5 years old — standard comprehensive policies deduct 25-50% depreciation on body parts making you pay lakhs out of pocket after accidents. On a 2-year-old car a typical accident repair of Rs.80,000 might result in Rs.50,000 claim with standard insurance versus Rs.80,000 with zero dep. Government PSU backing means no claim disputes. Available only for vehicles under 5 years making it most relevant for new car buyers. The 10-15% premium increase for zero dep is easily recovered in a single claim.
+
+PLAN 14
+----------------------------------------
+plan_name: HDFC ERGO Bike360 Two-Wheeler App Plan
+company_name: HDFC ERGO General Insurance
+insurance_type: Vehicle Insurance
+coverage_amount: IDV of two-wheeler
+premium_range: Rs.1,100 to Rs.4,200 per year (app-exclusive pricing)
+waiting_period: No waiting period; instant digital policy
+eligibility_age: Bike 0-15 years; rider 18+ with DL
+conditions_covered: Own damage, Third party (mandatory), Theft, Natural disaster, Fire, Personal accident, Pillion rider PA
+exclusions: Drunk riding, expired DL, war, mechanical wear, overloading
+claim_process: Selfie claim — take photos of damage on HDFC ERGO app; instant claim registration; 3-day settlement for minor claims
+network_hospitals: 6,800+ garages
+special_benefits: Selfie claim feature; app-exclusive lower pricing; pillion rider PA included; instant digital policy; 3-day minor claim settlement; easy 2-minute renewal on app
+raw_summary: HDFC ERGO Bike360 is the app-exclusive two-wheeler insurance plan with selfie claim feature — just photograph the damage on your smartphone for instant claim registration without waiting for a surveyor. App-exclusive pricing gives 10-15% discount versus offline premiums. Pillion rider PA cover protects your passenger with Rs.1 Lakh personal accident benefit. 3-day settlement for minor claims (scratches, minor dents) from the app itself. Easy 2-minute renewal via app ensures your bike is never uninsured. Best for tech-savvy bike owners who want digital-first insurance experience.
+
+PLAN 15
+----------------------------------------
+plan_name: Pay As You Drive (PAYD) Motor Insurance
+company_name: Bajaj Allianz General Insurance
+insurance_type: Vehicle Insurance
+coverage_amount: IDV as declared; OD premium based on actual km driven
+premium_range: Rs.2,500 to Rs.10,000 per year (30-50% savings for low-mileage drivers)
+waiting_period: No waiting period
+eligibility_age: Vehicle 0-10 years; driver 18+ with DL
+conditions_covered: Own damage (proportional to km), Third party (full mandatory), Theft (full), Fire (full), Personal accident (full), Natural disaster (full)
+exclusions: Drunk driving, expired DL, war, mechanical failure
+claim_process: Standard cashless or reimbursement; telematics-verified mileage
+network_hospitals: 4,000+ garages
+special_benefits: 30-50% savings for cars driven under 5,000 km/year; telematics device tracks km; OD refund if driving less than declared km; ideal for work-from-home users; secondary cars; vacation homes
+raw_summary: Bajaj Allianz Pay As You Drive PAYD motor insurance is India's usage-based insurance where own damage premium varies based on actual kilometres driven tracked through a telematics device. Vehicles driven under 5,000 km annually can save 30-50% compared to standard comprehensive premiums — significant savings for work-from-home professionals and weekend cars. Third party liability, theft and natural disaster remain at full standard premium regardless of usage. OD premium refund is provided if actual driving is less than the km declared. Revolutionary for India's growing population of remote workers and second-car owners.
+
+================================================================================
+END OF KB_03 | TOTAL PLANS: 15 | SECTOR: VEHICLE INSURANCE
+================================================================================

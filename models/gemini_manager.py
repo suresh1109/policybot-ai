@@ -7,8 +7,10 @@ log = logging.getLogger("Gemini")
 # Model priority order — if quota hit on primary, try next model
 # gemini-2.0-flash-lite is free tier friendly and has separate quota pool
 MODELS_PRIORITY = [
-    "gemini-2.5-flash"
-   
+    "gemini-2.5-flash",
+    "gemini-2.0-flash-lite",
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-8b",
 ]
 
 # How long to cool down a key after quota exhaustion (seconds)

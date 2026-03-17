@@ -1,0 +1,227 @@
+POLICYBOT KNOWLEDGE BASE — HEALTH INSURANCE
+Generated: 2026 | 25 Plans | India Market
+============================================================
+
+PLAN 01
+----------------------------------------
+plan_name: Arogya Sanjeevani Policy
+company_name: All IRDAI-Registered Insurers (Standard Product)
+insurance_type: Health Insurance
+coverage_amount: Rs.1 Lakh to Rs.5 Lakh
+premium_range: Rs.3,000 to Rs.8,000 per year (individual); Rs.6,000 to Rs.15,000 (family)
+waiting_period: 30 days general; 2 years pre-existing diseases; 4 years specific diseases
+eligibility_age: 18 to 65 years (children from 3 months with parent)
+conditions_covered: Hospitalisation, ICU charges, surgery, daycare procedures, AYUSH treatments, cataract up to Rs.40,000
+exclusions: Cosmetic surgery, dental (unless accident), self-inflicted injury, OPD, maternity (standard), war injury
+claim_process: Cashless at network hospitals OR reimbursement within 30 days; submit bills within 15 days of discharge
+network_hospitals: Depends on insurer — average 5,000 to 10,000 hospitals
+special_benefits: Standard IRDAI mandated product; portable across insurers; no sub-limits on room rent (5% of SI cap); lowest cost entry-level plan
+raw_summary: Arogya Sanjeevani is India's standardised health insurance plan mandated by IRDAI. Every insurer must offer it at a regulated price. Ideal for first-time buyers on a tight budget. Covers hospitalisation, surgery, ICU, and AYUSH. Has 5% of sum insured capped room rent. Great starting point for young individuals aged 18–35 or senior citizens looking for affordable basic coverage.
+
+PLAN 02
+----------------------------------------
+plan_name: Optima Restore
+company_name: HDFC ERGO Health Insurance
+insurance_type: Health Insurance
+coverage_amount: Rs.3 Lakh to Rs.50 Lakh
+premium_range: Rs.7,000 to Rs.25,000 per year (individual); Rs.14,000 to Rs.45,000 (family floater)
+waiting_period: 30 days general; 2 years pre-existing; 2 years specific (shorter than average)
+eligibility_age: 5 years to 65 years; lifelong renewal
+conditions_covered: Hospitalisation, daycare, ICU, organ donor expenses, AYUSH, mental illness (as per law), maternity (optional rider), OPD (optional)
+exclusions: Cosmetic procedures, HIV/AIDS (unless accidental), war, nuclear, experimental treatments
+claim_process: Cashless at 13,000+ network hospitals; pre-auth within 4 hours; reimbursement within 15 days
+network_hospitals: 13,000+ across India
+special_benefits: RESTORE benefit — 100% sum insured restored FREE if exhausted in same policy year (unique feature); Multiplier Benefit — 50% increase in SI for claim-free years; No sub-limit on room rent above Rs.5 Lakh SI
+raw_summary: Optima Restore by HDFC ERGO is one of India's best-selling premium health plans. Its standout feature is the Restore Benefit — if your entire sum insured is exhausted due to a claim, it is fully restored to 100% in the same year at no extra cost. The Multiplier Benefit increases your coverage by 50% each claim-free year. Best suited for families aged 25–55 with moderate to high coverage needs. Network of 13,000+ hospitals makes cashless claims highly accessible.
+
+PLAN 03
+----------------------------------------
+plan_name: Supreme Health Plan
+company_name: Niva Bupa (formerly Max Bupa)
+insurance_type: Health Insurance
+coverage_amount: Rs.5 Lakh to Rs.1 Crore
+premium_range: Rs.9,000 to Rs.40,000 per year (individual); Rs.18,000 to Rs.70,000 (family)
+waiting_period: 30 days general; 2 years pre-existing; 2 years specific
+eligibility_age: 18 to 65 years; children from 91 days; lifelong renewal
+conditions_covered: Hospitalisation, daycare, ICU, organ donor, emergency ambulance (Rs.10,000), AYUSH, mental health, maternity (Gold/Platinum variants), international emergency
+exclusions: Cosmetic surgery, dental (routine), OPD (base plan), experimental drugs, self-harm
+claim_process: Direct cashless at 10,000+ hospitals; in-house claim settlement — no TPA; 30 min cashless guarantee at select hospitals
+network_hospitals: 10,000+ (in-house settlement — faster)
+special_benefits: In-house claims settlement (no TPA delays); ReAssure Benefit — unlimited reinstatement of SI; Health Companion Add-on available; Premium stay option (maternity + OPD); Direct billing without TPA
+raw_summary: Niva Bupa Supreme is a flagship product known for its in-house claims settlement without a Third Party Administrator (TPA). This means faster, smoother cashless approvals. The ReAssure benefit offers unlimited reinstatement of sum insured. Multiple variants — Silver, Gold, Platinum — allow tailored coverage. Ideal for urban professionals aged 25–50 who want premium, hassle-free claims with large sum insured up to Rs.1 Crore.
+
+PLAN 04
+----------------------------------------
+plan_name: Care Supreme
+company_name: Care Health Insurance
+insurance_type: Health Insurance
+coverage_amount: Rs.5 Lakh to Rs.75 Lakh
+premium_range: Rs.8,000 to Rs.35,000 per year (individual); Rs.16,000 to Rs.60,000 (family)
+waiting_period: 30 days general; 3 years pre-existing (reducible with continuity); 2 years specific
+eligibility_age: 18 to 65 years; children 5 years to 25 years; lifelong renewal
+conditions_covered: Hospitalisation, ICU, surgery, daycare, ambulance, AYUSH, mental health, organ donor, domiciliary
+exclusions: Cosmetic surgery, dental (routine), OPD (standard), fertility treatment, self-harm, war
+claim_process: Cashless at 19,400+ hospitals (largest network); claim settlement average 2 hours for cashless
+network_hospitals: 19,400+ (one of the largest networks in India)
+special_benefits: Unlimited automatic recharge of SI (for different illness in same year); No Claim Bonus — 50% increase per claim-free year; 10% premium discount for choosing higher deductible; Free annual health check-up from day 1
+raw_summary: Care Supreme stands out for having one of the largest hospital networks in India — over 19,400 hospitals. This makes cashless claims possible in even tier-3 cities. The automatic SI recharge for different illnesses in the same year is a key advantage. Ideal for families with elderly parents or individuals living in smaller towns who need wide hospital access. The NCB of 50% per year makes long-term coverage economical.
+
+PLAN 05
+----------------------------------------
+plan_name: Activ Health Enhanced Plan
+company_name: Aditya Birla Health Insurance
+insurance_type: Health Insurance
+coverage_amount: Rs.2 Lakh to Rs.2 Crore
+premium_range: Rs.7,500 to Rs.50,000 per year (individual); Rs.15,000 to Rs.90,000 (family)
+waiting_period: 30 days general; 2 years pre-existing; 2 years specific
+eligibility_age: 5 years to 65 years; lifelong renewal
+conditions_covered: Hospitalisation, ICU, surgery, daycare, AYUSH, OPD (up to Rs.10,000 — unique), mental health, chronic disease management
+exclusions: Cosmetic surgery, experimental treatment, war, self-harm, HIV (non-accidental)
+claim_process: Cashless at 10,500+ hospitals; HealthReturns portal for wellness rewards
+network_hospitals: 10,500+
+special_benefits: HealthReturns — earn premium back as reward for staying active (fitness tracker integration); Chronic Disease Management for Diabetes, Hypertension, Asthma; OPD coverage up to Rs.10,000 in base plan (rare); Wellness Coach and doctor consultation included; Premium waiver for fitness milestones
+raw_summary: Aditya Birla Activ Health Enhanced is India's most wellness-focused health insurance plan. Its HealthReturns feature allows policyholders to earn back up to 100% of their premium as a reward for physical activity tracked via a fitness app or wearable. Built-in OPD coverage up to Rs.10,000 is rare in Indian health plans and covers outpatient doctor visits and medicines. Ideal for health-conscious individuals aged 25–45 with chronic conditions like diabetes or hypertension, as it includes dedicated chronic disease management.
+
+PLAN 06
+----------------------------------------
+plan_name: Star Health Comprehensive Plan
+company_name: Star Health and Allied Insurance
+insurance_type: Health Insurance
+coverage_amount: Rs.5 Lakh to Rs.1 Crore
+premium_range: Rs.10,000 to Rs.45,000 per year (individual); Rs.20,000 to Rs.80,000 (family)
+waiting_period: 30 days general; 2 years pre-existing (with condition loading option); 2 years specific
+eligibility_age: 18 to 65 years; children from 1 day; lifelong renewal
+conditions_covered: Hospitalisation, ICU, surgery, daycare (586+ procedures), AYUSH, OPD (Rs.500 per visit up to 12 visits), personal accident, funeral expenses
+exclusions: Cosmetic, dental routine, self-inflicted, war, HIV non-accidental, experimental
+claim_process: Cashless at 14,000+ hospitals (Star owns 1,100+ own network hospitals — fastest); in-house settlement
+network_hospitals: 14,000+ (owns 1,100 hospitals directly)
+special_benefits: OPD coverage in base plan (12 visits per year); Automatic restoration 100% on same illness too; No co-payment up to 60 years; Pre and post hospitalisation 60/90 days; Star's own hospital network ensures premium rooms and priority admission
+raw_summary: Star Health Comprehensive is a flagship plan from India's largest standalone health insurer. Unique feature: Star owns over 1,100 hospitals directly, guaranteeing priority admission and premium room quality for policyholders. The plan includes OPD visits (up to 12 per year), making it one of the few plans covering doctor visits without hospitalisation. Automatic restoration applies even for the same illness — a benefit rarely offered. Best suited for families wanting premium in-hospital experience and frequent outpatient care.
+
+PLAN 07
+----------------------------------------
+plan_name: iHealth Plus
+company_name: Manipal Cigna Health Insurance
+insurance_type: Health Insurance
+coverage_amount: Rs.2 Lakh to Rs.25 Lakh
+premium_range: Rs.6,000 to Rs.28,000 per year (individual); Rs.12,000 to Rs.50,000 (family)
+waiting_period: 30 days general; 3 years pre-existing; 2 years specific
+eligibility_age: 18 to 65 years; children from 91 days; lifelong renewal
+conditions_covered: Hospitalisation, ICU, surgery, daycare, AYUSH, preventive health check, mental health, teleconsultation
+exclusions: OPD (unless rider), cosmetic, dental, self-harm, war, fertility
+claim_process: Cashless at 8,000+ hospitals; TPA-assisted; reimbursement 30 days
+network_hospitals: 8,000+
+special_benefits: Preventive Health Check from day 1 (covers annual full-body check-up); Second Medical Opinion from international specialists; Teleconsultation with specialist (unlimited); No room rent sub-limit on Rs.5 Lakh+ plans; No co-payment below 65 years
+raw_summary: Manipal Cigna iHealth Plus leverages Cigna's global expertise to provide health insurance with international second opinion access. The unlimited teleconsultation feature allows policyholders to speak with specialists from home without visiting a clinic. Annual preventive health check-up from day 1 (no waiting period) is a valuable benefit. Best for urban professionals aged 30–50 who value preventive healthcare, telemedicine, and global medical second opinions.
+
+PLAN 08
+----------------------------------------
+plan_name: Senior Citizen Red Carpet Plan
+company_name: Star Health and Allied Insurance
+insurance_type: Health Insurance
+coverage_amount: Rs.1 Lakh to Rs.25 Lakh
+premium_range: Rs.12,000 to Rs.60,000 per year (individual 60–75 years)
+waiting_period: 30 days general; 1 year pre-existing (shortest for senior plans); specific: 2 years
+eligibility_age: 60 to 75 years only; renewable lifelong
+conditions_covered: Hospitalisation, ICU, surgery, daycare, AYUSH, pre-existing covered from Year 2, outpatient diseases at Star network
+exclusions: Cosmetic surgery, dental routine, HIV, self-harm, war, fertility
+claim_process: Cashless at 14,000+ hospitals; in-house settlement; priority senior citizen helpline
+network_hospitals: 14,000+ with priority senior citizen support counters
+special_benefits: Specifically designed for senior citizens aged 60–75; No pre-medical check-up required up to Rs.5 Lakh; Shorter pre-existing waiting period (1 year vs standard 3–4 years); Pre-existing diseases like Diabetes, BP covered from 2nd year; Senior citizen helpline dedicated; Home care services available
+raw_summary: Star Senior Citizen Red Carpet is one of the best health plans for individuals aged 60–75 years. Unlike most plans that have 3–4 year waiting periods for pre-existing conditions, this plan covers them from the 2nd year. No medical check-up required up to Rs.5 Lakh sum insured — simplifying enrollment for seniors. The dedicated senior citizen helpline and priority cashless at Star's 1,100 owned hospitals makes this highly reliable. Ideal for retired individuals with known conditions like diabetes or hypertension.
+
+PLAN 09
+----------------------------------------
+plan_name: Health Infinity Plan
+company_name: Reliance General Insurance
+insurance_type: Health Insurance
+coverage_amount: Rs.3 Lakh to Unlimited (unlimited coverage variant available)
+premium_range: Rs.8,000 to Rs.40,000 per year (individual); Rs.16,000 to Rs.65,000 (family)
+waiting_period: 30 days general; 3 years pre-existing; 2 years specific
+eligibility_age: 18 to 65 years; children from 91 days; lifelong renewal
+conditions_covered: Hospitalisation, ICU, surgery, daycare, AYUSH, worldwide emergency (unlimited variant), air ambulance, mental health
+exclusions: Cosmetic surgery, OPD (standard), dental, self-harm, war
+claim_process: Cashless at 8,000+ hospitals; 4-hour pre-auth for cashless; reimbursement 15 days
+network_hospitals: 8,000+
+special_benefits: Unlimited sum insured variant — covers unlimited hospitalisation costs (unique in India); International emergency coverage; Air ambulance up to Rs.2 Lakh; 50 daycare procedures covered; Worldwide coverage for emergencies; Ideal for frequent international travellers
+raw_summary: Reliance Health Infinity is the only major Indian health plan offering an Unlimited Sum Insured variant — meaning there is no cap on hospitalisation expenses. This is especially valuable for critical illness treatment, organ transplants, or cancer treatment that could run into crores. International emergency coverage and air ambulance support make this plan ideal for frequent flyers and corporate executives. The unlimited variant carries a higher premium but removes the risk of under-insurance entirely.
+
+PLAN 10
+----------------------------------------
+plan_name: Niva Bupa ReAssure 2.0
+company_name: Niva Bupa Health Insurance
+insurance_type: Health Insurance
+coverage_amount: Rs.5 Lakh to Rs.1 Crore
+premium_range: Rs.10,000 to Rs.45,000 per year (individual); Rs.20,000 to Rs.75,000 (family)
+waiting_period: 30 days general; 2 years pre-existing; 2 years specific
+eligibility_age: 18 to 65 years; children from 91 days; lifelong renewal
+conditions_covered: Hospitalisation, ICU, daycare, ambulance, AYUSH, mental health, maternity (optional), organ donor, domiciliary
+exclusions: Cosmetic, OPD (standard), dental, war, self-harm, experimental
+claim_process: In-house claims; cashless at 10,000+; 30 min cashless guarantee at partner hospitals
+network_hospitals: 10,000+ (in-house, no TPA)
+special_benefits: 10% increase in sum insured every year without claiming (up to 100% in 10 years); Lock-the-clock benefit — premium stays same when renewed at same age bracket; Booster Benefit — unused base SI carries forward to next year; Direct billing and in-house settlement
+raw_summary: Niva Bupa ReAssure 2.0 introduces innovative features: the 10% annual SI increase (even without a claim) ensures your coverage keeps pace with medical inflation. The Lock-the-Clock benefit freezes your premium at the current age bracket if you maintain continuous renewal, protecting against sharp premium hikes. The Booster feature carries forward unused sum insured to the next year. Best for long-term policyholders aged 25–45 looking for a growing coverage plan with premium stability.
+
+PLAN 11
+----------------------------------------
+plan_name: HDFC ERGO My Health Suraksha
+company_name: HDFC ERGO Health Insurance
+insurance_type: Health Insurance
+coverage_amount: Rs.3 Lakh to Rs.50 Lakh
+premium_range: Rs.6,500 to Rs.22,000 per year (individual); Rs.13,000 to Rs.40,000 (family)
+waiting_period: 30 days general; 3 years pre-existing; 2 years specific
+eligibility_age: 91 days to 65 years; lifelong renewal
+conditions_covered: Hospitalisation, ICU, surgery, daycare, AYUSH, mental illness, domiciliary hospitalisation, organ donor
+exclusions: OPD, dental routine, cosmetic, war, self-harm
+claim_process: Cashless at 13,000+; in-house claims; express reimbursement 7 working days
+network_hospitals: 13,000+
+special_benefits: Silver, Gold, Platinum tiers; Gold and Platinum include OPD benefits; 100% No Claim Bonus every claim-free year; Reinstatement of full SI once per year; Maternity available as add-on; Critical illness lump sum rider available
+raw_summary: HDFC ERGO My Health Suraksha is a tiered plan offering Silver, Gold, and Platinum options. The 100% No Claim Bonus (doubling SI each claim-free year) is the highest NCB offered in the market. The express reimbursement in 7 working days makes out-of-pocket expenses minimal. The Platinum tier includes OPD coverage and maternity — making it suitable for young couples planning families. Ideal for individuals aged 25–50 wanting value-for-money health insurance with growing coverage.
+
+PLAN 12
+----------------------------------------
+plan_name: Corona Kavach Policy
+company_name: All Insurers (IRDAI Standard COVID Plan)
+insurance_type: Health Insurance
+coverage_amount: Rs.50,000 to Rs.5 Lakh
+premium_range: Rs.300 to Rs.2,500 (3.5 months); Rs.500 to Rs.4,500 (6.5 months); Rs.700 to Rs.6,500 (9.5 months)
+waiting_period: 15 days only (shortest waiting period of any health plan)
+eligibility_age: 18 to 65 years; children from 1 day (with parent)
+conditions_covered: COVID-19 hospitalisation, ICU, PPE kit, comorbidity treatment during COVID hospitalisation, home care if hospitalised-level care needed, AYUSH for COVID
+exclusions: Non-COVID illnesses, OPD, pre-existing comorbidities standalone
+claim_process: Cashless at network hospitals; rapid settlement within 7 days for COVID claims
+network_hospitals: All insurer networks applicable
+special_benefits: Only 15-day waiting period; covers home care treatment; comorbidities treated during COVID covered; AYUSH treatments included; Short-term policy (3.5/6.5/9.5 months); affordable COVID-specific coverage
+raw_summary: Corona Kavach is an IRDAI-mandated standard COVID health policy available from all insurers. Its unique advantage is the 15-day waiting period (versus 30+ days for standard plans). Home care coverage is included if hospitalisation-level care is required at home. For individuals concerned specifically about COVID-19 or related respiratory infections, this is the most affordable entry-point at Rs.300 for 3.5 months. Still relevant for respiratory illness management and pandemic preparedness.
+
+PLAN 13
+----------------------------------------
+plan_name: Ayushman Bharat PM-JAY
+company_name: Government of India (National Health Authority)
+insurance_type: Health Insurance
+coverage_amount: Rs.5 Lakh per family per year (FREE — government funded)
+premium_range: Rs.0 (fully government funded for eligible BPL/SECC families)
+waiting_period: None — coverage from day 1
+eligibility_age: No age limit; covers all family members
+conditions_covered: 1,929 medical procedures across secondary and tertiary care; hospitalisation, surgery, ICU, daycare, pre and post-hospitalisation (3 days pre / 15 days post), newborn baby expenses
+exclusions: OPD, cosmetic procedures, experimental treatments, dental (routine)
+claim_process: Cashless at 29,000+ empanelled hospitals (both public and private); e-card required
+network_hospitals: 29,000+ empanelled hospitals across India
+special_benefits: Completely FREE for eligible families; covers 1,929 medical packages; largest government health scheme in the world; covers pre-existing conditions from day 1; no family size limit; covers mental illness; can be used in any empanelled hospital across India (portable)
+raw_summary: Ayushman Bharat PM-JAY is the world's largest government-funded health insurance scheme, providing Rs.5 Lakh per year free coverage to 50 crore+ beneficiaries from economically weaker sections (SECC database). If eligible, this is the best possible health coverage at zero cost, covering 1,929 medical procedures at 29,000+ hospitals. Pre-existing conditions are covered from day 1. Ideal to recommend to users with lower income profiles or those falling under BPL/SECC categories.
+
+PLAN 14
+----------------------------------------
+plan_name: Super Top-Up Health Plan
+company_name: HDFC ERGO (Optima Super)
+insurance_type: Health Insurance
+coverage_amount: Rs.5 Lakh to Rs.50 Lakh (kicks in after deductible threshold)
+premium_range: Rs.3,000 to Rs.12,000 per year (very affordable due to deductible structure)
+waiting_period: 30 days general; 3 years pre-existing; 2 years specific
+eligibility_age: 18 to 70 years; lifelong renewal
+conditions_covered: Hospitalisation, ICU, surgery, daycare, AYUSH — activates after aggregate annual hospitalisation exceeds deductible (Rs.3–5 Lakh)
+exclusions: Expenses below deductible threshold, OPD, cosmetic, dental, self-harm
+claim_process: Cashless at 13,000+; activated after deductible; reimbursement 15 days
+network_hospitals: 13,000+
+special_benefits: Super top-up applies to aggregate annual hospitalisation (not per claim — unlike top-up); extremely affordable premium; ideal as supplement to existing employer policy; covers deductible from any source; no medical check-up up to 45 years
+raw_summary:

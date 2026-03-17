@@ -1,0 +1,361 @@
+================================================================================
+POLICYBOT KNOWLEDGE BASE — SECTOR 02: TERM LIFE & LIFE INSURANCE
+INDIA | 22 PLANS | UPDATED 2025-26
+FORMAT: DIRECT PARSER v2 (structured key:value)
+================================================================================
+
+PLAN 01
+----------------------------------------
+plan_name: Click 2 Protect Super Term Plan
+company_name: HDFC Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.20 Lakh to Rs.10 Crore
+premium_range: Rs.8,000 to Rs.45,000 per year (non-smoker 30yr old Rs.1Cr ~ Rs.10,000/yr)
+waiting_period: 45 days (suicidal within first year excluded)
+eligibility_age: 18 to 65 years entry; coverage up to age 85
+conditions_covered: Death benefit (lump sum or monthly income), Terminal illness accelerated payout, Critical illness optional, Disability optional, Accidental death benefit
+exclusions: Suicide first year, death by intoxication, war, self-inflicted injury, criminal activity
+claim_process: Online claim at HDFC Life portal; 99.4% claim settlement ratio; 4-day average settlement
+network_hospitals: N/A (life insurance)
+special_benefits: 99.4% claim settlement ratio (highest in private sector); return of premium option; premium holiday for income loss; increasing cover option; monthly income option; single premium option
+raw_summary: HDFC Life Click 2 Protect Super is consistently ranked as India's best term insurance plan with an industry-leading 99.4% claim settlement ratio. For a 30-year non-smoking male a Rs.1 Crore cover costs approximately Rs.10,000 per year — extremely affordable. The plan offers flexible options including return of premium at maturity, monthly income option for family, increasing cover that grows with inflation and premium holiday if income is disrupted. Terminal illness benefit pays out early if diagnosed with terminal disease. The gold standard of Indian term insurance.
+
+PLAN 02
+----------------------------------------
+plan_name: iProtect Smart Term Plan
+company_name: ICICI Prudential Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.25 Lakh to Rs.10 Crore
+premium_range: Rs.7,000 to Rs.40,000 per year
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 65 years entry; coverage up to age 85
+conditions_covered: Death benefit, Terminal illness payout, Critical illness payout (34 conditions), Permanent disability benefit, Accidental death extra cover
+exclusions: Suicide first year, war, criminal acts, self-inflicted
+claim_process: Online claim at ICICI Pru portal; 99.17% claim settlement ratio; 24-hour claim helpline
+network_hospitals: N/A
+special_benefits: Covers 34 critical illnesses with separate payout; women get 5% premium discount; 4 plan variants for different needs; premium remains level; ICICI brand trust
+raw_summary: ICICI Prudential iProtect Smart covers 34 critical illnesses including cancer, heart attack, stroke and kidney failure with a separate lump-sum payout independent of the death benefit. Women policyholders get a 5% premium discount. Four different plan variants — Life, Life Plus, Life and Health, All in One — let customers choose exactly what they need. With a 99.17% claim settlement ratio and ICICI Prudential's track record this is a reliable choice for comprehensive term protection including critical illness.
+
+PLAN 03
+----------------------------------------
+plan_name: Tech Term Plan
+company_name: LIC of India (Government)
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.50 Lakh to Rs.2 Crore
+premium_range: Rs.9,000 to Rs.50,000 per year
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 65 years entry; coverage up to age 80
+conditions_covered: Death benefit lump sum; optional accidental death benefit; terminal illness accelerated benefit; differential premium for smoker vs non-smoker
+exclusions: Suicide first year, death by intoxication, criminal acts, war, self-inflicted
+claim_process: Online and branch claims; 98.8% claim settlement ratio; unmatched government trust
+network_hospitals: N/A
+special_benefits: LIC government backing — no-insolvency guarantee; 98.8% settlement; differential rates for smokers and non-smokers; large agent network for claims assistance
+raw_summary: LIC Tech Term is India's first online pure-risk term plan from the state insurer LIC which has the absolute highest brand trust in Indian insurance. While LIC's settlement ratio of 98.8% is strong it's the government backing — meaning LIC can never go bankrupt — that makes it uniquely trustworthy. Premiums are competitive with private insurers. LIC's 1.4 million agent network provides hands-on claim support in every district including rural areas where private insurers have less presence. Best for conservative buyers who want maximum claim security above all else.
+
+PLAN 04
+----------------------------------------
+plan_name: Smart Secure Plus Term Plan
+company_name: Max Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.20 Lakh to Rs.10 Crore
+premium_range: Rs.7,500 to Rs.42,000 per year
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 65 years; coverage up to age 85
+conditions_covered: Death benefit, Terminal illness, Critical illness (optional), Disability waiver, Return of premium option
+exclusions: Suicide first year, intoxication, war, criminal acts
+claim_process: Online and branch; 99.3% claim settlement ratio — highest among pure-play life insurers; 3-day settlement average
+network_hospitals: N/A
+special_benefits: 99.3% settlement ratio; in-built terminal illness; optional critical illness cover for 40 conditions; joint life option covers spouse; premium waiver on disability; Max Life has won 12 industry awards for claims
+raw_summary: Max Life Smart Secure Plus holds the distinction of 99.3% claim settlement ratio — the highest among dedicated life insurance companies in India. The plan optionally covers 40 critical illnesses providing a lump sum payout alongside the term cover. Joint life option covers both spouses under one policy at discounted combined premium. On total permanent disability future premiums are waived while coverage continues. 3-day average claim settlement makes it exceptionally fast. For buyers who prioritise claim certainty above everything else Max Life is the benchmark.
+
+PLAN 05
+----------------------------------------
+plan_name: eShield Next Term Plan
+company_name: SBI Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.25 Lakh to Rs.10 Crore
+premium_range: Rs.8,500 to Rs.44,000 per year
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 65 years; coverage up to age 80
+conditions_covered: Death benefit with level or increasing cover; accidental total disability benefit; terminal illness benefit
+exclusions: Suicide first year, war, criminal, intoxication
+claim_process: SBI bank branch + online; 97.6% settlement ratio; SBI network assistance
+network_hospitals: N/A
+special_benefits: Increasing cover option — sum insured grows 10% every 5 years; joint life option; SBI bank branch claim support at 22,000 locations; SBI brand and government ownership
+raw_summary: SBI Life eShield Next from India's largest bank-backed insurer offers an increasing cover option where the sum insured grows by 10% every 5 years to counter inflation — so a Rs.1 Crore policy becomes Rs.1.5 Crore after 10 years at no extra cost. Joint life coverage option covers spouse under same policy. With SBI's 22,000 branch network across India claim support is available in every corner of the country. SBI Life combines government bank trust with competitive private-sector premiums making it ideal for conservative buyers.
+
+PLAN 06
+----------------------------------------
+plan_name: Saral Jeevan Bima
+company_name: All IRDAI-Licensed Life Insurers (Standard)
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.5 Lakh to Rs.25 Lakh
+premium_range: Rs.3,000 to Rs.12,000 per year
+waiting_period: 45 days; suicide excluded first year; accident excluded first 45 days
+eligibility_age: 18 to 65 years
+conditions_covered: Death benefit lump sum; simple uncomplicated terms
+exclusions: Suicide first year, self-inflicted, war, criminal
+claim_process: Standard documentation process at any insurer; 45-day settlement requirement by IRDAI
+network_hospitals: N/A
+special_benefits: Standard IRDAI product — same terms across all insurers; no complex conditions; easy to understand; no rejection on standard health basis; entry-level term
+raw_summary: Saral Jeevan Bima is India's standard term life insurance plan mandated by IRDAI with simple uniform terms across all insurers eliminating complex conditions that confuse buyers. Coverage from Rs.5-25 Lakh at affordable premiums starting Rs.3,000 per year makes it ideal for first-time buyers, low-income workers and those who want simple uncomplicated life insurance. The plan is designed to be transparent with minimal exclusions and standardised claim process. Best for first-time term insurance buyers who want simplicity over features.
+
+PLAN 07
+----------------------------------------
+plan_name: TATA AIA Sampoorna Raksha Supreme
+company_name: TATA AIA Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.25 Lakh to Rs.10 Crore
+premium_range: Rs.8,000 to Rs.43,000 per year
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 65 years; coverage up to age 100
+conditions_covered: Death benefit, Terminal illness, Critical illness (optional 40 conditions), Disability, Return of premium option, Second opinion for critical illness
+exclusions: Suicide first year, war, criminal, intoxication
+claim_process: Online and branch; 99.06% settlement ratio; Tata AIA claims WhatsApp service
+network_hospitals: N/A
+special_benefits: Coverage up to age 100; 40 critical illness conditions; WhatsApp claim filing; second medical opinion benefit; Tata-AIA joint venture dual brand trust; loyalty additions
+raw_summary: TATA AIA Sampoorna Raksha Supreme offers coverage up to age 100 — the longest term available in India — providing permanent life protection. The optional critical illness rider covers 40 conditions with separate lump-sum payout and the built-in second medical opinion benefit helps confirm serious diagnoses. WhatsApp-based claim filing makes the process modern and simple. TATA AIA's combination of TATA group reliability and AIA's Asian insurance expertise creates exceptional customer service. The 99.06% settlement ratio confirms strong claim performance.
+
+PLAN 08
+----------------------------------------
+plan_name: Digi Term Life Insurance
+company_name: Go Digit Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.25 Lakh to Rs.5 Crore
+premium_range: Rs.7,000 to Rs.35,000 per year
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 55 years entry; coverage up to age 70
+conditions_covered: Death benefit; accidental death benefit; critical illness optional
+exclusions: Suicide first year, war, intoxication, criminal
+claim_process: Fully digital claim on Digit app; video-based verification; 7-day settlement promise
+network_hospitals: N/A
+special_benefits: Fully digital no-paperwork experience; transparent T&C; video-based claim verification; fair claim policy — no technical exclusion denials; millennial-friendly interface; affordable premiums
+raw_summary: Go Digit Term Life Insurance is the digital-native term plan designed for millennials who want insurance with transparent terms and digital-first claim experience. Digit's 'fair policy' approach means they don't reject claims on technical grounds — a common complaint with traditional insurers. The Digit app handles everything from purchase to claims with video-based verification. 7-day settlement promise keeps the process fast. For young professionals aged 25-45 who are comfortable buying and managing insurance digitally Digit Term offers excellent value with transparent terms.
+
+PLAN 09
+----------------------------------------
+plan_name: PMJJBY - Pradhan Mantri Jeevan Jyoti Bima Yojana
+company_name: Government of India through LIC and other PSU banks
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.2 Lakh
+premium_range: Rs.436 per year (fixed)
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 50 years
+conditions_covered: Death benefit Rs.2 Lakh to nominee; all-cause death
+exclusions: Suicide first year; coverage ends at age 55
+claim_process: Bank branch claim filing; nominee receives funds directly in bank account; 30-day processing
+network_hospitals: N/A
+special_benefits: Extremely affordable at Rs.436 per year (~Rs.1.20 per day); auto-debit from bank account; government-backed; pure protection with zero complexity; available at every bank
+raw_summary: PMJJBY is India's government life insurance scheme providing Rs.2 Lakh death benefit for just Rs.436 per year — auto-debited from any linked bank account. Available to all bank account holders aged 18-50 this is the simplest and most affordable life insurance available. Over 16 crore Indians are enrolled. While the Rs.2 Lakh coverage is modest it provides basic financial security for low-income families and daily wage workers. Every earning Indian who doesn't have other life insurance should have this as a minimum. Best combined with PMSBY accident insurance for complete basic protection.
+
+PLAN 10
+----------------------------------------
+plan_name: LIC Jeevan Amar Term Plan
+company_name: LIC of India (Government)
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.25 Lakh to Rs.10 Crore
+premium_range: Rs.8,500 to Rs.48,000 per year (smoker surcharge applies)
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 65 years; coverage up to age 80
+conditions_covered: Death benefit; level sum or increasing sum insured options; accidental death benefit optional
+exclusions: Suicide first year, intoxication, war, criminal, self-inflicted
+claim_process: LIC branch + online; 98.8% settlement ratio; 1.4 million agents for support
+network_hospitals: N/A
+special_benefits: Separate premium rates for smokers and non-smokers (fair pricing); increasing sum insured variant; LIC government guarantee; rural coverage with vast agent network
+raw_summary: LIC Jeevan Amar is LIC's flagship individual term plan offering separate actuarially-fair premium rates for smokers and non-smokers — an honest approach to pricing risk. The increasing sum insured option lets you choose coverage that grows automatically. LIC's government backing gives absolute guarantee of claim payment regardless of economic conditions. With 1.4 million agents across every Indian district LIC remains the only insurer with meaningful rural and semi-urban presence. For traditional buyers who trust LIC government backing over private sector features this is the definitive choice.
+
+PLAN 11
+----------------------------------------
+plan_name: Max Life Smart Wealth Plan (Endowment)
+company_name: Max Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.5 Lakh to Rs.1 Crore (guaranteed sum assured)
+premium_range: Rs.25,000 to Rs.2 Lakh per year
+waiting_period: 90 days exclusion for non-accidental death
+eligibility_age: 18 to 60 years
+conditions_covered: Death benefit; maturity benefit; survival benefit; guaranteed additions
+exclusions: Suicide first 5 years, war, criminal, intoxication
+claim_process: Online and branch claim; maturity auto-paid to bank account
+network_hospitals: N/A
+special_benefits: 5.5% guaranteed returns + loyalty additions; life cover + savings in one policy; guaranteed income option; tax benefit 80C and 10(10D); Max Life's award-winning claim service
+raw_summary: Max Life Smart Wealth Plan is a traditional participating endowment plan offering guaranteed 5.5% returns with loyalty additions making it competitive with fixed deposits while providing life cover. Unlike pure term insurance it pays maturity benefit if the policyholder survives the term — combining protection with guaranteed savings. Premiums qualify for 80C tax deduction and maturity proceeds are tax-free under 10(10D). Ideal for conservative investors who want guaranteed returns with life cover rather than separate investment and insurance products.
+
+PLAN 12
+----------------------------------------
+plan_name: HDFC Life Sanchay Par Advantage (Participating Plan)
+company_name: HDFC Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.5 Lakh to Rs.5 Crore maturity value
+premium_range: Rs.20,000 to Rs.3 Lakh per year
+waiting_period: 90 days for non-accident claims
+eligibility_age: 18 to 65 years
+conditions_covered: Death benefit; maturity; survival; bonuses; loyalty additions
+exclusions: Suicide first 5 years, war, criminal
+claim_process: Online and HDFC Life branches; auto-payment at maturity
+network_hospitals: N/A
+special_benefits: Participating plan with bonuses declared annually; guaranteed minimum + bonus; flexible premium payment period; loan facility against policy; 80C and 10(10D) tax benefits; HDFC Life brand
+raw_summary: HDFC Life Sanchay Par Advantage is a participating whole life endowment plan that shares insurer profits with policyholders through annually declared bonuses. The plan provides guaranteed minimum returns plus variable bonus making total returns competitive with 6-8% over long term. Policy loan facility provides liquidity if funds needed urgently. A flexible premium payment option allows 7, 10 or 15 years of premium payment while coverage continues for entire policy term. Best for risk-averse investors who want wealth accumulation with guaranteed life cover and regular bonus income.
+
+PLAN 13
+----------------------------------------
+plan_name: Bajaj Allianz eTouch Online Term Plan
+company_name: Bajaj Allianz Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.25 Lakh to Rs.10 Crore
+premium_range: Rs.7,000 to Rs.40,000 per year
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 65 years; coverage up to age 80
+conditions_covered: Death benefit; terminal illness; premium holiday option
+exclusions: Suicide first year, war, criminal, intoxication
+claim_process: Online portal and branch; 99.04% settlement ratio; 7-day claim service
+network_hospitals: N/A
+special_benefits: Premium holiday feature — pause up to 2 years if income disrupted; 99.04% settlement; easy online purchase; Bajaj Allianz brand trust; add-ons available; tax benefit 80C/10(10D)
+raw_summary: Bajaj Allianz eTouch Term Plan's unique Premium Holiday feature allows policyholders to pause premium payment for up to 2 years during financial hardship like job loss or medical emergency without policy lapsing. This addresses a critical pain point in term insurance — people who stop paying premiums during difficult times losing their coverage. With a 99.04% claim settlement ratio and 7-day claim service it delivers reliable protection. An ideal choice for self-employed individuals, freelancers and those with variable income who need premium flexibility.
+
+PLAN 14
+----------------------------------------
+plan_name: ICICI Pru GIFT — Guaranteed Income For Tomorrow
+company_name: ICICI Prudential Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.5 Lakh to Rs.5 Crore guaranteed income
+premium_range: Rs.30,000 to Rs.2.5 Lakh per year
+waiting_period: 90 days for non-accident death claims
+eligibility_age: 18 to 60 years
+conditions_covered: Death benefit; guaranteed regular income during payout phase; lump sum at end; waiver of premium on disability
+exclusions: Suicide first 5 years, war, criminal
+claim_process: Online and ICICI Pru branches; guaranteed payments via NEFT directly to bank account
+network_hospitals: N/A
+special_benefits: Guaranteed monthly income after premium payment period; no market risk — fixed returns; tax-free income under 10(10D) if structured correctly; disability premium waiver; income timing flexible (immediate or deferred)
+raw_summary: ICICI Pru GIFT (Guaranteed Income For Tomorrow) is a non-participating life insurance plan that provides guaranteed regular monthly income for a fixed number of years after the premium payment period ends. Unlike ULIPs it has no market risk — returns are fully guaranteed from day 1. Death benefit protects family throughout. This is ideal for retirement planning where you want guaranteed post-retirement income without market exposure. Tax-free income under Section 10(10D) makes the effective return even more attractive than taxed fixed deposits.
+
+PLAN 15
+----------------------------------------
+plan_name: POS Goal Suraksha (Non-Medical)
+company_name: Bajaj Allianz Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.2 Lakh to Rs.50 Lakh
+premium_range: Rs.5,000 to Rs.20,000 per year
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 55 years
+conditions_covered: Death benefit; no medical test required
+exclusions: Suicide first year, pre-existing in first year (limited), war
+claim_process: Standard branch claim process; simplified underwriting
+network_hospitals: N/A
+special_benefits: NO medical examination required; instant policy issuance; simplified declaration; ideal for those with minor health conditions who fear rejection; affordable
+raw_summary: Bajaj Allianz POS Goal Suraksha is a point-of-sale term plan that requires NO medical test up to Rs.50 Lakh sum assured with just a simple health declaration. This makes it accessible to individuals who have been declined by other insurers due to health conditions or who want immediate coverage without going through lengthy medical examinations. Premiums are slightly higher than medically underwritten plans but the convenience and accessibility make it worthwhile. Best for individuals aged 35-55 with mild health conditions who need term coverage without medical hassle.
+
+PLAN 16
+----------------------------------------
+plan_name: Tata AIA Fortune Pro ULIP
+company_name: TATA AIA Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: 10x to 15x annual premium as death benefit
+premium_range: Rs.24,000 to Rs.2 Lakh per year minimum
+waiting_period: 5-year lock-in (IRDAI mandate for ULIPs); suicide excluded first year
+eligibility_age: 18 to 55 years
+conditions_covered: Life cover + market-linked investment; fund options (equity/debt/balanced); death benefit higher of sum assured or fund value
+exclusions: Suicide first year, war, criminal
+claim_process: Death benefit paid from insurer funds independent of market; TATA AIA branch + online
+network_hospitals: N/A
+special_benefits: Life cover + wealth creation combined; multiple fund options; flexibility to switch funds; premium redirection; top-up investment allowed; loyalty additions after 10 years; tax benefits 80C/10(10D)
+raw_summary: TATA AIA Fortune Pro is a ULIP (Unit Linked Insurance Plan) that combines life insurance with equity and debt market investment in a single product. With a 5-year lock-in period ULIPs have historically delivered better long-term returns than traditional endowment plans for investors comfortable with market risk. Multiple fund options from aggressive equity to conservative debt allow risk-appropriate allocation. After 10 years loyalty additions boost corpus further. Tax benefits under 80C for premiums and 10(10D) for maturity proceeds make it tax-efficient. Best for investors aged 25-40 with 15-20 year horizon who want life cover with equity market growth.
+
+PLAN 17
+----------------------------------------
+plan_name: SBI Life eShield Smart ULIP
+company_name: SBI Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: 10x annual premium as minimum death benefit
+premium_range: Rs.24,000 to Rs.2 Lakh per year minimum
+waiting_period: 5-year lock-in; suicide excluded first year
+eligibility_age: 18 to 55 years
+conditions_covered: Life cover; market-linked fund value; equity and debt fund options; partial withdrawal after 5 years
+exclusions: Suicide first year, war, criminal, intoxication
+claim_process: SBI Life branch + online; auto-credited to nominee bank account
+network_hospitals: N/A
+special_benefits: SBI bank trust; regular NAV updates on SBI app; free switches between funds 12 per year; systematic transfer plan; premium holiday after 5 years; SBI customer discounts
+raw_summary: SBI Life eShield Smart ULIP leverages SBI's unmatched banking network and customer trust to offer a simple investment-plus-insurance product. 12 free fund switches per year allow dynamic asset allocation as market conditions change. After the 5-year lock-in partial withdrawals are allowed providing liquidity. SBI customers benefit from seamless integration with their bank accounts and SBI's financial planning advisory services. The systematic transfer plan option allows gradual equity deployment reducing timing risk. Best for SBI customers who want to invest in markets with life insurance bundled.
+
+PLAN 18
+----------------------------------------
+plan_name: Kotak e-Term Pure Risk Plan
+company_name: Kotak Mahindra Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.25 Lakh to Rs.10 Crore
+premium_range: Rs.7,200 to Rs.38,000 per year
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 65 years; coverage up to age 75
+conditions_covered: Death benefit; terminal illness; accidental death benefit optional; disability optional
+exclusions: Suicide first year, war, criminal, intoxication
+claim_process: Online portal + Kotak branches; 98.7% settlement ratio; 24-hour claim helpline
+network_hospitals: N/A
+special_benefits: Online purchase discount; gender-specific pricing (women cheaper); 98.7% settlement; Kotak Mahindra Bank integration for seamless premium payment; financial planning tools
+raw_summary: Kotak e-Term Plan is Kotak Life's competitive online term plan offering gender-based pricing where women pay lower premiums due to actuarially lower mortality rates — a fair pricing approach. The 98.7% claim settlement ratio and 24-hour claim helpline ensure reliable service. Online purchase discounts make premiums competitive. Kotak Mahindra Bank customers benefit from seamless integration for premium management. A reliable mid-tier option for buyers who want competitive pricing, good settlement track record and the comfort of a banking group's backing.
+
+PLAN 19
+----------------------------------------
+plan_name: Aegon Life iTerm Plus
+company_name: Aditya Birla Sun Life (formerly Aégon)
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.25 Lakh to Rs.10 Crore
+premium_range: Rs.7,000 to Rs.35,000 per year
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 65 years; coverage up to age 80
+conditions_covered: Death benefit; terminal illness; critical illness (optional); disability; increasing cover option
+exclusions: Suicide first year, war, criminal
+claim_process: Online portal; 97.92% settlement ratio; direct digital claim process
+network_hospitals: N/A
+special_benefits: Life stage benefit — auto sum insured increase at marriage, first child, home loan; critical illness optional; all-online fully digital purchase and claim
+raw_summary: Aditya Birla Sun Life iTerm Plus offers a unique Life Stage Benefit feature that automatically increases sum insured at key life milestones — marriage (50% increase), first child (25% increase) and home loan (same as outstanding loan) without additional medical underwriting. This ensures your coverage always matches your growing financial responsibilities. The all-digital purchase and claim process with 97.92% settlement makes it a reliable modern term plan. Best for young professionals who expect their life commitments to grow and want coverage that keeps pace automatically.
+
+PLAN 20
+----------------------------------------
+plan_name: PNB MetLife Mera Term Plan Plus
+company_name: PNB MetLife India Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.10 Lakh to Rs.5 Crore
+premium_range: Rs.6,500 to Rs.36,000 per year
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 65 years; coverage up to age 80
+conditions_covered: Death benefit; terminal illness; critical illness optional (47 conditions); disability waiver
+exclusions: Suicide first year, war, criminal, intoxication
+claim_process: PNB bank branches + online portal; 98.17% settlement; PNB MetLife WhatsApp claim
+network_hospitals: N/A
+special_benefits: 47 critical illness conditions covered (widest in class); joint life option for couples; PNB bank branch claim support at 10,000+ branches; MetLife global expertise
+raw_summary: PNB MetLife Mera Term Plan Plus offers coverage for 47 critical illnesses — the widest critical illness coverage in India's term insurance market — providing a separate lump sum for any of 47 serious conditions alongside the death benefit. The combination of PNB's 10,000+ bank branches for claim support and MetLife's global insurance expertise creates exceptional service quality. Joint life option covers both husband and wife under one policy at discounted premium. WhatsApp claim filing makes the process accessible. Best for those who want maximum critical illness protection alongside term coverage.
+
+PLAN 21
+----------------------------------------
+plan_name: Canara HSBC Young Term Plan
+company_name: Canara HSBC Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.25 Lakh to Rs.5 Crore
+premium_range: Rs.7,000 to Rs.40,000 per year
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 55 years entry; coverage up to age 80
+conditions_covered: Death benefit; terminal illness; critical illness optional; education fund option
+exclusions: Suicide first year, war, criminal, intoxication
+claim_process: Canara Bank branches + online; 96.5% settlement ratio; bank branch claim filing
+network_hospitals: N/A
+special_benefits: Education fund feature — separate fund created for children's education if policyholder dies; bank branch filing at all Canara Bank branches; HSBC global backing
+raw_summary: Canara HSBC Young Term Plan features a unique Education Fund option that automatically creates a dedicated fund for the policyholder's children's education expenses if the policyholder dies — ensuring children's future is protected beyond basic income replacement. The Canara Bank distribution network provides claim filing support at all Canara Bank branches across India. HSBC's global backing ensures strong financial stability. Best for young parents aged 25-40 who want term insurance that specifically protects their children's educational future.
+
+PLAN 22
+----------------------------------------
+plan_name: Edelweiss Tokio Zindagi Plus Term Plan
+company_name: Edelweiss Tokio Life Insurance
+insurance_type: Term / Life Insurance
+coverage_amount: Rs.25 Lakh to Rs.10 Crore
+premium_range: Rs.7,500 to Rs.42,000 per year
+waiting_period: 45 days; suicide excluded first year
+eligibility_age: 18 to 65 years; coverage up to age 85
+conditions_covered: Death benefit; terminal illness; critical illness optional (36 conditions); disability; return of premium optional
+exclusions: Suicide first year, war, criminal
+claim_process: Online portal and branches; 98.09% settlement ratio; dedicated claim relationship manager
+network_hospitals: N/A
+special_benefits: Dedicated personal claim relationship manager; 36 critical illness conditions; return of premium option; 5% discount for non-tobacco users; Tokio Marine global reinsurance backing; flexible payout options (lump sum or income)
+raw_summary: Edelweiss Tokio Life Zindagi Plus assigns every policyholder a dedicated personal claim relationship manager who guides the nominee through the entire claim process — a premium service that addresses the biggest pain point in Indian life insurance which is claim filing complexity. The 98.09% settlement ratio backed by Tokio Marine's global reinsurance ensures financial stability. 36 critical illness conditions are covered and flexible payout options allow family to receive death benefit as lump sum or regular monthly income. For buyers who value personalised claim service above all else.
+
+================================================================================
+END OF KB_02 | TOTAL PLANS: 22 | SECTOR: TERM LIFE & LIFE INSURANCE
+================================================================================

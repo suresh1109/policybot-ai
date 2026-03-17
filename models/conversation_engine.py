@@ -11,30 +11,39 @@ NEW IN v7:
 import json, re
 from models.conversation_memory import memory_manager, ALL_STEPS, FIELD_TO_STEP
 
-SYSTEM_PROMPT = """You are PolicyBot, a warm, natural AI Insurance Advisor for India.
+SYSTEM_PROMPT = """You are PolicyBot, a warm, intelligent AI Insurance Advisor for India — NOT a traditional rule-based bot.
 
-PERSONALITY: Friendly, conversational, concise (2-3 sentences max). Use emojis naturally 😊 👍 ✨
-Never use markdown headers or bullet symbols. Address user by first name when known.
+PERSONALITY: Friendly, natural, empathetic. Like a smart friend who knows insurance. Use emojis naturally 😊 👍 ✨
+Keep replies concise (2-3 sentences). Address user by first name when known. Never use markdown headers or bullet symbols.
 
 LANGUAGE RULE (CRITICAL):
 - Every prompt has a LANGUAGE field. Reply ONLY in that language.
-- LANGUAGE=English → reply in English only, regardless of what user wrote.
+- LANGUAGE=English → reply in English only.
 - LANGUAGE=Tamil → reply entirely in Tamil script.
 - LANGUAGE=Hindi → reply entirely in Hindi script.
 
-NATURAL CONVERSATION RULES — READ CAREFULLY:
-- The SESSION PROFILE shows everything already collected. NEVER re-ask a field that is already in the profile.
-- The ALREADY COLLECTED section in each prompt explicitly lists what is known — skip those questions entirely.
-- If the user mentions name, age, city, or insurance type naturally in any message — acknowledge it and move on.
-- Example: User says "I am Suresh, 25 years old, want health insurance" → You already have name+age+type → go straight to asking for Gov ID upload. Do NOT ask name. Do NOT ask age.
-- Example: User says "I am Suresh 20 yrs old" after choosing insurance → You have name+age → skip to Gov ID.
-- Transitions should feel natural: "Great Suresh! 😊 Could you upload your Gov ID so I can verify your details?"
+ADVANCED CONVERSATION INTELLIGENCE — THIS IS WHAT MAKES YOU SMART:
+- You are a conversational AI — you can handle ANYTHING the user says, not just on-topic answers.
+- If the user asks an off-topic question (e.g. "what is GST?", "tell me a joke", "what is insurance?") → answer it briefly and naturally, then smoothly guide back to the current step.
+- Example: User asks "what is a premium?" during budget stage → Explain it briefly, then ask for their budget.
+- Example: User says "I don't understand" → Clarify what was asked in a different, simpler way.
+- Example: User says something unrelated → Acknowledge it warmly, give a short answer, then redirect.
+- NEVER say "I can only help with insurance" — you are smart enough to handle any question briefly.
+- The SESSION PROFILE shows everything already collected. NEVER re-ask a field already in the profile.
+- The ALREADY COLLECTED section lists known fields — skip those questions entirely.
+- If the user mentions name, age, city, or type naturally → acknowledge and move on without re-asking.
 
-FLOW (follow the CURRENT STEP in each prompt — skip steps for already-known fields):
-→ Insurance type → Name → Age → Gov ID upload → City → Coverage → Family → Medical → Budget → Review → Recommend → Explain → Rate → Farewell
+MEDICAL REPORT STAGE — VERY IMPORTANT:
+- At optional_medical_report stage: say ONE short message only — show upload button prompt. NEVER say 'since you chose to skip', NEVER say 'we can move on', NEVER generate transition text. The system routes automatically.
+- NEVER jump to budget on words like 'proceed', 'ok', 'now', 'continue' at this stage.
+
+
+
+FLOW (skip steps for already-known fields):
+→ Insurance type → Name → Age → Gov ID upload → City → Coverage → Family → Medical → Medical Report (upload or skip) → Budget → Review → Recommend → Explain → Rate → Farewell
 
 ABSOLUTE RULES:
-- NEVER ask for a field already shown in SESSION PROFILE or ALREADY COLLECTED.
+- NEVER ask for a field already in SESSION PROFILE or ALREADY COLLECTED.
 - NEVER say document verified unless backend confirms it.
 - NEVER recommend before budget is collected.
 - At verify_wait / condition_report_wait: say ONLY the waiting message, ask NO questions.
@@ -424,6 +433,22 @@ class ConversationEngine:
         elif next_stage == "explain_plan":
             rag_ctx = self.rag.get_context(self._rag_query(profile), self.gemini)
 
+        # ── DIRECT SKIP: optional_medical_report → collect_budget ────────────────
+        # When user clicks "Skip to Budget", bypass Gemini entirely — no intermediate messages
+        _direct_skip = (stage == "optional_medical_report" and next_stage == "collect_budget")
+        if _direct_skip:
+            _name = profile.get("name", "")
+            options, opt_type = self._options("collect_budget", profile)
+            return {
+                "reply": f"No problem{', ' + _name if _name else ''}! 😊 Let's talk budget. 💰 What is your monthly budget for insurance premiums?",
+                "stage": "collect_budget",
+                "options": options,
+                "option_type": opt_type,
+                "show_upload": False,
+                "is_farewell": False,
+                "lock_chat": False,
+            }
+        # ─────────────────────────────────────────────────────────────────────
         prompt   = self._build_prompt(message, history, profile, rag_ctx, next_stage, language)
         # Token budget: review_details needs more room for full summary
         _tok = 900 if next_stage in ("review_details", "edit_details", "recommendation", "collect_budget") else 500
@@ -462,7 +487,7 @@ class ConversationEngine:
                     if "travel" in (_ins or "").lower() else
                     f"Please briefly mention your medical condition(s) 🏥 (Select all that apply)"
                 ),
-                "optional_medical_report": f"Since you have no conditions, uploading a health report helps us recommend better plans{', ' + _name if _name else ''} 📋 You can also skip this step.",
+                "optional_medical_report": f"📋 A health report helps me find better plans for you{', ' + _name if _name else ''}! Use the upload button — or tap ⏭️ Skip to Budget to continue 💰",
                 "collect_budget":    f"Almost there{', ' + _name if _name else ''}! 🎯 What is your monthly budget for insurance premiums? 💰",
                 "review_details":    f"Please review your details{', ' + _name if _name else ''} 📋 Name: {profile.get('name','—')} | Age: {profile.get('age','—')} | City: {profile.get('city','—')} | Insurance: {profile.get('insurance_type','—')} | Budget: {profile.get('budget_range','—')} | Medical: {profile.get('medical_conditions','None')} — Would you like to continue with these details? 😊",
                 "edit_details":      f"Sure{', ' + _name if _name else ''}! Which details would you like to update? 😊 You can change: Location, Coverage, Medical conditions, or Budget.",
@@ -714,11 +739,19 @@ class ConversationEngine:
 
         # ── Step 13a: Optional medical report upload ──────────────────────
         if stage == "optional_medical_report":
-            # Upload handled by /api/upload — it sets next_stage
-            if is_skip or "no" in msg or "skip" in msg:
-                # No report uploaded — go to insurance-type-specific branch
-                return self._medical_branch(profile, user_id)
-            # Wait for upload
+            # /api/upload handles actual upload → sets next_stage automatically
+            # Only skip on EXPLICIT skip words — never on generic words like proceed/ok/now/upload
+            _explicit_skip = ["skip", "no thanks", "no report", "without",
+                              "don't want", "dont want", "not now", "no file",
+                              "bypass", "don't have", "dont have", "later",
+                              "skip to budget", "⏭️ skip to budget", "skip it",
+                              "skip report", "no upload", "go to budget"]
+            if any(w in msg for w in _explicit_skip):
+                # User explicitly skipped → go DIRECTLY to collect_budget, no intermediate stages
+                self.db.upsert_user_profile(user_id, {"onboarding_stage": "collect_budget"})
+                return "collect_budget"
+            # For re-upload / proceed / ok / now / any other word → stay here
+            # Frontend will show Upload + Skip buttons again
             return "optional_medical_report"
 
         # ── Condition report upload (locked — /api/upload exits to collect_budget) ──
@@ -1221,7 +1254,8 @@ class ConversationEngine:
                              "looks good","all good","go ahead","great","fine",
                              "budget","premium","monthly","amount","range","cost",
                              "ok proceed","ok proeed","proeed","hmm","yeah","yep",
-                             "what","skip","please","now","let","let's","lets"}
+                             "what","skip","please","now","let","let's","lets",
+                             "upload","re-upload","reupload","try again","retry"}
             if msg_stripped and msg_stripped.lower() not in _budget_noise:
                 out["budget_range"] = msg_stripped
 
@@ -1298,7 +1332,8 @@ class ConversationEngine:
 
         # ── NEW: Optional medical report upload ─────────────────────────
         if stage == "optional_medical_report":
-            return (["Upload medical report","Skip"], "radio")
+            # Show Upload button (upload widget shown separately) + Skip chip
+            return (["📎 Upload Report","⏭️ Skip to Budget"], "radio")
 
         if stage == "collect_family":
             return (["Only Me","Spouse","Children","Parents","Full Family"], "multi")
@@ -1558,10 +1593,13 @@ class ConversationEngine:
             ),
             # ── Optional medical report ───────────────────────────────────────
             "optional_medical_report":(
-                f"Ask {name or 'the user'} to optionally upload a personal health report (main user only). "
-                "Say: 'Since you have no medical conditions, a recent health report helps us "
-                f"find better plans for you{', ' + name if name else ''} 📋 You can upload now or skip.' "
-                "Upload widget is on the left. Main user only — do NOT ask family members."
+                f"Medical report upload step for {name or 'the user'}. "
+                "CRITICAL: Do NOT say anything about skipping or moving to budget in your reply. "
+                "Do NOT say 'since you chose to skip' or 'we can move on'. "
+                "Simply say: "
+                f"'A health report helps me find the best plans for you{', ' + name if name else ''}! 📋 "
+                "Use the upload button below — or tap Skip to Budget to continue 💰' "
+                "That is ALL you say. Nothing more. Wait for user action."
             ),
             # ── Condition-based branches ────────────────────────────────
             "condition_report_upload":(
